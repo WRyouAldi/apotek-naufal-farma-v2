@@ -1,0 +1,81 @@
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const R=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
+const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let cache=[],editing=null,readyTimer=0;
+function native(){return !!(window.Android&&typeof Android.listProducts==='function'&&typeof Android.upsertProduct==='function'&&typeof Android.deleteProduct==='function')}
+function list(q){try{return native()?JSON.parse(Android.listProducts(q||'',100)):[]}catch(e){return[]}}
+function fallback(q){const a=Array.isArray(window.ITEMS)?window.ITEMS:[],x=(q||'').toLowerCase();return x?a.filter(i=>[i.code,i.barcode,i.name,i.jenis,i.brand].some(v=>String(v||'').toLowerCase().includes(x))).slice(0,100):a.slice(0,100)}
+function styles(){if($('nfCrudStyle'))return;const s=document.createElement('style');s.id='nfCrudStyle';s.textContent=`
+.nf-crud-card{background:rgba(255,255,255,.94);border:1px solid #dce9e5;border-radius:22px;padding:13px;box-shadow:0 10px 30px rgba(20,70,58,.08);margin-bottom:12px}
+.nf-crud-top{display:flex;gap:8px}.nf-crud-top input{height:46px}.nf-crud-add{height:46px;white-space:nowrap;background:#087f63!important}
+.nf-crud-count{font-size:10px;color:#72817c;margin:8px 2px}.nf-crud-list{display:flex;flex-direction:column;gap:7px}
+.nf-crud-item{padding:11px;border:1px solid #e1ebe7;border-radius:15px;background:#fbfdfc}.nf-crud-item-head{display:flex;justify-content:space-between;gap:8px}
+.nf-crud-name{font-size:13px;font-weight:800;line-height:1.25}.nf-crud-code{font-size:10px;color:#72817c;margin-top:3px}.nf-crud-price{font-size:13px;font-weight:900;color:#087f63;white-space:nowrap}
+.nf-crud-meta{font-size:10px;color:#72817c;margin-top:6px}.nf-crud-actions{display:flex;gap:6px;margin-top:9px}.nf-crud-actions button{flex:1;height:36px;padding:0;font-size:11px}
+.nf-edit{background:#edf7f3!important;color:#087f63!important}.nf-del{background:#fff0f0!important;color:#c85050!important}
+.nf-crud-tools{display:flex;gap:8px;margin-top:9px}.nf-crud-tools>*{flex:1;height:42px}.nf-crud-tools select{padding:0 9px;border:1px solid #dce8e4;border-radius:12px;background:#f8fbfa}
+.nf-crud-import{margin-top:10px;padding:12px;border:1px solid #cfe6df;border-radius:16px;background:linear-gradient(135deg,#effaf6,#f8fcfb)}
+.nf-crud-import-head{display:flex;align-items:center;gap:9px}.nf-crud-import-icon{width:38px;height:38px;border-radius:12px;background:#087f63;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;flex:none}.nf-crud-import-title{font-size:12px;font-weight:900;color:#17312b}.nf-crud-import-sub{font-size:9px;color:#72817c;margin-top:2px;line-height:1.35}.nf-crud-import-row{display:grid;grid-template-columns:1fr 1.2fr;gap:7px;margin-top:9px}.nf-crud-import-row select,.nf-crud-import-row button{height:42px}.nf-crud-import-row select{padding:0 9px;border:1px solid #dce8e4;border-radius:12px;background:#fff;font-size:11px}.nf-crud-import-btn{background:#087f63!important;color:#fff!important}
+.nf-crud-status{font-size:11px;margin-top:8px}.nf-crud-empty{text-align:center;padding:28px 8px;color:#72817c;font-size:12px}
+.nf-crud-modal{position:fixed;inset:0;background:rgba(9,35,29,.48);z-index:5000;display:none;align-items:flex-end;justify-content:center;padding:10px}.nf-crud-modal.show{display:flex}
+.nf-crud-box{width:min(620px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:22px;padding:15px}.nf-crud-box h3{margin:0 0 12px}
+.nf-crud-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nf-crud-field{display:flex;flex-direction:column;gap:4px}.nf-crud-field.full{grid-column:1/-1}.nf-crud-field label{font-size:10px;font-weight:800;color:#667771}.nf-crud-field input{height:42px;padding:0 10px;border:1px solid #dbe7e3;border-radius:11px;background:#f8fbfa;font-size:14px}
+.nf-crud-modal-actions{display:flex;gap:8px;margin-top:12px}.nf-crud-modal-actions button{flex:1;height:44px}.nf-crud-cancel{background:#edf1ef!important;color:#34413d!important}.nf-crud-save{background:#087f63!important}
+@media(max-width:430px){.nf-crud-top{display:grid;grid-template-columns:1fr}.nf-crud-add{width:100%}.nf-crud-grid{grid-template-columns:1fr}.nf-crud-field.full{grid-column:auto}}
+`;document.head.appendChild(s)}
+function modal(){if($('nfCrudModal'))return;const m=document.createElement('div');m.id='nfCrudModal';m.className='nf-crud-modal';m.innerHTML='<div class="nf-crud-box"><h3 id="nfCrudTitle">Tambah Item</h3><div class="nf-crud-grid">'+
+'<div class="nf-crud-field full"><label>Nama Barang</label><input id="nfFName"></div>'+
+'<div class="nf-crud-field"><label>Kode</label><input id="nfFCode"></div><div class="nf-crud-field"><label>Barcode</label><input id="nfFBarcode"></div>'+
+'<div class="nf-crud-field"><label>Jenis</label><input id="nfFJenis"></div><div class="nf-crud-field"><label>Merek</label><input id="nfFBrand"></div>'+
+'<div class="nf-crud-field"><label>Satuan</label><input id="nfFSatuan"></div><div class="nf-crud-field"><label>Harga Beli</label><input id="nfFCost" type="number" inputmode="numeric"></div><div class="nf-crud-field"><label>Harga Jual</label><input id="nfFPrice" type="number" inputmode="numeric"></div>'+
+'<div class="nf-crud-field"><label>Stok</label><input id="nfFStok" type="number" step="any" inputmode="decimal"></div><div class="nf-crud-field"><label>Rak</label><input id="nfFRak"></div>'+
+'</div><div class="nf-crud-modal-actions"><button class="nf-crud-cancel" id="nfCrudCancel">Batal</button><button class="nf-crud-save" id="nfCrudSave">Simpan</button></div></div>';document.body.appendChild(m);
+$('nfCrudCancel').onclick=close;$('nfCrudSave').onclick=save}
+function openForm(x){editing=x||null;$('nfCrudTitle').textContent=x?'Edit Item':'Tambah Item';const v=k=>x?.[k]??'';$('nfFName').value=v('name');$('nfFCost').value=v('purchasePrice')??v('cost')??0;$('nfFCode').value=v('code');$('nfFBarcode').value=v('barcode');$('nfFJenis').value=v('jenis');$('nfFBrand').value=v('brand');$('nfFSatuan').value=v('satuan');$('nfFPrice').value=v('price');$('nfFStok').value=v('stok');$('nfFRak').value=v('rak');$('nfCrudModal').classList.add('show');setTimeout(()=>$('nfFName').focus(),80)}
+function close(){$('nfCrudModal')?.classList.remove('show');editing=null}
+function save(){const row={name:$('nfFName').value.trim(),code:$('nfFCode').value.trim(),barcode:$('nfFBarcode').value.trim(),jenis:$('nfFJenis').value.trim(),brand:$('nfFBrand').value.trim(),satuan:$('nfFSatuan').value.trim(),cost:Number($('nfFCost').value||0),price:Number($('nfFPrice').value||0),stok:Number($('nfFStok').value||0),rak:$('nfFRak').value.trim()};if(!row.name&&!row.code&&!row.barcode){alert('Isi minimal Nama, Kode, atau Barcode.');return}try{if(!native())throw Error('Database native belum tersedia.');const res=JSON.parse(Android.upsertProduct(JSON.stringify(row)));if(!res.ok)throw Error(res.error||'Simpan gagal');close();render();status('✓ Item berhasil disimpan.')}catch(e){alert(e.message)}}
+function del(x){
+  const id=Number(x?.id||0);
+  if(!id||!native()){alert('Item belum memiliki ID database yang valid.');return}
+  if(!confirm('Hapus '+(x.name||'item')+'?'))return;
+  try{
+    const res=JSON.parse(Android.deleteProduct(id));
+    if(!res.ok)throw Error(res.error||'Hapus gagal');
+    const query=$('nfCrudSearch')?.value||'';
+    const after=list(query);
+    if(after.some(r=>Number(r.id)===id))throw Error('Database masih mengembalikan item yang sama setelah dihapus.');
+    cache=after;
+    render();
+    status('✓ Item berhasil dihapus dari database.');
+  }catch(e){alert(e.message||'Hapus gagal')}
+}
+function status(t){const e=$('nfCrudStatus');if(e){e.textContent=t;e.className='nf-crud-status status-ok'}}
+function render(){const q=$('nfCrudSearch')?.value||'';cache=list(q);if(!native()&&!cache.length)cache=fallback(q);const total=native()?Android.productCount():((window.ITEMS||[]).length);$('nfCrudCount').textContent=total.toLocaleString('id-ID')+' produk • menampilkan '+cache.length;const host=$('nfCrudList');if(!host)return;host.innerHTML=cache.map(x=>'<div class="nf-crud-item"><div class="nf-crud-item-head"><div><div class="nf-crud-name">'+E(x.name||'(Tanpa nama)')+'</div><div class="nf-crud-code">'+E(x.code||'-')+(x.barcode?' • '+E(x.barcode):'')+'</div></div><div class="nf-crud-price">'+R(x.price)+'</div></div><div class="nf-crud-meta">'+E(x.jenis||'-')+' • '+E(x.satuan||'-')+' • Stok '+E(x.stok??0)+(x.rak?' • Rak '+E(x.rak):'')+'</div><div class="nf-crud-actions"><button class="nf-edit" data-id="'+Number(x.id||0)+'">✎ Edit</button><button class="nf-del" data-id="'+Number(x.id||0)+'">Hapus</button></div></div>').join('')||'<div class="nf-crud-empty">Item tidak ditemukan.</div>';host.querySelectorAll('.nf-edit').forEach(b=>b.onclick=()=>openForm(cache.find(x=>Number(x.id)===Number(b.dataset.id))));host.querySelectorAll('.nf-del').forEach(b=>b.onclick=()=>del(cache.find(x=>Number(x.id)===Number(b.dataset.id))))}
+function csvParse(t){const rows=[];let row=[],cell='',q=false;const first=(String(t).split(/\r?\n/,1)[0]||'');const d=(first.split(';').length>first.split(',').length)?';':',';for(let i=0;i<t.length;i++){const c=t[i],n=t[i+1];if(c==='"'){if(q&&n==='"'){cell+='"';i++}else q=!q}else if(c===d&&!q){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')i++;row.push(cell);if(row.some(v=>v.trim()))rows.push(row);row=[];cell=''}else cell+=c}row.push(cell);if(row.some(v=>v.trim()))rows.push(row);return rows}
+function imp(){const f=$('nfCrudFile')?.files?.[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{if(!native())throw Error('Database native belum tersedia.');const rows=csvParse(String(rd.result||''));if(rows.length<2)throw Error('CSV kosong.');const h=rows[0].map(x=>String(x).toLowerCase().replace(/[^a-z0-9]/g,'')),idx=(...a)=>{for(const z of a){const key=String(z).toLowerCase().replace(/[^a-z0-9]/g,'');const i=h.indexOf(key);if(i>=0)return i}return -1};const ci=idx('cost','hargabeli','hargapokok','purchaseprice','purchase_price');const data=rows.slice(1).map(r=>{const x={code:r[idx('code','kode','kodebarang')]||'',barcode:r[idx('barcode')]||'',name:r[idx('name','nama','namabarang','namaitem')]||'',jenis:r[idx('jenis','type','kategori')]||'',brand:r[idx('brand','merek')]||'',satuan:r[idx('satuan','unit')]||'',price:Number(String(r[idx('price','harga','hargajual','hargajual1')]||'').replace(/[^0-9.-]/g,''))||0,stok:Number(String(r[idx('stok','stock')]||'').replace(',','.'))||0,rak:r[idx('rak','lokasi')]||''};if(ci>=0)x.cost=Number(String(r[ci]||'').replace(/[^0-9.-]/g,''))||0;return x}).filter(x=>x.name||x.code||x.barcode);if(!data.length)throw Error('Kolom Nama/Kode/Barcode tidak ditemukan.');const mode=$('nfCrudMode').value,res=JSON.parse(Android.importProducts(JSON.stringify(data),mode));if(!res.ok)throw Error(res.error||'Import gagal');status('✓ Import: '+res.added+' ditambah, '+res.updated+' diperbarui. Total '+res.total+' produk.');render()}catch(e){status('Import gagal: '+e.message)}$('nfCrudFile').value=''};rd.readAsText(f,'UTF-8')}
+function exportCsv(){if(!native()){alert('Export tersedia di APK.');return}const a=list('');if(!a.length){alert('Database kosong.');return}const head=['Kode','Barcode','Nama','Jenis','Merek','Satuan','Harga Jual','Stok','Rak'];const csv='\ufeff'+head.join(',')+'\n'+a.map(x=>[x.code,x.barcode,x.name,x.jenis,x.brand,x.satuan,x.price,x.stok,x.rak].map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');Android.saveReport('database-naufal-farma.csv',csv,'text/csv')}
+function build(){const host=$('nfItemsHost');if(!host)return;styles();modal();host.innerHTML='<div class="nf-crud-card"><div class="nf-crud-top"><input id="nfCrudSearch" placeholder="Cari nama, kode, barcode..." autocomplete="off"><button id="nfCrudAdd" class="nf-crud-add">＋ Tambah Item</button></div><div id="nfCrudCount" class="nf-crud-count">Memuat database...</div><div class="nf-crud-import"><div class="nf-crud-import-head"><div class="nf-crud-import-icon">⇩</div><div><div class="nf-crud-import-title">Import Database dari CSV</div><div class="nf-crud-import-sub">Masukkan banyak item sekaligus. Pilih mode sebelum memilih file CSV.</div></div></div><div class="nf-crud-import-row"><select id="nfCrudMode"><option value="add_update">Tambah + Update</option><option value="add">Tambah saja</option><option value="update">Update saja</option><option value="replace">Ganti semua</option></select><input id="nfCrudFile" type="file" accept=".csv,text/csv" style="display:none"><button id="nfCrudImport" class="nf-crud-import-btn">📥 Pilih File CSV</button></div></div><div id="nfCrudStatus" class="nf-crud-status"></div><div class="nf-crud-tools"><button id="nfCrudExport" class="nf-crud-add">📤 Export CSV</button></div><div id="nfCrudList" class="nf-crud-list"></div></div>';
+$('nfCrudSearch').oninput=render;$('nfCrudAdd').onclick=()=>openForm();$('nfCrudImport').onclick=()=>$('nfCrudFile').click();$('nfCrudFile').onchange=imp;$('nfCrudExport').onclick=exportCsv;render()}
+function init(){
+  clearInterval(readyTimer);
+  let tries=0;
+  const wait=()=>{
+    if(!$('nfItemsHost')){
+      if(++tries<60) readyTimer=setTimeout(wait,250);
+      return;
+    }
+    build();
+    let dbTries=0;
+    const dbWait=()=>{
+      if(native()&&Android.productCount()>0){render();return}
+      if(++dbTries<30) readyTimer=setTimeout(dbWait,250);
+    };
+    dbWait();
+  };
+  wait();
+}
+window.nfCrudInit=init;
+window.nfCrudRefresh=()=>{if($('nfItemsHost'))render()};
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
+})();
