@@ -331,7 +331,7 @@
   }
   attachAllSearchScanners();
   const scanAttachObserver=new MutationObserver(attachAllSearchScanners);
-  scanAttachObserver.observe(host,{childList:true,subtree:true});
+  scanAttachObserver.observe(wrap,{childList:true,subtree:true});
   items.addEventListener('click',()=>setTimeout(attachAllSearchScanners,80));
   out.addEventListener('click',()=>setTimeout(attachAllSearchScanners,80));
   document.getElementById('nfTxShowQris')?.addEventListener('click',()=>window.nfGo('payment'));
