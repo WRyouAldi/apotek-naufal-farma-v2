@@ -288,3 +288,12 @@ button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger
  .card,.cart,.history,.report-controls,.mobile-summary,.mobile-item,.itemline,.history-item{background:#fff!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
  button{box-shadow:none!important}
 }
+
+/* POS quick scan control */
+.nf-scan-button{flex:0 0 66px;min-width:66px;display:flex;align-items:center;justify-content:center;gap:5px;border:1px solid rgba(255,255,255,.95);border-radius:14px;background:linear-gradient(135deg,#188b70,#62c9ad);color:#fff;font-size:12px;font-weight:800;box-shadow:0 5px 13px rgba(24,139,112,.18)}
+.nf-scan-button span{font-size:19px}
+#nfTransaction .nf-page-intro{display:none}
+#nfTransaction .nf-page-head{margin-bottom:8px!important}
+#nfTransaction #searchArea{margin-top:0!important}
+#nfTransaction .search{display:flex;align-items:center;gap:7px}
+#nfTransaction .search input{min-width:0;flex:1}
