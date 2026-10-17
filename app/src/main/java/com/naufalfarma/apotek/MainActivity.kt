@@ -395,7 +395,7 @@ class MainActivity : Activity() {
                                 break
                             }
                         }
-                        return if (same) JSONObject().put("ok", true).put("duplicate", true).put("invoice", invoice).toString()
+                        return if (same && stored.optString("status", "LUNAS") == "LUNAS") JSONObject().put("ok", true).put("duplicate", true).put("invoice", invoice).toString()
                         else JSONObject().put("ok", false).put("error", "Nomor invoice sudah dipakai untuk transaksi berbeda").toString()
                     }
                 }
