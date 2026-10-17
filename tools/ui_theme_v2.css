@@ -68,7 +68,7 @@ header:after{content:"";position:absolute;inset:0 0 auto;height:1px;background:l
 .nf-home-tools button b{font-size:11px!important;line-height:1.25!important}
 .nf-home-tools button small{font-size:9px!important;line-height:1.3!important;color:var(--nf-muted)!important}
 .nf-page{display:none;min-width:0;animation:nfPageIn .3s var(--nf-ease) both}
-.nf-page.active,.nf-page[aria-hidden="false"]{display:block}
+.nf-page.nf-active,.nf-page.active,.nf-page[aria-hidden="false"]{display:block}
 .nf-page-head{display:flex!important;align-items:center!important;gap:12px!important;margin:2px 0 17px!important;padding:3px 1px!important}
 .nf-page-head>div{min-width:0}
 .nf-page-head h2{margin:0!important;color:#252d38!important;font-size:23px!important;line-height:1.12!important;letter-spacing:-.7px!important;font-weight:800!important}
