@@ -4,6 +4,7 @@
   const wrap=document.querySelector('.wrap');
   if(!wrap || document.getElementById('nfHome')) return;
 
+  const legacyPayment=document.getElementById('pembayaranMandiri');
   const welcome=wrap.querySelector('.welcome-card');
   const stats=wrap.querySelector('.stats-grid');
   const quick=wrap.querySelector('.quick-section');
@@ -55,6 +56,13 @@
   if(nodes.cartAnchor)tx.appendChild(nodes.cartAnchor);
   if(nodes.cart)tx.appendChild(nodes.cart);
 
+  const paymentPage=make('nfPayment','QRIS','QRIS merchant berdiri sendiri, terpisah dari keranjang kasir.');
+  if(legacyPayment){legacyPayment.style.display='block';paymentPage.appendChild(legacyPayment);}
+  const morePage=make('nfMore','Lainnya','Riwayat, laporan, produk, dan sinkronisasi.');
+  const moreGrid=document.createElement('div');moreGrid.className='nf-more-grid';
+  moreGrid.innerHTML='<button type="button" data-more="report"><span>▥</span><b>Laporan</b><small>Ringkasan penjualan</small></button><button type="button" data-more="items"><span>▤</span><b>Produk</b><small>Daftar dan kelola item</small></button><button type="button" data-more="sync"><span>↻</span><b>Sync Data</b><small>Perbarui database</small></button><button type="button" data-more="out"><span>⇥</span><b>Barang Keluar</b><small>Pencatatan barang keluar</small></button>';
+  morePage.appendChild(moreGrid);
+  moreGrid.querySelectorAll('[data-more]').forEach(b=>b.addEventListener('click',()=>window.nfGo(b.dataset.more)));
   const out=make('nfOut','Barang Keluar','Pencatatan barang keluar menggunakan Harga Beli.');
   const report=make('nfReport','Laporan','Ringkasan penjualan, detail transaksi, dan ekspor.');
   if(nodes.report)report.appendChild(nodes.report);
@@ -118,18 +126,16 @@
   // Rebuild the existing navigation instead of creating a second navigation bar.
   if(nodes.bottom){
     nodes.bottom.innerHTML=
-      '<button type="button" data-page="transaction" aria-label="Kasir: keranjang dan pembayaran"><span>▣</span><b>Kasir</b></button>'+
-      '<button type="button" data-page="price" aria-label="Cek Harga: pencarian produk dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
-      '<button type="button" data-page="items"><span>▤</span><b>Daftar Item</b></button>'+
-      '<button type="button" data-page="sync"><span>↻</span><b>Sync Data</b></button>'+
-      '<button type="button" data-page="report"><span>▥</span><b>Laporan</b></button>'+
-      '<button type="button" data-page="home"><span>⌂</span><b>Beranda</b></button>';
+      '<button type="button" data-page="transaction" aria-label="Kasir"><span>▣</span><b>Kasir</b></button>'+
+      '<button type="button" data-page="payment" aria-label="QRIS merchant"><span>▦</span><b>QRIS</b></button>'+
+      '<button type="button" data-page="price" aria-label="Cek harga dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
+      '<button type="button" data-page="more" aria-label="Menu lainnya"><span>☷</span><b>Lainnya</b></button>';
     nodes.bottom.classList.add('nf-glass-nav');
     nodes.bottom.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>window.nfGo(b.dataset.page)));
   }
 
   wrap.innerHTML='';
-  wrap.append(home,price,tx,out,report,items,sync);
+  wrap.append(home,price,tx,paymentPage,morePage,out,report,items,sync);
 
   // Keep dynamically created Barang Keluar inside its own page.
   const relocate=()=>{
@@ -142,7 +148,7 @@
   setTimeout(relocate,100);
   setTimeout(relocate,500);
 
-  const map={home:'nfHome',price:'nfPrice',transaction:'nfTransaction',out:'nfOut',report:'nfReport',items:'nfItems',sync:'nfSync'};
+  const map={home:'nfHome',price:'nfPrice',transaction:'nfTransaction',payment:'nfPayment',more:'nfMore',out:'nfOut',report:'nfReport',items:'nfItems',sync:'nfSync'};
   window.nfGo=function(page){
     if(!map[page])page='home';
     Object.entries(map).forEach(([key,id])=>{
@@ -155,6 +161,7 @@
     if(page==='items')window.nfCrudRefresh?.();
     if(page==='sync')window.nfCloudSyncInit?.();
     if(page==='report')window.nfReportRefresh?.();
+    if(page==='payment')window.nfPaymentOpen?.();
   };
 
   const cashierSearch=nodes.search?.querySelector('.search');
@@ -163,6 +170,8 @@
     cashierSearch.appendChild(scanButton);
     scanButton.addEventListener('click',()=>{if(window.Android&&typeof window.Android.scanBarcode==='function')window.Android.scanBarcode();else alert('Pemindaian tersedia pada APK Android.');});
   }
+  window.nfPaymentOpen=function(){if(legacyPayment)legacyPayment.style.display='block';};
+  window.focusPayment=function(){window.nfGo('payment')};
   window.focusSearch=function(scan){
     window.nfGo(scan?'transaction':'price');
     setTimeout(()=>{
@@ -171,6 +180,7 @@
     },140);
   };
   window.focusCart=function(){window.nfGo('transaction')};
+  window.focusPayment=function(){window.nfGo('payment')};
   window.focusReport=function(){window.nfGo('report')};
   window.focusOut=function(){window.nfGo('out')};
   window.focusItems=function(){window.nfGo('items')};
