@@ -184,6 +184,12 @@ class MainActivity : Activity() {
         @JavascriptInterface
         fun importProducts(json: String, mode: String): String = try { productDb.importProducts(JSONArray(json), mode) } catch (e: Exception) { JSONObject().put("ok", false).put("error", e.message ?: "Import gagal").toString() }
         @JavascriptInterface
+        fun commitSale(transactionJson: String): String = try { productDb.commitSale(JSONObject(transactionJson)) } catch (e: Exception) { JSONObject().put("ok", false).put("error", e.message ?: "Transaksi gagal disimpan").toString() }
+
+        @JavascriptInterface
+        fun salesHistory(date: String): String = productDb.salesHistory(date)
+
+        @JavascriptInterface
         fun productCount(): Int = productDb.count()
 
         @JavascriptInterface
@@ -309,7 +315,7 @@ class MainActivity : Activity() {
         private fun toast(message: String) = runOnUiThread { Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show() }
     }
 
-    class ProductDb(context: android.content.Context) : SQLiteOpenHelper(context, "naufal_products.db", null, 2) {
+    class ProductDb(context: android.content.Context) : SQLiteOpenHelper(context, "naufal_products.db", null, 3) {
         override fun onConfigure(db: SQLiteDatabase) {
             super.onConfigure(db)
             db.setForeignKeyConstraintsEnabled(true)
@@ -327,6 +333,9 @@ class MainActivity : Activity() {
             db.execSQL("CREATE TABLE IF NOT EXISTS product_prices (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, unit TEXT, level INTEGER DEFAULT 1, quantity_until REAL DEFAULT 0, percentage REAL DEFAULT 0, price INTEGER DEFAULT 0, updated_at INTEGER, UNIQUE(product_id, unit, level, quantity_until), FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE)")
             db.execSQL("CREATE TABLE IF NOT EXISTS stock (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, office TEXT DEFAULT 'default', quantity REAL DEFAULT 0, updated_at INTEGER, UNIQUE(product_id, office), FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE)")
             db.execSQL("CREATE TABLE IF NOT EXISTS db_meta (key TEXT PRIMARY KEY, value TEXT)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS sales (id INTEGER PRIMARY KEY AUTOINCREMENT, invoice TEXT NOT NULL UNIQUE, sold_at TEXT, sold_date TEXT, customer TEXT, payment_method TEXT, total INTEGER NOT NULL, cash INTEGER NOT NULL, change_amount INTEGER NOT NULL, status TEXT NOT NULL, transaction_json TEXT NOT NULL)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS sale_items (id INTEGER PRIMARY KEY AUTOINCREMENT, sale_id INTEGER NOT NULL, product_id INTEGER NOT NULL, code TEXT, name TEXT NOT NULL, qty REAL NOT NULL, price INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(sale_id) REFERENCES sales(id) ON DELETE CASCADE, FOREIGN KEY(product_id) REFERENCES products(id))
+            db.execSQL("CREATE INDEX IF NOT EXISTS idx_sales_date ON sales(sold_date)")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_products_code ON products(code)")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_products_barcode ON products(barcode)")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_products_name ON products(name)")
@@ -341,6 +350,69 @@ class MainActivity : Activity() {
             if (!cols.contains("keterangan")) db.execSQL("ALTER TABLE products ADD COLUMN keterangan TEXT")
             if (!cols.contains("status")) db.execSQL("ALTER TABLE products ADD COLUMN status TEXT")
         }
+        fun commitSale(tx: JSONObject): String {
+            val invoice = tx.optString("invoice").trim()
+            val items = tx.optJSONArray("items") ?: JSONArray()
+            val total = tx.optLong("total", 0L)
+            if (invoice.isEmpty() || items.length() == 0 || total <= 0L) return JSONObject().put("ok", false).put("error", "Data transaksi tidak lengkap").toString()
+            val db = writableDatabase
+            db.beginTransaction()
+            try {
+                db.rawQuery("SELECT id FROM sales WHERE invoice=?", arrayOf(invoice)).use {
+                    if (it.moveToFirst()) return JSONObject().put("ok", true).put("duplicate", true).put("invoice", invoice).toString()
+                }
+                val resolved = JSONArray()
+                var computedTotal = 0L
+                for (i in 0 until items.length()) {
+                    val item = items.getJSONObject(i)
+                    val code = item.optString("code").trim()
+                    val barcode = item.optString("barcode").trim()
+                    val name = item.optString("name").trim()
+                    val qty = item.optDouble("qty", 0.0)
+                    val price = item.optLong("price", 0L)
+                    if (qty <= 0.0 || price < 0L) return JSONObject().put("ok", false).put("error", "Jumlah atau harga item tidak valid: $name").toString()
+                    val cursor = when {
+                        code.isNotEmpty() -> db.rawQuery("SELECT id,stok,name,code FROM products WHERE code=? LIMIT 1", arrayOf(code))
+                        barcode.isNotEmpty() -> db.rawQuery("SELECT id,stok,name,code FROM products WHERE barcode=? LIMIT 1", arrayOf(barcode))
+                        else -> db.rawQuery("SELECT id,stok,name,code FROM products WHERE lower(name)=lower(?) LIMIT 1", arrayOf(name))
+                    }
+                    cursor.use {
+                        if (!it.moveToFirst()) return JSONObject().put("ok", false).put("error", "Produk tidak ditemukan di database: $name").toString()
+                        val stock = it.getDouble(1)
+                        if (stock < qty) return JSONObject().put("ok", false).put("error", "Stok $name tidak cukup. Tersedia: $stock").toString()
+                        val subtotal = (qty * price).toLong()
+                        computedTotal += subtotal
+                        resolved.put(JSONObject().put("productId", it.getLong(0)).put("code", it.getString(3) ?: code).put("name", it.getString(2) ?: name).put("qty", qty).put("price", price).put("subtotal", subtotal))
+                    }
+                }
+                if (computedTotal != total) return JSONObject().put("ok", false).put("error", "Total transaksi berubah. Hitung ulang sebelum menyimpan.").toString()
+                val values = ContentValues().apply {
+                    put("invoice", invoice); put("sold_at", tx.optString("iso")); put("sold_date", tx.optString("date")); put("customer", tx.optString("customer"))
+                    put("payment_method", tx.optString("paymentMethod")); put("total", total); put("cash", tx.optLong("cash", total))
+                    put("change_amount", tx.optLong("change", 0L)); put("status", "LUNAS"); put("transaction_json", tx.toString())
+                }
+                val saleId = db.insertOrThrow("sales", null, values)
+                for (i in 0 until resolved.length()) {
+                    val item = resolved.getJSONObject(i)
+                    val pid = item.getLong("productId"); val qty = item.getDouble("qty")
+                    val cv = ContentValues().apply { put("sale_id", saleId); put("product_id", pid); put("code", item.optString("code")); put("name", item.optString("name")); put("qty", qty); put("price", item.optLong("price")); put("subtotal", item.optLong("subtotal")) }
+                    db.insertOrThrow("sale_items", null, cv)
+                    db.execSQL("UPDATE products SET stok=stok-?, updated_at=? WHERE id=? AND stok>=?", arrayOf(qty, System.currentTimeMillis(), pid, qty))
+                    db.execSQL("UPDATE stock SET quantity=quantity-?, updated_at=? WHERE product_id=? AND office='default' AND quantity>=?", arrayOf(qty, System.currentTimeMillis(), pid, qty))
+                }
+                db.setTransactionSuccessful()
+                return JSONObject().put("ok", true).put("invoice", invoice).put("saleId", saleId).put("total", total).toString()
+            } finally { db.endTransaction() }
+        }
+
+        fun salesHistory(date: String): String {
+            val out = JSONArray()
+            readableDatabase.rawQuery("SELECT transaction_json FROM sales WHERE sold_date LIKE ? ORDER BY id DESC", arrayOf("%$date%")).use { c ->
+                while (c.moveToNext()) try { out.put(JSONObject(c.getString(0))) } catch (_: Exception) {}
+            }
+            return out.toString()
+        }
+
         fun count(): Int = readableDatabase.rawQuery("SELECT COUNT(*) FROM products", null).use { if (it.moveToFirst()) it.getInt(0) else 0 }
 
         fun exportAll(): String {
