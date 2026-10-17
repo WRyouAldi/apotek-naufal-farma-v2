@@ -174,19 +174,53 @@
   priceQuery?.addEventListener('input',()=>{clearTimeout(priceTimer);priceTimer=setTimeout(()=>priceLookup(priceQuery.value),120)});
   priceClear?.addEventListener('click',()=>{priceQuery.value='';priceLookup('');priceQuery.focus()});
 
-  // Route scanner results according to the active destination. Scanning from
-  // Cek Harga must remain read-only; cashier scans keep the legacy cart flow.
+  // One native scanner, routed to whichever product-search feature is active.
+  // Price lookup remains read-only; cashier retains the original add-to-cart flow.
   const legacyBarcodeHandler=window.onNativeBarcodeScanned;
+  function setSearchValue(input,value){
+    if(!input)return false;
+    input.value=value;
+    input.dispatchEvent(new Event('input',{bubbles:true}));
+    input.dispatchEvent(new Event('change',{bubbles:true}));
+    input.focus();
+    return true;
+  }
   window.onNativeBarcodeScanned=function(code){
+    const value=String(code??'').trim();
+    if(!value)return;
     if(document.getElementById('nfPrice')?.classList.contains('nf-active')){
-      const value=String(code??'').trim();
-      if(!value||!priceQuery)return;
-      priceQuery.value=value;
-      priceLookup(value);
-      return;
+      setSearchValue(priceQuery,value);priceLookup(value);return;
     }
-    if(typeof legacyBarcodeHandler==='function')return legacyBarcodeHandler(code);
+    if(document.getElementById('nfItems')?.classList.contains('nf-active')){
+      const input=document.getElementById('nfCrudSearch');
+      if(setSearchValue(input,value))return;
+    }
+    if(document.getElementById('nfOut')?.classList.contains('nf-active')){
+      const input=document.getElementById('bkSearch');
+      if(setSearchValue(input,value))return;
+    }
+    if(document.getElementById('nfTransaction')?.classList.contains('nf-active')){
+      if(typeof legacyBarcodeHandler==='function'){legacyBarcodeHandler(value);return;}
+      setSearchValue(document.getElementById('q'),value);return;
+    }
+    // If another product search is focused, use it as a safe fallback.
+    const active=document.activeElement;
+    if(active&&active.matches('input[type="search"],input[placeholder*="barcode" i],input[placeholder*="kode" i]')){
+      setSearchValue(active,value);return;
+    }
+    setSearchValue(document.getElementById('q'),value);
   };
+  function attachScanButton(input,buttonId,label){
+    if(!input||document.getElementById(buttonId))return;
+    const host=input.closest('.search')||input.parentElement;
+    if(!host)return;
+    const button=document.createElement('button');
+    button.type='button';button.id=buttonId;button.className='nf-scan-button';
+    button.textContent='▦ Scan';
+    button.setAttribute('aria-label',label||'Scan barcode');
+    button.addEventListener('click',launchNativeScan);
+    host.appendChild(button);
+  }
 
   // Rebuild the existing navigation instead of creating a second navigation bar.
   if(nodes.bottom){
@@ -245,6 +279,18 @@
     scanButton.addEventListener('click',launchNativeScan);
   }
   document.getElementById('nfTxScan')?.addEventListener('click',launchNativeScan);
+  // Add a scan action beside every searchable product input.
+  attachScanButton(priceQuery,'nfPriceScanBarcode','Scan barcode untuk cek harga');
+  // CRUD and stock-out search fields are rendered dynamically, so attach on entry and mutations.
+  function attachAllSearchScanners(){
+    attachScanButton(document.getElementById('nfCrudSearch'),'nfCrudScanBarcode','Scan barcode untuk mencari item');
+    attachScanButton(document.getElementById('bkSearch'),'nfOutScanBarcode','Scan barcode untuk mencari barang keluar');
+  }
+  attachAllSearchScanners();
+  const scanAttachObserver=new MutationObserver(attachAllSearchScanners);
+  scanAttachObserver.observe(host,{childList:true,subtree:true});
+  items.addEventListener('click',()=>setTimeout(attachAllSearchScanners,80));
+  out.addEventListener('click',()=>setTimeout(attachAllSearchScanners,80));
   document.getElementById('nfTxShowQris')?.addEventListener('click',()=>window.nfGo('payment'));
   const txCount=document.getElementById('nfTxCount');
   const txState=document.getElementById('nfTxState');
