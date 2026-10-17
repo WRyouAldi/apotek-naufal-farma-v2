@@ -264,6 +264,22 @@ button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger
 .nf-back{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border-radius:15px!important;font-size:26px!important;color:#137b63!important}
 @media(prefers-reduced-motion:reduce){.nf-page-enter{animation:none!important}}
 
+
+/* Dedicated read-only Cek Harga surface; visually distinct from cashier/cart. */
+.nf-price-lookup{display:grid;gap:11px;min-width:0}
+.nf-price-search{display:flex;align-items:center;gap:9px;min-width:0;padding:7px 9px;border:1px solid rgba(255,255,255,.98);border-radius:19px;background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(225,236,245,.88) 55%,rgba(218,242,233,.82));box-shadow:0 10px 24px rgba(38,52,66,.07),inset 0 1px 0 #fff;backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%)}
+.nf-price-search>span{font-size:22px;color:#188b70;flex:0 0 auto}
+.nf-price-search input{min-width:0;flex:1;height:42px;border:0!important;outline:none!important;background:transparent!important;box-shadow:none!important}
+.nf-price-search button{width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(255,255,255,.95);border-radius:12px;background:rgba(255,255,255,.76);color:#657583;font-size:22px}
+.nf-price-result{min-width:0;padding:13px;margin:8px 0;border:1px solid rgba(255,255,255,.96);border-radius:18px;background:linear-gradient(130deg,rgba(255,255,255,.96),rgba(231,239,246,.84) 58%,rgba(221,242,234,.78));box-shadow:0 9px 22px rgba(38,52,66,.06),inset 0 1px 0 #fff}
+.nf-price-result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-width:0}
+.nf-price-product{min-width:0;display:grid;gap:5px}
+.nf-price-product b{font-size:14px;line-height:1.35;overflow-wrap:anywhere;color:#263442}
+.nf-price-product small{font-size:10px;color:#778493;overflow-wrap:anywhere}
+.nf-price-result-top>strong{flex:0 0 auto;max-width:48%;text-align:right;font-size:14px;color:#137b63;overflow-wrap:anywhere}
+.nf-price-result-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:10px;padding-top:9px;border-top:1px solid rgba(128,151,164,.15);font-size:11px;color:#627382}
+.nf-price-empty{padding:18px 13px;text-align:center;border:1px dashed rgba(119,143,155,.35);border-radius:16px;background:rgba(255,255,255,.55);font-size:12px;line-height:1.5;color:#73818e}
+
 /* Keep printable reports and receipts independent from the on-screen glass theme. */
 @media print{
  html,body{background:#fff!important;color:#000!important;padding:0!important;margin:0!important;box-shadow:none!important}
