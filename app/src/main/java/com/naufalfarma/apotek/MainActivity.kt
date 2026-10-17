@@ -190,6 +190,13 @@ class MainActivity : Activity() {
         fun salesHistory(date: String): String = productDb.salesHistory(date)
 
         @JavascriptInterface
+        fun migrateLegacyTransactions(json: String): String = try {
+            productDb.importLegacyTransactions(JSONArray(json))
+        } catch (e: Exception) {
+            JSONObject().put("ok", false).put("error", e.message ?: "Migrasi riwayat lama gagal").toString()
+        }
+
+        @JavascriptInterface
         fun productCount(): Int = productDb.count()
 
         @JavascriptInterface
@@ -413,9 +420,61 @@ class MainActivity : Activity() {
             } finally { db.endTransaction() }
         }
 
+        fun importLegacyTransactions(rows: JSONArray): String {
+            val db = writableDatabase
+            var imported = 0
+            var skipped = 0
+            db.beginTransaction()
+            try {
+                for (i in 0 until rows.length()) {
+                    val original = rows.optJSONObject(i)
+                    if (original == null) { skipped++; continue }
+                    val tx = JSONObject(original.toString())
+                    val items = tx.optJSONArray("items")
+                    val total = tx.optLong("total", 0L)
+                    if (items == null || items.length() == 0 || total <= 0L) { skipped++; continue }
+                    val stableId = tx.optString("id").takeIf { it.isNotBlank() && it != "0" } ?: "row-$i"
+                    var invoice = tx.optString("invoice").trim()
+                    if (invoice.isBlank()) invoice = "LEGACY-$stableId"
+                    if (invoice.length > 90) invoice = invoice.take(90)
+                    val exists = db.rawQuery("SELECT id FROM sales WHERE invoice=?", arrayOf(invoice)).use { it.moveToFirst() }
+                    if (exists) { skipped++; continue }
+                    val iso = tx.optString("iso")
+                    val soldDate = if (iso.length >= 10) iso.take(10) else ""
+                    val method = tx.optString("paymentMethod", "Tunai").ifBlank { "Tunai" }
+                    tx.put("invoice", invoice)
+                    tx.put("status", "LEGACY_IMPORTED")
+                    if (!tx.has("id")) tx.put("id", stableId)
+                    val values = ContentValues().apply {
+                        put("invoice", invoice)
+                        put("sold_at", iso.ifBlank { tx.optString("date") })
+                        put("sold_date", soldDate)
+                        put("customer", tx.optString("customer"))
+                        put("payment_method", method)
+                        put("total", total)
+                        put("cash", tx.optLong("cash", total))
+                        put("change_amount", tx.optLong("change", 0L))
+                        put("status", "LEGACY_IMPORTED")
+                        put("transaction_json", tx.toString())
+                    }
+                    db.insertOrThrow("sales", null, values)
+                    // Historical imports deliberately do not change stock.
+                    imported++
+                }
+                db.setTransactionSuccessful()
+            } finally { db.endTransaction() }
+            return JSONObject().put("ok", true).put("imported", imported).put("skipped", skipped).toString()
+        }
+
         fun salesHistory(date: String): String {
             val out = JSONArray()
-            readableDatabase.rawQuery("SELECT transaction_json FROM sales WHERE sold_date LIKE ? ORDER BY id DESC", arrayOf("%$date%")).use { c ->
+            val sql = if (date == "*") {
+                "SELECT transaction_json FROM sales ORDER BY id DESC"
+            } else {
+                "SELECT transaction_json FROM sales WHERE sold_date=? ORDER BY id DESC"
+            }
+            val args = if (date == "*") null else arrayOf(date)
+            readableDatabase.rawQuery(sql, args).use { c ->
                 while (c.moveToNext()) try { out.put(JSONObject(c.getString(0))) } catch (_: Exception) {}
             }
             return out.toString()
