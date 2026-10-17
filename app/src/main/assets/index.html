@@ -245,9 +245,24 @@ function clearCart(){cart=[];renderCart();}
 
 function getHistory(){
   if(window.Android && typeof window.Android.salesHistory==="function"){
-    try{const rows=JSON.parse(window.Android.salesHistory("*"));if(Array.isArray(rows)&&rows.length)return rows;}catch(e){}
+    try{const rows=JSON.parse(window.Android.salesHistory("*"));if(Array.isArray(rows))return rows;}catch(e){}
   }
   try{return JSON.parse(localStorage.getItem("naufal_farma_transactions")||"[]")}catch(e){return[]}
+}
+function migrateLegacyTransactionsToSQLite(){
+  if(!(window.Android && typeof window.Android.migrateLegacyTransactions==="function"))return;
+  try{
+    const legacy=JSON.parse(localStorage.getItem("naufal_farma_transactions")||"[]");
+    if(!Array.isArray(legacy)||legacy.length===0)return;
+    const result=JSON.parse(window.Android.migrateLegacyTransactions(JSON.stringify(legacy)));
+    if(result && result.ok){
+      const status=document.getElementById("saveStatus");
+      if(status && Number(result.imported)>0){
+        status.className="small status-ok";
+        status.textContent="✓ "+result.imported+" transaksi lama diimpor ke SQLite tanpa mengubah stok. Arsip lokal tetap dipertahankan.";
+      }
+    }
+  }catch(e){console.warn("Migrasi transaksi lama ditunda:",e);}
 }
 function saveTransaction(){
   if(!cart.length){alert("Keranjang masih kosong.");return;}
@@ -301,7 +316,8 @@ function saveTransaction(){
   if(document.getElementById("customerName"))document.getElementById("customerName").value="";
   if(document.getElementById("paymentVerified"))document.getElementById("paymentVerified").checked=false;
   renderCart();
-  updatePaymentGuide();
+  migrateLegacyTransactionsToSQLite();
+updatePaymentGuide();
   showHistory();
 }
 function updatePaymentGuide(){
