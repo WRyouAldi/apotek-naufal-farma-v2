@@ -135,6 +135,119 @@ button.danger,.danger{color:#c9515c!important;background:linear-gradient(145deg,
  .bottom-nav button b,.nf-glass-nav button b{font-size:7px!important}
 }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+/* PEARL CRYSTAL LIQUID GLASS — cohesive UI/UX enhancement */
+:root{
+ --nf-pearl-glass:linear-gradient(135deg,rgba(255,255,255,.96),rgba(228,235,242,.86) 52%,rgba(216,241,232,.82));
+ --nf-glass-border:rgba(255,255,255,.94);
+ --nf-glass-highlight:inset 0 1px 0 rgba(255,255,255,.98);
+ --nf-glass-shadow:0 14px 32px rgba(38,52,66,.09),0 3px 8px rgba(38,52,66,.035);
+}
+html,body{width:100%;max-width:100%;overflow-x:clip!important}
+.wrap{min-width:0!important;padding-bottom:112px!important;overflow-x:clip!important}
+.nf-page{min-width:0!important;width:100%;max-width:100%}
+.nf-page>*{min-width:0;max-width:100%}
+header{
+ background:linear-gradient(125deg,rgba(255,255,255,.97),rgba(227,235,243,.9) 54%,rgba(216,241,232,.82))!important;
+ border-bottom:1px solid rgba(255,255,255,.96)!important;
+ box-shadow:0 14px 34px rgba(38,52,66,.075),inset 0 1px 0 #fff!important;
+}
+.brand-mark,.top-notify,.nf-back{
+ background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(224,232,240,.86) 55%,rgba(220,241,234,.78))!important;
+ border:1px solid rgba(255,255,255,.98)!important;
+ box-shadow:0 8px 20px rgba(38,52,66,.09),inset 0 1px 0 #fff!important;
+}
+.welcome-card{
+ background:linear-gradient(120deg,rgba(255,255,255,.97),rgba(232,239,246,.87) 50%,rgba(211,239,229,.8))!important;
+ border:1px solid rgba(255,255,255,.98)!important;
+ box-shadow:0 18px 42px rgba(38,52,66,.10),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(191,211,221,.28)!important;
+}
+.welcome-card:before{
+ background:radial-gradient(circle at 34% 35%,rgba(255,255,255,.99),rgba(174,222,209,.52) 42%,rgba(196,213,233,.12) 72%,transparent 73%)!important;
+}
+.stat-card,.quick-btn,.nf-home-tools button,.search-card,.card,.cart,.history,.report-controls,.mobile-summary,.mobile-item,.itemline,.history-item{
+ border:1px solid var(--nf-glass-border)!important;
+ background:var(--nf-pearl-glass)!important;
+ box-shadow:var(--nf-glass-shadow),var(--nf-glass-highlight)!important;
+}
+.stat-card,.quick-btn,.nf-home-tools button,.search-card,.card,.cart,.history,.report-controls,.mobile-summary,.mobile-item,.itemline,.history-item{
+ backdrop-filter:blur(20px) saturate(155%)!important;
+ -webkit-backdrop-filter:blur(20px) saturate(155%)!important;
+}
+.stat-card{transition:transform .18s ease,box-shadow .18s ease!important}
+.quick-btn{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important}
+.quick-btn:active,.nf-home-tools button:active{transform:scale(.985)!important}
+.stat-card .stat-icon,.quick-btn>span:first-child,.quick-btn .quick-icon,.nf-home-tools button>span{
+ border:1px solid rgba(255,255,255,.98)!important;
+ box-shadow:0 6px 14px rgba(38,52,66,.07),inset 0 1px 0 #fff!important;
+}
+.stat-card .stat-icon{background:linear-gradient(145deg,#fff 0%,#e7f3ef 100%)!important}
+.stat-stock .stat-icon{background:linear-gradient(145deg,#fff 0%,#fae5e7 100%)!important}
+.q-blue>span:first-child{background:linear-gradient(145deg,#fff,#dceafa)!important}
+.q-indigo>span:first-child{background:linear-gradient(145deg,#fff,#e7e8fb)!important}
+.q-orange>span:first-child{background:linear-gradient(145deg,#fff,#faead5)!important}
+.search-card,.search{
+ border-color:rgba(255,255,255,.98)!important;
+ background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(233,240,246,.88) 58%,rgba(228,244,238,.78))!important;
+ box-shadow:0 10px 24px rgba(38,52,66,.065),inset 0 1px 0 #fff!important;
+}
+.search{background:rgba(255,255,255,.72)!important}
+input,select,textarea{
+ background:rgba(255,255,255,.94)!important;
+ border:1px solid rgba(153,170,184,.28)!important;
+ box-shadow:inset 0 1px 2px rgba(38,52,66,.025),0 1px 0 rgba(255,255,255,.85)!important;
+}
+input:focus,select:focus,textarea:focus{
+ border-color:rgba(24,139,112,.62)!important;
+ box-shadow:0 0 0 3px rgba(24,139,112,.12),inset 0 1px 0 #fff!important;
+}
+button.primary,.actions button:not(.danger),.cart button:not(.danger),.nf-sync-host button:not(.danger),.nf-crud-host button:not(.danger){
+ background:linear-gradient(135deg,#188b70 0%,#13745f 54%,#315e69 100%)!important;
+ border:1px solid rgba(255,255,255,.78)!important;
+ box-shadow:0 8px 18px rgba(24,139,112,.2),inset 0 1px 0 rgba(255,255,255,.24)!important;
+}
+button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger):hover{
+ box-shadow:0 10px 22px rgba(24,139,112,.25),inset 0 1px 0 rgba(255,255,255,.3)!important;
+}
+.price,.change{color:#137b63!important}
+.badge{background:linear-gradient(135deg,#f8fffc,#d9f1e7)!important;border-color:rgba(24,139,112,.13)!important}
+.empty{background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(228,236,243,.48))!important}
+.nf-crud-host table,.nf-sync-host table{
+ display:block;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+ background:rgba(255,255,255,.86)!important;
+ border:1px solid rgba(255,255,255,.96)!important;
+ box-shadow:0 8px 22px rgba(38,52,66,.055)!important;
+}
+.nf-crud-host th,.nf-sync-host th{
+ background:linear-gradient(120deg,#edf2f7,#e1f1eb)!important;color:#405363!important;
+}
+.nf-crud-host td,.nf-crud-host th,.nf-sync-host td,.nf-sync-host th{overflow-wrap:anywhere}
+#laporanSection{max-width:100%!important;min-width:0!important}
+#reportPreview{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+#reportPreview table{max-width:100%}
+.nf-page-head h2{overflow-wrap:anywhere}
+.bottom-nav,.nf-glass-nav{isolation:isolate}
+.bottom-nav:before,.nf-glass-nav:before{
+ content:"";position:absolute;inset:0 12% auto;height:1px;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);
+ pointer-events:none;
+}
+.bottom-nav button:focus-visible,.nf-glass-nav button:focus-visible{
+ outline:2px solid rgba(24,139,112,.65)!important;outline-offset:-3px!important;
+}
+@media(max-width:430px){
+ .wrap{padding:12px 12px 112px!important}
+ .nf-page-head h2{font-size:21px!important}
+ .search-card{padding:9px!important}
+ .card,.cart,.history,.report-controls{border-radius:19px!important}
+}
+@media(min-width:600px){.wrap{padding-bottom:112px!important}}
+@supports not ((backdrop-filter:blur(1px))){
+ .stat-card,.quick-btn,.nf-home-tools button,.search-card,.card,.cart,.history,.report-controls,.mobile-summary,.mobile-item,.itemline,.history-item,.bottom-nav,.nf-glass-nav{
+  background:rgba(245,248,250,.98)!important;
+ }
+}
+
 /* Keep printable reports and receipts independent from the on-screen glass theme. */
 @media print{
  html,body{background:#fff!important;color:#000!important;padding:0!important;margin:0!important;box-shadow:none!important}
