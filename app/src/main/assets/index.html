@@ -192,6 +192,14 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
   </div>
 </section>
 
+<section id="pembayaranMandiri" class="card payment-hub" style="display:none">
+<div class="payment-hub-head"><div><span class="eyebrow">PEMBAYARAN</span><h2>Pembayaran QRIS</h2><p>Menu terpisah untuk pembayaran di luar transaksi kasir.</p></div><span class="payment-hub-icon">▦</span></div>
+<div class="payment-merchant"><small>Merchant QRIS</small><h3>Apotek Naufal</h3><div>NMID: <b>ID1026613777956</b></div><div>Terminal: <b>A01</b></div></div>
+<div class="payment-qris-frame"><div class="payment-qris-placeholder"><span>QRIS</span><b>QRIS statis resmi</b><p>Gambar QRIS asli harus dipasang di aplikasi sebelum pelanggan memindai.</p></div></div>
+<div class="payment-hub-note"><b>Langkah pembayaran</b><ol><li>Minta pelanggan memindai QRIS resmi.</li><li>Masukkan nominal di aplikasi pembayaran pelanggan jika diminta.</li><li>Periksa transaksi masuk di DANA Bisnis.</li><li>Konfirmasi hanya setelah dana benar-benar diterima.</li></ol></div>
+<button type="button" class="payment-check-btn" onclick="openDanaInstructions()">✓ Panduan verifikasi pembayaran</button>
+<div id="danaVerifyNote" class="small" style="display:none;margin-top:10px;line-height:1.5">Buka DANA Bisnis, lalu cocokkan status berhasil, nominal, dan waktu transaksi. Menu ini tidak mengonfirmasi pembayaran otomatis.</div>
+</section>
 <div class="search-card" id="searchArea">
 <div class="search"><input id="q" placeholder="Cari nama produk atau kode produk..." aria-label="Cari nama atau kode produk" autocomplete="off"></div>
 </div>
@@ -575,7 +583,18 @@ renderResults(ITEMS.slice(0,30));renderCart();
       '</style></head><body><h1>APOTEK NAUFAL FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
       '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table>'+
-      '</body></html>';
+      '<style id="standalonePaymentHubStyle">
+.payment-hub{border-radius:22px;padding:18px;background:linear-gradient(145deg,#fff,#f4faf7);border:1px solid #dcebe4}
+.payment-hub-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.payment-hub-head h2{margin:5px 0;font-size:22px;color:#173d31}.payment-hub-head p{margin:0;color:#687b73;font-size:13px;line-height:1.45}.payment-hub-icon{width:52px;height:52px;border-radius:17px;background:#e1f4eb;color:#087f62;display:grid;place-items:center;font-size:28px;flex:none}
+.payment-merchant{margin-top:18px;background:#fff;border:1px solid #e2eee8;border-radius:16px;padding:14px}.payment-merchant small{color:#71827a}.payment-merchant h3{margin:4px 0 8px;font-size:20px}.payment-merchant div{font-size:13px;color:#53665d;margin-top:4px}
+.payment-qris-frame{margin:14px auto;padding:12px;max-width:340px;border:1px dashed #b8d7c8;border-radius:18px;background:#fff}.payment-qris-placeholder{min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:#f7fbf9;border-radius:12px;color:#47665a}.payment-qris-placeholder span{font-size:32px;font-weight:900;letter-spacing:2px;color:#0a7256;border:4px solid #0a7256;padding:8px 14px;margin-bottom:12px}.payment-qris-placeholder b{font-size:15px}.payment-qris-placeholder p{font-size:12px;line-height:1.5;max-width:240px;color:#71827a}.payment-hub-note{font-size:13px;line-height:1.55;color:#4d6258;background:#edf8f2;padding:14px;border-radius:14px}.payment-hub-note ol{padding-left:20px;margin:8px 0 0}.payment-hub-note li{margin:5px 0}.payment-check-btn{width:100%;margin-top:12px;min-height:48px;font-weight:800;background:#087f62}
+</style>
+<script id="standalonePaymentHubLogic">
+function restorePOSSections(){['searchArea','results','cartAnchor'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});const cart=document.querySelector('.cart');if(cart)cart.style.display='';const panel=document.getElementById('pembayaranMandiri');if(panel)panel.style.display='none';}
+function showPaymentHub(){const panel=document.getElementById('pembayaranMandiri');if(!panel)return;if(panel.style.display!=='none'){restorePOSSections();return;}panel.style.display='block';['searchArea','results','cartAnchor'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});const cart=document.querySelector('.cart');if(cart)cart.style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
+function openDanaInstructions(){const el=document.getElementById('danaVerifyNote');if(el)el.style.display=el.style.display==='none'?'block':'none';}
+</script>
+</body></html>';
     if(window.Android && typeof window.Android.saveReport==="function"){
       window.Android.saveReport("Laporan-"+date+".xls",xls,"application/vnd.ms-excel");
       return;
@@ -733,9 +752,9 @@ body.pos-modal-open{overflow:hidden}
 
 
 <script id="sampleUIUXHelpers">
-function focusSearch(){const el=document.getElementById("q");if(el){el.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>el.focus(),300);}}
-function focusCart(){const el=document.querySelector(".cart");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
-function focusReport(){const el=document.getElementById("laporanSection");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
+function focusSearch(){restorePOSSections();const el=document.getElementById("q");if(el){el.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>el.focus(),300);}}
+function focusCart(){restorePOSSections();const el=document.querySelector(".cart");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
+function focusReport(){restorePOSSections();const el=document.getElementById("laporanSection");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
 function focusSettings(){const el=document.getElementById("backupBtn");if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.focus();}}
 </script>
 <!-- Native Android barcode bridge. In an APK, Android.scanBarcode() opens the native scanner. In a normal browser, it falls back to manual search. -->
@@ -746,7 +765,8 @@ function focusSettings(){const el=document.getElementById("backupBtn");if(el){el
 <button type="button" onclick="focusSearch()"><span>▣</span><b>Obat</b></button>
 <button type="button" onclick="focusCart()"><span>🛒</span><b>Transaksi</b></button>
 <button type="button" onclick="focusReport()"><span>▤</span><b>Laporan</b></button>
+<button type="button" onclick="showPaymentHub()"><span>▦</span><b>QRIS</b></button>
 </nav>
-<style id="bottomNavStyle">.bottom-nav{position:sticky;bottom:0;z-index:20;max-width:760px;margin:14px auto 0;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#fff;border:1px solid var(--line);border-radius:20px 20px 0 0;box-shadow:0 -5px 20px rgba(20,70,58,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:3px}.bottom-nav button{background:transparent;color:#75827e;padding:5px 2px;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:3px}.bottom-nav button span{font-size:18px;color:var(--g)}.bottom-nav button b{font-size:9px}.bottom-nav button:first-child{color:var(--g)}</style>
+<style id="bottomNavStyle">.bottom-nav{position:sticky;bottom:0;z-index:20;max-width:760px;margin:14px auto 0;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#fff;border:1px solid var(--line);border-radius:20px 20px 0 0;box-shadow:0 -5px 20px rgba(20,70,58,.08);display:grid;grid-template-columns:repeat(5,1fr);gap:3px}.bottom-nav button{background:transparent;color:#75827e;padding:5px 2px;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:3px}.bottom-nav button span{font-size:18px;color:var(--g)}.bottom-nav button b{font-size:9px}.bottom-nav button:first-child{color:var(--g)}</style>
 <script>if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",migrateLegacyTransactionsToSQLite,{once:true});}else{migrateLegacyTransactionsToSQLite();}</script>
 </body></html>
