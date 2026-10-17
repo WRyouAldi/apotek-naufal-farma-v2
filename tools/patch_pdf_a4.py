@@ -15,15 +15,15 @@ new_html = '''                val html = """
                     html,body{margin:0;padding:0;background:#fff;width:794px;min-width:794px;max-width:794px}
                     body{font-family:Arial,sans-serif;color:#111;font-size:9pt;padding:34px;width:794px;max-width:794px;overflow:visible}
                     #pdfRoot{width:726px;max-width:726px;margin:0 auto;overflow:visible}
-                    h1{text-align:center;font-size:17pt;line-height:1.15;margin:0 0 4px;max-width:726px}
-                    h2{text-align:center;font-size:11pt;line-height:1.2;margin:0 0 10px;max-width:726px}
-                    p{margin:4px 0 10px;max-width:726px}
-                    table{width:726px!important;max-width:726px!important;border-collapse:collapse;table-layout:fixed}
+                    h1{text-align:center;font-size:17pt;line-height:1.15;margin:0 0 4px;max-width:100%;overflow-wrap:anywhere}
+                    h2{text-align:center;font-size:11pt;line-height:1.2;margin:0 0 10px;max-width:100%;overflow-wrap:anywhere}
+                    p{margin:4px 0 10px;max-width:100%;overflow-wrap:anywhere}
+                    table{width:100%!important;max-width:100%!important;border-collapse:collapse;table-layout:fixed}
                     thead{display:table-header-group}
                     tr{break-inside:avoid;page-break-inside:avoid}
                     th,td{border:1px solid #888;padding:5px 6px;vertical-align:top;overflow-wrap:anywhere;word-break:break-word;white-space:normal}
                     th{background:#eee}
-                    img,svg,canvas,iframe,pre{max-width:726px!important}
+                    img,svg,canvas,iframe,pre{max-width:100%!important;height:auto}
                     .r{text-align:right;white-space:nowrap}
                     .total{margin:12px 0 0 auto;width:300px;max-width:726px}
                     .total th,.total td{font-weight:700}
