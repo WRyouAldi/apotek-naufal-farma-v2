@@ -354,7 +354,11 @@ class MainActivity : Activity() {
             val invoice = tx.optString("invoice").trim()
             val items = tx.optJSONArray("items") ?: JSONArray()
             val total = tx.optLong("total", 0L)
+            val method = tx.optString("paymentMethod", "Tunai")
+            val cash = tx.optLong("cash", total)
             if (invoice.isEmpty() || items.length() == 0 || total <= 0L) return JSONObject().put("ok", false).put("error", "Data transaksi tidak lengkap").toString()
+            if (method == "Tunai" && cash < total) return JSONObject().put("ok", false).put("error", "Pembayaran tunai kurang dari total").toString()
+            if (method != "Tunai" && !tx.optBoolean("paymentVerified", false)) return JSONObject().put("ok", false).put("error", "Pembayaran non-tunai belum dikonfirmasi").toString()
             val db = writableDatabase
             db.beginTransaction()
             try {
@@ -387,7 +391,7 @@ class MainActivity : Activity() {
                 }
                 if (computedTotal != total) return JSONObject().put("ok", false).put("error", "Total transaksi berubah. Hitung ulang sebelum menyimpan.").toString()
                 val values = ContentValues().apply {
-                    put("invoice", invoice); put("sold_at", tx.optString("iso")); put("sold_date", tx.optString("date")); put("customer", tx.optString("customer"))
+                    put("invoice", invoice); put("sold_at", tx.optString("iso")); put("sold_date", tx.optString("iso").take(10)); put("customer", tx.optString("customer"))
                     put("payment_method", tx.optString("paymentMethod")); put("total", total); put("cash", tx.optLong("cash", total))
                     put("change_amount", tx.optLong("change", 0L)); put("status", "LUNAS"); put("transaction_json", tx.toString())
                 }
@@ -398,7 +402,9 @@ class MainActivity : Activity() {
                     val cv = ContentValues().apply { put("sale_id", saleId); put("product_id", pid); put("code", item.optString("code")); put("name", item.optString("name")); put("qty", qty); put("price", item.optLong("price")); put("subtotal", item.optLong("subtotal")) }
                     db.insertOrThrow("sale_items", null, cv)
                     db.execSQL("UPDATE products SET stok=stok-?, updated_at=? WHERE id=? AND stok>=?", arrayOf(qty, System.currentTimeMillis(), pid, qty))
+                    if (db.compileStatement("SELECT changes()").simpleQueryForLong() != 1L) throw IllegalStateException("Gagal memperbarui stok produk: "+item.optString("name"))
                     db.execSQL("UPDATE stock SET quantity=quantity-?, updated_at=? WHERE product_id=? AND office='default' AND quantity>=?", arrayOf(qty, System.currentTimeMillis(), pid, qty))
+                    if (db.compileStatement("SELECT changes()").simpleQueryForLong() != 1L) throw IllegalStateException("Saldo stok tidak tersedia atau tidak cukup: "+item.optString("name"))
                 }
                 db.setTransactionSuccessful()
                 return JSONObject().put("ok", true).put("invoice", invoice).put("saleId", saleId).put("total", total).toString()
