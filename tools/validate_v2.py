@@ -27,7 +27,7 @@ check("POS rejects cash underpayment", 'if(cash<total){alert("Pembayaran Tunai k
 check("QRIS requires manual DANA verification", 'id="paymentVerified"' in checkout and "notifikasi/riwayat transaksi di aplikasi DANA Bisnis" in checkout and "if(!verified)" in checkout, "non-cash payment requires explicit cashier confirmation after checking merchant payment status")
 check("POS records invoice and payment method", 'paymentMethod:method' in checkout and 'invoice:"ANF-"' in checkout and 'status:"LUNAS"' in checkout, "transaction includes invoice, payment method and paid status")
 check("POS customer field", 'id="customerName"' in checkout and "customer," in checkout, "optional customer is saved with the transaction")
-check("Dedicated POS checkout workspace", 'id="posWorkspaceV1"' in checkout and 'id="posCheckoutModal"' in checkout and ("open.id='posCheckoutOpen'" in checkout or "id='posCheckoutOpen'" in checkout or 'id="posCheckoutOpen"' in checkout), "checkout is presented in a dedicated payment sheet instead of only inline fields")
+check("Dedicated POS checkout workspace", 'id="posWorkspaceV1"' in checkout and ("modal.id='posCheckoutModal'" in checkout or 'id="posCheckoutModal"' in checkout) and ("open.id='posCheckoutOpen'" in checkout or "id='posCheckoutOpen'" in checkout or 'id="posCheckoutOpen"' in checkout), "checkout is presented in a dedicated payment sheet instead of only inline fields")
 check("QRIS merchant identity and asset safety", 'ID1026613777956' in checkout and 'QRIS resmi merchant belum tersedia' in checkout, "merchant identity is shown and missing QR image is not replaced with a fake code")
 seed = ROOT / "app/src/main/assets/products_seed.json"
 if seed.exists():
