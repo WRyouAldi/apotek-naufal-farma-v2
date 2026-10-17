@@ -157,11 +157,17 @@
     if(page==='report')window.nfReportRefresh?.();
   };
 
+  const cashierSearch=nodes.search?.querySelector('.search');
+  if(cashierSearch&&!document.getElementById('nfScanBarcode')){
+    const scanButton=document.createElement('button');scanButton.type='button';scanButton.id='nfScanBarcode';scanButton.className='nf-scan-button';scanButton.textContent='▦ Scan';
+    cashierSearch.appendChild(scanButton);
+    scanButton.addEventListener('click',()=>{if(window.Android&&typeof window.Android.scanBarcode==='function')window.Android.scanBarcode();else alert('Pemindaian tersedia pada APK Android.');});
+  }
   window.focusSearch=function(scan){
-    window.nfGo('price');
+    window.nfGo(scan?'transaction':'price');
     setTimeout(()=>{
       if(scan && window.Android?.scanBarcode){try{window.Android.scanBarcode();}catch(e){}}
-      else document.getElementById('nfPriceQuery')?.focus();
+      else document.getElementById(scan?'q':'nfPriceQuery')?.focus();
     },140);
   };
   window.focusCart=function(){window.nfGo('transaction')};
