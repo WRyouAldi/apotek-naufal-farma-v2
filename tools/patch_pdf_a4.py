@@ -18,7 +18,7 @@ new_html = '''                val html = """
                     h1{text-align:center;font-size:17pt;line-height:1.15;margin:0 0 4px;max-width:726px}
                     h2{text-align:center;font-size:11pt;line-height:1.2;margin:0 0 10px;max-width:726px}
                     p{margin:4px 0 10px;max-width:726px}
-                    table{width:527px!important;max-width:726px!important;border-collapse:collapse;table-layout:fixed}
+                    table{width:726px!important;max-width:726px!important;border-collapse:collapse;table-layout:fixed}
                     thead{display:table-header-group}
                     tr{break-inside:avoid;page-break-inside:avoid}
                     th,td{border:1px solid #888;padding:5px 6px;vertical-align:top;overflow-wrap:anywhere;word-break:break-word;white-space:normal}
