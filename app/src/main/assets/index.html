@@ -153,7 +153,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 .nf-glass-nav button span{font-size:20px!important;line-height:1!important}.nf-glass-nav button b{font-size:9px!important;font-weight:800!important}
 .nf-glass-nav button.active{background:rgba(8,127,99,.11)!important;color:var(--nf-green)!important}
 </style>
-</head>
+<style id="posCheckoutV1">.pos-field-label{display:block;font-size:12px;font-weight:800;color:#52645e;margin:12px 2px 0}#paymentMethod:focus,#customerName:focus,#cash:focus{outline:2px solid #0b8a6933;border-color:#0b8a69}#saveBtn{min-height:48px;font-weight:800;letter-spacing:.1px}</style></head>
 <body>
 <header>
   <div class="topbar">
@@ -201,7 +201,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 <div id="results"></div>
 <div id="cartAnchor"></div>
 <div class="card cart"><div class="row"><b>Keranjang</b><span id="count" class="small">0 item</span></div>
-<div id="cart"></div><input id="cash" type="number" inputmode="numeric" placeholder="Uang dibayar" style="margin-top:10px">
+<div id="cart"></div><label class="pos-field-label" for="paymentMethod">Metode pembayaran</label><select id="paymentMethod" style="width:100%;padding:13px;border:1px solid #cfd6d3;border-radius:12px;font-size:15px;background:#fff;margin-top:5px"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option><option value="Kartu Debit">Kartu Debit</option><option value="Transfer">Transfer</option></select><label class="pos-field-label" for="customerName">Pelanggan (opsional)</label><input id="customerName" type="text" maxlength="80" autocomplete="off" placeholder="Nama pelanggan" style="margin-top:5px"><label class="pos-field-label" for="cash">Uang diterima</label><input id="cash" type="number" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal pembayaran" style="margin-top:5px">
 <div class="total">Total: <span id="total">Rp 0</span></div><div class="change">Kembalian: <span id="change">Rp 0</span></div>
 <div class="actions">
 <button type="button" id="saveBtn">💾 Simpan Transaksi</button>
@@ -248,22 +248,35 @@ function getHistory(){
 }
 function saveTransaction(){
   if(!cart.length){alert("Keranjang masih kosong.");return;}
-  const total=cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const total=cart.reduce((a,c)=>a+(Number(c.price)||0)*(Number(c.qty)||0),0);
+  const method=document.getElementById("paymentMethod")?.value||"Tunai";
   const cash=Number(document.getElementById("cash").value||0);
-  if(cash>0 && cash<total){alert("Uang dibayar masih kurang. Transaksi tetap bisa disimpan jika belum menerima pembayaran.");}
+  const customer=(document.getElementById("customerName")?.value||"").trim();
+  if(!Number.isFinite(total)||total<=0){alert("Total transaksi tidak valid.");return;}
+  if(!Number.isFinite(cash)||cash<0){alert("Nominal pembayaran tidak valid.");return;}
+  if(cash<total){alert("Pembayaran "+method+" kurang "+rupiah(total-cash)+". Transaksi belum disimpan.");return;}
+  const now=new Date();
   const tx={
     id:Date.now(),
-    iso:new Date().toISOString(),
-    date:new Date().toLocaleString("id-ID"),
-    items:cart.map(x=>({code:x.code,name:x.name,price:x.price,qty:x.qty})),
-    total,cash,change:cash-total
+    invoice:"ANF-"+now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0")+"-"+String(Date.now()).slice(-6),
+    iso:now.toISOString(),
+    date:now.toLocaleString("id-ID"),
+    customer,
+    paymentMethod:method,
+    status:"LUNAS",
+    items:cart.map(x=>({code:x.code,name:x.name,price:Number(x.price)||0,qty:Number(x.qty)||0})),
+    total,cash,change:method==="Tunai"?cash-total:0
   };
   const history=getHistory();
+  if(history.some(x=>x.id===tx.id)){alert("ID transaksi duplikat. Silakan coba lagi.");return;}
   history.unshift(tx);
-  localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));
+  try{localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));}
+  catch(e){alert("Transaksi gagal disimpan. Penyimpanan perangkat penuh atau tidak tersedia.");return;}
   document.getElementById("saveStatus").className="small status-ok";
-  document.getElementById("saveStatus").textContent="✓ Transaksi berhasil disimpan.";
-  cart=[];document.getElementById("cash").value="";renderCart();
+  document.getElementById("saveStatus").textContent="✓ Transaksi "+tx.invoice+" berhasil disimpan sebagai LUNAS.";
+  cart=[];document.getElementById("cash").value="";
+  if(document.getElementById("customerName"))document.getElementById("customerName").value="";
+  renderCart();
   showHistory();
 }
 function showHistory(){
