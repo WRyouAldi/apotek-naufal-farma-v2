@@ -344,3 +344,32 @@ button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger
  .nf-page-enter{animation:none!important}
  .nf-back,.nf-scan-button,.nf-glass-nav button,.nf-home-tools button,.nf-price-result{transition:none!important}
 }
+
+
+/* Next-stage POS workflow: clear checkout hierarchy and a compact secondary menu */
+.nf-more-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:8px 0 18px}
+.nf-more-grid button{min-width:0;min-height:108px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;padding:15px;border:1px solid rgba(255,255,255,.94);border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(228,237,243,.76));color:#293844;text-align:left;box-shadow:0 8px 22px rgba(38,52,66,.055),inset 0 1px 0 #fff;transition:transform .16s ease,border-color .18s ease,box-shadow .18s ease}
+.nf-more-grid button span{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:rgba(24,139,112,.1);color:#13785f;font-size:20px}
+.nf-more-grid button b{font-size:14px;font-weight:800}
+.nf-more-grid button small{font-size:11px;line-height:1.35;color:#778591}
+.nf-more-grid button:active{transform:scale(.98)}
+#nfPayment .payment-hub{display:block!important;margin-top:2px!important;border:1px solid rgba(255,255,255,.95)!important;border-radius:24px!important;background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(231,239,244,.82))!important;box-shadow:0 12px 28px rgba(38,52,66,.07),inset 0 1px 0 #fff!important}
+#nfPayment .payment-hub-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#nfPayment .payment-hub-head h2{font-size:22px;letter-spacing:-.45px}
+#nfPayment .payment-merchant{border:1px solid rgba(24,139,112,.12);border-radius:17px;background:linear-gradient(135deg,rgba(229,248,240,.86),rgba(255,255,255,.92));padding:14px}
+#nfPayment .payment-qris-frame{margin-top:12px;border:1px dashed rgba(24,139,112,.3);border-radius:18px;background:rgba(255,255,255,.7);padding:12px}
+#nfPayment .payment-qris-placeholder{min-height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+#nfPayment .payment-qris-placeholder>span{display:grid;place-items:center;width:72px;height:72px;border-radius:20px;background:linear-gradient(145deg,#e4f5ed,#fff);border:1px solid rgba(24,139,112,.16);color:#13785f;font-size:21px;font-weight:900}
+#nfPayment .payment-qris-placeholder p{max-width:30ch;margin:0;color:#778591;font-size:12px;line-height:1.5}
+#nfTransaction .total{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0 5px;padding:16px;border:1px solid rgba(24,139,112,.15);border-radius:18px;background:linear-gradient(135deg,rgba(225,247,238,.94),rgba(255,255,255,.96));color:#36534a;font-size:13px;font-weight:750}
+#nfTransaction .total #total{font-size:clamp(21px,5.5vw,27px);letter-spacing:-.65px;font-weight:900;color:#116e57}
+#nfTransaction .change{margin:0 2px 12px;text-align:right;font-size:12px;color:#718078}
+#nfTransaction .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+#nfTransaction #saveBtn{flex:1 1 100%;min-height:50px;border:0!important;border-radius:16px!important;background:linear-gradient(120deg,#126e59,#188b70 58%,#49b99a)!important;color:#fff!important;font-size:14px!important;font-weight:850!important;box-shadow:0 8px 18px rgba(24,139,112,.2),inset 0 1px 0 rgba(255,255,255,.2)!important}
+#nfTransaction #clearBtn,#nfTransaction #historyBtn,#nfTransaction #backupBtn,#nfTransaction #restoreBtn{flex:1 1 calc(50% - 9px);min-height:44px;border-radius:14px!important}
+#nfTransaction #paymentMethod,#nfTransaction #customerName,#nfTransaction #cash{min-height:46px!important;border-radius:14px!important;border:1px solid rgba(126,145,157,.22)!important;background:rgba(255,255,255,.9)!important}
+#nfTransaction #paymentGuide{border-radius:16px!important}
+#nfTransaction #saveStatus:empty{display:none}
+@media(hover:hover) and (pointer:fine){.nf-more-grid button:hover{transform:translateY(-2px);border-color:rgba(24,139,112,.3);box-shadow:0 12px 24px rgba(38,52,66,.09),inset 0 1px 0 #fff}}
+@media(max-width:360px){.nf-more-grid{gap:8px}.nf-more-grid button{padding:12px;min-height:100px}#nfTransaction .total{padding:13px}}
+@media(prefers-reduced-motion:reduce){.nf-more-grid button{transition:none}}
