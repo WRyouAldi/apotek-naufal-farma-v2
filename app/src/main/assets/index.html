@@ -244,6 +244,9 @@ function renderCart(){
 function clearCart(){cart=[];renderCart();}
 
 function getHistory(){
+  if(window.Android && typeof window.Android.salesHistory==="function"){
+    try{const rows=JSON.parse(window.Android.salesHistory("*"));if(Array.isArray(rows)&&rows.length)return rows;}catch(e){}
+  }
   try{return JSON.parse(localStorage.getItem("naufal_farma_transactions")||"[]")}catch(e){return[]}
 }
 function saveTransaction(){
@@ -287,9 +290,11 @@ function saveTransaction(){
       if(!result.ok){alert("Transaksi belum disimpan: "+(result.error||"gagal memvalidasi stok dan pembayaran"));return;}
     }catch(e){alert("Transaksi belum disimpan ke database POS: "+e.message);return;}
   }
-  history.unshift(tx);
-  try{localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));}
-  catch(e){alert("Transaksi gagal disimpan. Penyimpanan perangkat penuh atau tidak tersedia.");return;}
+  if(!(window.Android && typeof window.Android.commitSale==="function")){
+    history.unshift(tx);
+    try{localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));}
+    catch(e){alert("Transaksi gagal disimpan. Penyimpanan perangkat penuh atau tidak tersedia.");return;}
+  }
   document.getElementById("saveStatus").className="small status-ok";
   document.getElementById("saveStatus").textContent="✓ Transaksi "+tx.invoice+" tersimpan. Pembayaran "+method+" telah dikonfirmasi manual.";
   cart=[];document.getElementById("cash").value="";
@@ -422,6 +427,9 @@ renderResults(ITEMS.slice(0,30));renderCart();
   dateEl.value=todayLocal();
 
   function loadHistory(){
+    if(window.Android && typeof window.Android.salesHistory==="function"){
+      try{const nativeRows=JSON.parse(window.Android.salesHistory("*"));if(Array.isArray(nativeRows))return nativeRows;}catch(e){}
+    }
     try{
       const x=JSON.parse(localStorage.getItem(REPORT_KEY)||"[]");
       return Array.isArray(x)?x:[];
