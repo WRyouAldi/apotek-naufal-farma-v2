@@ -520,7 +520,9 @@ renderResults(ITEMS.slice(0,30));renderCart();
 
   function filtered(){
     const selected=dateEl.value;
-    return loadHistory().filter(tx=>txDate(tx)===selected);
+    // Voided sales remain visible in the audit/history view, but must not inflate
+    // net sales, item totals, Excel exports, or PDF reports.
+    return loadHistory().filter(tx=>txDate(tx)===selected && String(tx.status||"LUNAS").toUpperCase()!=="VOIDED");
   }
 
 
