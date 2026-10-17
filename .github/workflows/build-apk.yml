@@ -74,6 +74,9 @@ jobs:
       - name: Apply robust A4 PDF renderer
         run: python3 tools/patch_pdf_a4.py
 
+      - name: Run V2 static regression checks
+        run: python3 tools/validate_v2.py
+
       - name: Validate generated database seed
         run: |
           python3 - <<'PY'
