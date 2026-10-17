@@ -248,6 +248,22 @@ button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger
  }
 }
 
+
+/* Interactive polish: tactile cards, page transitions, and a clear Kasir action. */
+.nf-page-enter{animation:nfPageIn .24s cubic-bezier(.2,.75,.25,1) both}
+.quick-btn.nf-tapped,.nf-home-tools button.nf-tapped{transform:scale(.975)!important;box-shadow:0 3px 10px rgba(24,139,112,.16),inset 0 1px 0 #fff!important}
+.bottom-nav button[data-page="transaction"],.nf-glass-nav button[data-page="transaction"]{
+ color:#116b59!important;
+}
+.bottom-nav button[data-page="transaction"] span,.nf-glass-nav button[data-page="transaction"] span{font-size:20px!important}
+.quick-btn:hover,.nf-home-tools button:hover{border-color:rgba(24,139,112,.22)!important;box-shadow:0 15px 32px rgba(38,52,66,.11),inset 0 1px 0 #fff!important}
+.nf-page-head{display:flex;align-items:center;gap:12px;margin:2px 0 15px;min-width:0}
+.nf-page-head>div{min-width:0}
+.nf-page-head h2{margin:0;color:#25313d;font-size:22px;font-weight:800;letter-spacing:-.55px}
+.nf-page-head p{margin:4px 0 0;color:#7e8794;font-size:11px;line-height:1.4}
+.nf-back{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border-radius:15px!important;font-size:26px!important;color:#137b63!important}
+@media(prefers-reduced-motion:reduce){.nf-page-enter{animation:none!important}}
+
 /* Keep printable reports and receipts independent from the on-screen glass theme. */
 @media print{
  html,body{background:#fff!important;color:#000!important;padding:0!important;margin:0!important;box-shadow:none!important}
