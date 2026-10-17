@@ -369,8 +369,27 @@ class MainActivity : Activity() {
             val db = writableDatabase
             db.beginTransaction()
             try {
-                db.rawQuery("SELECT id FROM sales WHERE invoice=?", arrayOf(invoice)).use {
-                    if (it.moveToFirst()) return JSONObject().put("ok", true).put("duplicate", true).put("invoice", invoice).toString()
+                db.rawQuery("SELECT id,transaction_json FROM sales WHERE invoice=?", arrayOf(invoice)).use { existing ->
+                    if (existing.moveToFirst()) {
+                        val stored = try { JSONObject(existing.getString(1)) } catch (_: Exception) { JSONObject() }
+                        val storedItems = stored.optJSONArray("items") ?: JSONArray()
+                        var same = stored.optLong("total", -1L) == total &&
+                            stored.optString("paymentMethod", "Tunai") == method &&
+                            storedItems.length() == items.length()
+                        if (same) for (i in 0 until items.length()) {
+                            val a = storedItems.optJSONObject(i) ?: JSONObject()
+                            val b = items.optJSONObject(i) ?: JSONObject()
+                            if (a.optString("code") != b.optString("code") ||
+                                a.optString("barcode") != b.optString("barcode") ||
+                                a.optDouble("qty", -1.0) != b.optDouble("qty", -2.0) ||
+                                a.optLong("price", -1L) != b.optLong("price", -2L)) {
+                                same = false
+                                break
+                            }
+                        }
+                        return if (same) JSONObject().put("ok", true).put("duplicate", true).put("invoice", invoice).toString()
+                        else JSONObject().put("ok", false).put("error", "Nomor invoice sudah dipakai untuk transaksi berbeda").toString()
+                    }
                 }
                 val resolved = JSONArray()
                 var computedTotal = 0L
