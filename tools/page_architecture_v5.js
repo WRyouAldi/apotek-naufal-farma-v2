@@ -60,7 +60,33 @@
   const paymentIntro=document.createElement('div');paymentIntro.className='nf-page-intro';
   paymentIntro.textContent='Gunakan halaman ini untuk menampilkan QRIS merchant dan memeriksa pembayaran di DANA Bisnis. Membuka QRIS tidak membuat transaksi penjualan dan tidak mengubah stok.';
   paymentPage.appendChild(paymentIntro);
-  if(legacyPayment){legacyPayment.style.display='block';paymentPage.appendChild(legacyPayment);}
+  if(legacyPayment){
+    legacyPayment.style.display='block';
+    paymentPage.appendChild(legacyPayment);
+    const qrisFrame=legacyPayment.querySelector('.payment-qris-frame');
+    if(qrisFrame){
+      qrisFrame.innerHTML='<div class="nf-qris-image-wrap"><img id="nfOfficialQrisImage" src="images/qris-apotek-naufal.jpg" alt="QRIS resmi Apotek Naufal Farma" loading="eager"><button type="button" id="nfQrisZoom" class="nf-qris-zoom">⤢ Perbesar QRIS</button></div>';
+      const qrisImg=qrisFrame.querySelector('#nfOfficialQrisImage');
+      qrisImg.style.cssText='display:block;width:100%;max-width:420px;height:auto;max-height:62vh;object-fit:contain;margin:0 auto;border-radius:12px;background:#fff';
+      const qrisWrap=qrisFrame.querySelector('.nf-qris-image-wrap');
+      qrisWrap.style.cssText='display:flex;flex-direction:column;align-items:center;gap:12px;padding:12px;background:#fff;border-radius:16px;border:1px solid #e2ebe7';
+      const zoom=qrisFrame.querySelector('#nfQrisZoom');
+      zoom.style.cssText='width:100%;max-width:420px;min-height:44px;font-weight:700';
+      zoom.addEventListener('click',()=>{
+        let modal=document.getElementById('nfQrisZoomModal');
+        if(!modal){
+          modal=document.createElement('div');modal.id='nfQrisZoomModal';
+          modal.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:18px';
+          modal.innerHTML='<button type="button" aria-label="Tutup QRIS" style="position:absolute;right:18px;top:18px;font-size:28px;width:48px;height:48px;background:#fff;color:#17312b">×</button><img alt="QRIS resmi Apotek Naufal Farma diperbesar" style="display:block;max-width:100%;max-height:86vh;object-fit:contain;background:#fff;border-radius:12px">';
+          modal.querySelector('img').src=qrisImg.src;
+          modal.querySelector('button').addEventListener('click',()=>modal.remove());
+          modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
+          document.body.appendChild(modal);
+        }
+      });
+      qrisImg.addEventListener('error',()=>{qrisFrame.innerHTML='<div role="alert" style="padding:16px;color:#a22">QRIS belum dapat dimuat. Periksa file images/qris-apotek-naufal.jpg pada aset aplikasi.</div>'});
+    }
+  }
   const paymentActions=document.createElement('div');paymentActions.className='nf-payment-actions';
   paymentActions.innerHTML='<div class="nf-payment-note"><b>Verifikasi pembayaran</b><p>Pastikan nominal dan status berhasil pada aplikasi DANA Bisnis sebelum menyatakan pembayaran diterima. Tampilan QRIS saja bukan bukti pembayaran.</p></div><button type="button" id="nfPaymentRefresh">↻ Periksa instruksi pembayaran</button>';
   paymentPage.appendChild(paymentActions);
