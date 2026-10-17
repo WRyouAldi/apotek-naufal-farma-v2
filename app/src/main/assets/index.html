@@ -276,11 +276,17 @@ function saveTransaction(){
     paymentMethod:method,
     status:"LUNAS",
     paymentVerified:isCash?true:verified,
-    items:cart.map(x=>({code:x.code,name:x.name,price:Number(x.price)||0,qty:Number(x.qty)||0})),
+    items:cart.map(x=>({code:x.code,barcode:x.barcode,name:x.name,price:Number(x.price)||0,qty:Number(x.qty)||0})),
     total,cash:isCash?cash:total,change:isCash?cash-total:0
   };
   const history=getHistory();
   if(history.some(x=>x.id===tx.id)){alert("ID transaksi duplikat. Silakan coba lagi.");return;}
+  if(window.Android && typeof window.Android.commitSale==="function"){
+    try{
+      const result=JSON.parse(window.Android.commitSale(JSON.stringify(tx)));
+      if(!result.ok){alert("Transaksi belum disimpan: "+(result.error||"gagal memvalidasi stok dan pembayaran"));return;}
+    }catch(e){alert("Transaksi belum disimpan ke database POS: "+e.message);return;}
+  }
   history.unshift(tx);
   try{localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));}
   catch(e){alert("Transaksi gagal disimpan. Penyimpanan perangkat penuh atau tidak tersedia.");return;}
