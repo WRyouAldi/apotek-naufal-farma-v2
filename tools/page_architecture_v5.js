@@ -67,7 +67,7 @@
     nodes.bottom.innerHTML=
       '<button type="button" data-page="home"><span>⌂</span><b>Beranda</b></button>'+
       '<button type="button" data-page="price"><span>⌕</span><b>Harga</b></button>'+
-      '<button type="button" data-page="transaction"><span>▣</span><b>Transaksi</b></button>'+
+      '<button type="button" data-page="transaction" aria-label="Buka Kasir"><span>▣</span><b>Kasir</b></button>'+
       '<button type="button" data-page="items"><span>▤</span><b>Daftar Item</b></button>'+
       '<button type="button" data-page="sync"><span>↻</span><b>Sync Data</b></button>'+
       '<button type="button" data-page="report"><span>▥</span><b>Laporan</b></button>';
@@ -124,6 +124,28 @@
     b.onclick=null;
   });
 
+
+  // UI-only interaction polish: page entrance, touch feedback and clear focus states.
+  const motionQuery=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reduceMotion=()=>!!(motionQuery&&motionQuery.matches);
+  document.querySelectorAll('.quick-btn,.nf-home-tools button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      btn.classList.add('nf-tapped');
+      window.setTimeout(()=>btn.classList.remove('nf-tapped'),220);
+    },{passive:true});
+  });
+  const navLabel=nodes.bottom&&nodes.bottom.querySelector('[data-page="transaction"]');
+  if(navLabel)navLabel.setAttribute('aria-label','Kasir: keranjang dan pembayaran');
+  const originalGo=window.nfGo;
+  window.nfGo=function(page){
+    originalGo(page);
+    const active=document.getElementById(map[page]||map.home);
+    if(active&&!reduceMotion()){
+      active.classList.remove('nf-page-enter');
+      void active.offsetWidth;
+      active.classList.add('nf-page-enter');
+    }
+  };
   window.nfGo('home');
 })();
 })();
