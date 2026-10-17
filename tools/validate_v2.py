@@ -22,6 +22,8 @@ check("PDF tables fit and wrap", "table-layout:fixed" in pdf and "overflow-wrap:
 key = "naufal_farma_transactions"
 check("Report and receipt share transaction key", key in report and key in tx, "both modules use the same local transaction history")
 check("Report totals have item fallback", "function total(t)" in report and "reduce((a,i)=>a+sub(i),0)" in report, "totals can be calculated from line items")
+check("Native report reads SQLite history", "window.Android.salesHistory" in checkout and "function loadHistory()" in checkout, "Android reports use native SQLite sales as the primary source")
+check("Voided sales excluded from net reports", 'String(tx.status||"LUNAS").toUpperCase()!=="VOIDED"' in checkout, "voided sales remain auditable but do not inflate daily net sales")
 checkout = (ROOT / "app/src/main/assets/index.html").read_text(encoding="utf-8")
 check("POS rejects cash underpayment", 'if(cash<total){alert("Pembayaran Tunai kurang "' in checkout and "Transaksi belum disimpan." in checkout, "cash checkout must stop before persisting an underpaid sale")
 check("QRIS requires manual DANA verification", 'id="paymentVerified"' in checkout and "notifikasi/riwayat transaksi di aplikasi DANA Bisnis" in checkout and "if(!verified)" in checkout, "non-cash payment requires explicit cashier confirmation after checking merchant payment status")
