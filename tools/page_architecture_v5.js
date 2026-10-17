@@ -51,6 +51,16 @@
   const txIntro=document.createElement('div');txIntro.className='nf-page-intro';
   txIntro.textContent='Pilih produk dari pencarian kasir untuk memasukkannya ke keranjang. Cek Harga tetap terpisah dan tidak mengubah transaksi.';
   tx.appendChild(txIntro);
+
+  // Transaction workspace: clear flow, scanner entry point, cart summary, checkout.
+  const txTools=document.createElement('div');
+  txTools.className='nf-tx-tools';
+  txTools.innerHTML='<button type="button" id="nfTxScan" class="nf-tx-primary"><span>▦</span><b>Scan Barcode</b><small>Pindai produk untuk transaksi</small></button><button type="button" id="nfTxShowQris" class="nf-tx-secondary"><span>▧</span><b>Tampilkan QRIS</b><small>Pembayaran merchant terpisah</small></button>';
+  tx.appendChild(txTools);
+  const txSummary=document.createElement('div');
+  txSummary.className='nf-tx-summary';
+  txSummary.innerHTML='<div><small>Status transaksi</small><b id="nfTxState">Siap menerima item</b></div><div><small>Item di keranjang</small><b id="nfTxCount">0 item</b></div>';
+  tx.appendChild(txSummary);
   if(nodes.search)tx.appendChild(nodes.search);
   if(nodes.results)tx.appendChild(nodes.results);
   if(nodes.cartAnchor)tx.appendChild(nodes.cartAnchor);
@@ -198,10 +208,33 @@
   };
 
   const cashierSearch=nodes.search?.querySelector('.search');
+  function launchNativeScan(){
+    if(window.Android&&typeof window.Android.scanBarcode==='function'){
+      try{window.Android.scanBarcode();}catch(e){alert('Pemindai tidak dapat dibuka. Periksa izin kamera aplikasi.');}
+    }else{
+      const q=document.getElementById('q');
+      if(q){q.focus();q.placeholder='Masukkan kode produk secara manual…';}
+      alert('Pemindai kamera tersedia di APK Android. Di browser, masukkan kode secara manual.');
+    }
+  }
   if(cashierSearch&&!document.getElementById('nfScanBarcode')){
     const scanButton=document.createElement('button');scanButton.type='button';scanButton.id='nfScanBarcode';scanButton.className='nf-scan-button';scanButton.textContent='▦ Scan';
     cashierSearch.appendChild(scanButton);
-    scanButton.addEventListener('click',()=>{if(window.Android&&typeof window.Android.scanBarcode==='function')window.Android.scanBarcode();else alert('Pemindaian tersedia pada APK Android.');});
+    scanButton.addEventListener('click',launchNativeScan);
+  }
+  document.getElementById('nfTxScan')?.addEventListener('click',launchNativeScan);
+  document.getElementById('nfTxShowQris')?.addEventListener('click',()=>window.nfGo('payment'));
+  const txCount=document.getElementById('nfTxCount');
+  const txState=document.getElementById('nfTxState');
+  const txCart=document.querySelector('.cart');
+  const syncTxSummary=()=>{
+    const count=txCart?.querySelector('#count')?.textContent?.trim()||'0 item';
+    if(txCount)txCount.textContent=count;
+    if(txState)txState.textContent=/^0\\s*item/i.test(count)?'Siap menerima item':'Item siap diperiksa';
+  };
+  if(txCart){
+    new MutationObserver(syncTxSummary).observe(txCart,{childList:true,subtree:true,characterData:true});
+    syncTxSummary();
   }
   window.nfPaymentOpen=function(){if(legacyPayment)legacyPayment.style.display='block';};
   window.focusPayment=function(){window.nfGo('payment')};
