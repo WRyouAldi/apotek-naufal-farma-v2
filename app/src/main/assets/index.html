@@ -582,23 +582,7 @@ renderResults(ITEMS.slice(0,30));renderCart();
       '.r{text-align:right;mso-number-format:"#,##0"}.total{width:300px;margin-top:12px}.total th{text-align:left}.total td{text-align:right;font-weight:bold}'+
       '</style></head><body><h1>APOTEK NAUFAL FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
-      '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table>'+
-      '<style id="standalonePaymentHubStyle">
-.payment-hub{border-radius:22px;padding:18px;background:linear-gradient(145deg,#fff,#f4faf7);border:1px solid #dcebe4}
-.payment-hub-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.payment-hub-head h2{margin:5px 0;font-size:22px;color:#173d31}.payment-hub-head p{margin:0;color:#687b73;font-size:13px;line-height:1.45}.payment-hub-icon{width:52px;height:52px;border-radius:17px;background:#e1f4eb;color:#087f62;display:grid;place-items:center;font-size:28px;flex:none}
-.payment-merchant{margin-top:18px;background:#fff;border:1px solid #e2eee8;border-radius:16px;padding:14px}.payment-merchant small{color:#71827a}.payment-merchant h3{margin:4px 0 8px;font-size:20px}.payment-merchant div{font-size:13px;color:#53665d;margin-top:4px}
-.payment-qris-frame{margin:14px auto;padding:12px;max-width:340px;border:1px dashed #b8d7c8;border-radius:18px;background:#fff}.payment-qris-placeholder{min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:#f7fbf9;border-radius:12px;color:#47665a}.payment-qris-placeholder span{font-size:32px;font-weight:900;letter-spacing:2px;color:#0a7256;border:4px solid #0a7256;padding:8px 14px;margin-bottom:12px}.payment-qris-placeholder b{font-size:15px}.payment-qris-placeholder p{font-size:12px;line-height:1.5;max-width:240px;color:#71827a}.payment-hub-note{font-size:13px;line-height:1.55;color:#4d6258;background:#edf8f2;padding:14px;border-radius:14px}.payment-hub-note ol{padding-left:20px;margin:8px 0 0}.payment-hub-note li{margin:5px 0}.payment-check-btn{width:100%;margin-top:12px;min-height:48px;font-weight:800;background:#087f62}
-</style>
-<script id="standalonePaymentHubLogic">
-function restorePOSSections(){['searchArea','results','cartAnchor'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});const cart=document.querySelector('.cart');if(cart)cart.style.display='';const panel=document.getElementById('pembayaranMandiri');if(panel)panel.style.display='none';}
-function showPaymentHub(){const panel=document.getElementById('pembayaranMandiri');if(!panel)return;if(panel.style.display!=='none'){restorePOSSections();return;}panel.style.display='block';['searchArea','results','cartAnchor'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});const cart=document.querySelector('.cart');if(cart)cart.style.display='none';panel.scrollIntoView({behavior:'smooth',block:'start'});}
-function openDanaInstructions(){const el=document.getElementById('danaVerifyNote');if(el)el.style.display=el.style.display==='none'?'block':'none';}
-</script>
-</body></html>';
-    if(window.Android && typeof window.Android.saveReport==="function"){
-      window.Android.saveReport("Laporan-"+date+".xls",xls,"application/vnd.ms-excel");
-      return;
-    }
+      '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table></body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     a.href=url;a.download="Laporan-"+date+".xls";a.style.display="none";document.body.appendChild(a);a.click();
