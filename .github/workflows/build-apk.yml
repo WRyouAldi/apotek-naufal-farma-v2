@@ -76,6 +76,10 @@ jobs:
 
       - name: Run V2 static regression checks
         run: python3 tools/validate_v2.py
+        
+      - name: Check JavaScript syntax
+        run: |
+          for file in tools/*.js; do node --check "$file"; done
 
       - name: Validate generated database seed
         run: |
