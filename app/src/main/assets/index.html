@@ -333,7 +333,7 @@ function showHistory(){
       <div class="small">${esc(t.date)} • ${t.items.reduce((a,x)=>a+x.qty,0)} item</div>
       <div style="margin-top:4px"><b>${rupiah(t.total)}</b> • Bayar ${rupiah(t.cash)} • Kembali ${rupiah(t.change)}</div>
       <div class="small" style="margin-top:4px">${t.items.map(x=>esc(x.name)+" × "+x.qty).join(", ")}</div>
-      ${window.Android && typeof window.Android.salesHistory==="function" ? '<div class="small" style="margin-top:7px;color:var(--g)">Transaksi tersimpan di SQLite • riwayat tidak dapat dihapus langsung.</div>' : '<button class="danger" style="margin-top:7px;padding:6px 10px" onclick="deleteTransaction(\''+String(t.id).replace(/\'/g,"")+\'\')">Hapus</button>'}
+      ${window.Android && typeof window.Android.salesHistory==="function" ? '<div class="small" style="margin-top:7px;color:var(--g)">Transaksi tersimpan di SQLite • riwayat tidak dapat dihapus langsung.</div>' : '<button class="danger" style="margin-top:7px;padding:6px 10px" onclick="deleteTransaction('+Number(t.id)+')">Hapus</button>'}
     </div>`).join("")+'</div>';
 }
 function deleteTransaction(id){
