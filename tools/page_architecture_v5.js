@@ -137,7 +137,7 @@
     });
     if(nodes.bottom)nodes.bottom.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
     window.scrollTo({top:0,behavior:'smooth'});
-    if(page==='price')setTimeout(()=>document.getElementById('q')?.focus(),120);
+    if(page==='price')setTimeout(()=>document.getElementById('nfPriceQuery')?.focus(),120);
     if(page==='items')window.nfCrudRefresh?.();
     if(page==='sync')window.nfCloudSyncInit?.();
     if(page==='report')window.nfReportRefresh?.();
@@ -147,7 +147,7 @@
     window.nfGo('price');
     setTimeout(()=>{
       if(scan && window.Android?.scanBarcode){try{window.Android.scanBarcode();}catch(e){}}
-      else document.getElementById('q')?.focus();
+      else document.getElementById('nfPriceQuery')?.focus();
     },140);
   };
   window.focusCart=function(){window.nfGo('transaction')};
