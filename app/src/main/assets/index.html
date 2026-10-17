@@ -348,14 +348,15 @@ function deleteTransaction(id){
 }
 function backupData(){
   try{
-    const payload={app:"Apotek Naufal Farma",version:1,exportedAt:new Date().toISOString(),transactions:getHistory()};
+    let legacyTransactions=[];try{const saved=JSON.parse(localStorage.getItem("naufal_farma_transactions")||"[]");if(Array.isArray(saved))legacyTransactions=saved;}catch(e){}
+    const payload={app:"Apotek Naufal Farma",version:2,exportedAt:new Date().toISOString(),transactions:getHistory(),legacyLocalStorageTransactions:legacyTransactions,notes:"Pada Android, transaksi utama berasal dari SQLite. legacyLocalStorageTransactions adalah arsip lama dan belum diimpor ke SQLite."};
     const text=JSON.stringify(payload,null,2);
     const a=document.createElement("a");
     a.href="data:application/json;charset=utf-8,"+encodeURIComponent(text);
     a.download="backup-apotek-naufal-farma-"+new Date().toISOString().slice(0,10)+".json";
     document.body.appendChild(a);a.click();a.remove();
     document.getElementById("saveStatus").className="small status-ok";
-    document.getElementById("saveStatus").textContent="✓ Backup dibuat.";
+    document.getElementById("saveStatus").textContent="✓ Backup dibuat, termasuk arsip transaksi localStorage lama jika ada.";
   }catch(e){
     document.getElementById("saveStatus").className="small status-err";
     document.getElementById("saveStatus").textContent="Backup gagal: "+e.message;
