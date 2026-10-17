@@ -373,3 +373,13 @@ button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger
 @media(hover:hover) and (pointer:fine){.nf-more-grid button:hover{transform:translateY(-2px);border-color:rgba(24,139,112,.3);box-shadow:0 12px 24px rgba(38,52,66,.09),inset 0 1px 0 #fff}}
 @media(max-width:360px){.nf-more-grid{gap:8px}.nf-more-grid button{padding:12px;min-height:100px}#nfTransaction .total{padding:13px}}
 @media(prefers-reduced-motion:reduce){.nf-more-grid button{transition:none}}
+
+
+/* Standalone QRIS destination: accessible directly, independent from cashier */
+#nfPayment .nf-page-intro{margin:4px 0 14px}
+.nf-payment-actions{display:grid;gap:12px;margin:14px 0 28px}
+.nf-payment-note{padding:15px 16px;border:1px solid rgba(24,139,112,.18);border-radius:18px;background:linear-gradient(135deg,rgba(226,247,239,.95),rgba(255,255,255,.94));color:#36534a;transition:box-shadow .2s ease}
+.nf-payment-note b{display:block;font-size:14px;font-weight:850;color:#126e59}
+.nf-payment-note p{margin:6px 0 0;font-size:12px;line-height:1.55;color:#62756f}
+.nf-payment-actions>button{min-height:46px;padding:12px 15px;border:1px solid rgba(24,139,112,.2);border-radius:15px;background:rgba(255,255,255,.88);color:#126e59;font-size:13px;font-weight:800}
+.nf-payment-note.nf-note-pulse{box-shadow:0 0 0 4px rgba(24,139,112,.1)}
