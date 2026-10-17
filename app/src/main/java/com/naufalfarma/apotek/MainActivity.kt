@@ -3,6 +3,7 @@ package com.naufalfarma.apotek
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
