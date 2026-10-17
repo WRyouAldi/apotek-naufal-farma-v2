@@ -376,13 +376,15 @@ class MainActivity : Activity() {
                     val price = item.optLong("price", 0L)
                     if (qty <= 0.0 || price < 0L) return JSONObject().put("ok", false).put("error", "Jumlah atau harga item tidak valid: $name").toString()
                     val cursor = when {
-                        code.isNotEmpty() -> db.rawQuery("SELECT id,stok,name,code FROM products WHERE code=? LIMIT 1", arrayOf(code))
-                        barcode.isNotEmpty() -> db.rawQuery("SELECT id,stok,name,code FROM products WHERE barcode=? LIMIT 1", arrayOf(barcode))
-                        else -> db.rawQuery("SELECT id,stok,name,code FROM products WHERE lower(name)=lower(?) LIMIT 1", arrayOf(name))
+                        code.isNotEmpty() -> db.rawQuery("SELECT id,stok,name,code,price FROM products WHERE code=? LIMIT 1", arrayOf(code))
+                        barcode.isNotEmpty() -> db.rawQuery("SELECT id,stok,name,code,price FROM products WHERE barcode=? LIMIT 1", arrayOf(barcode))
+                        else -> db.rawQuery("SELECT id,stok,name,code,price FROM products WHERE lower(name)=lower(?) LIMIT 1", arrayOf(name))
                     }
                     cursor.use {
                         if (!it.moveToFirst()) return JSONObject().put("ok", false).put("error", "Produk tidak ditemukan di database: $name").toString()
                         val stock = it.getDouble(1)
+                        val currentPrice = it.getLong(4)
+                        if (price != currentPrice) return JSONObject().put("ok", false).put("error", "Harga $name berubah. Muat ulang produk sebelum membayar.").toString()
                         if (stock < qty) return JSONObject().put("ok", false).put("error", "Stok $name tidak cukup. Tersedia: $stock").toString()
                         val subtotal = (qty * price).toLong()
                         computedTotal += subtotal
