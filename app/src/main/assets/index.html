@@ -201,7 +201,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 <div id="results"></div>
 <div id="cartAnchor"></div>
 <div class="card cart"><div class="row"><b>Keranjang</b><span id="count" class="small">0 item</span></div>
-<div id="cart"></div><label class="pos-field-label" for="paymentMethod">Metode pembayaran</label><select id="paymentMethod" style="width:100%;padding:13px;border:1px solid #cfd6d3;border-radius:12px;font-size:15px;background:#fff;margin-top:5px"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option><option value="Kartu Debit">Kartu Debit</option><option value="Transfer">Transfer</option></select><label class="pos-field-label" for="customerName">Pelanggan (opsional)</label><input id="customerName" type="text" maxlength="80" autocomplete="off" placeholder="Nama pelanggan" style="margin-top:5px"><label class="pos-field-label" for="cash">Uang diterima</label><input id="cash" type="number" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal pembayaran" style="margin-top:5px">
+<div id="cart"></div><label class="pos-field-label" for="paymentMethod">Metode pembayaran</label><select id="paymentMethod" style="width:100%;padding:13px;border:1px solid #cfd6d3;border-radius:12px;font-size:15px;background:#fff;margin-top:5px"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option><option value="Kartu Debit">Kartu Debit</option><option value="Transfer">Transfer</option></select><div id="paymentGuide" class="payment-guide" style="display:none;margin-top:9px;padding:12px;border:1px solid #cde6dd;background:#f0faf6;border-radius:12px;font-size:13px;line-height:1.45"><b id="paymentGuideTitle">Konfirmasi pembayaran</b><p id="paymentGuideText" style="margin:6px 0 10px">Periksa pembayaran pada aplikasi merchant sebelum menyelesaikan transaksi.</p><label style="display:flex;gap:8px;align-items:flex-start;font-weight:600"><input id="paymentVerified" type="checkbox" style="width:18px;height:18px;flex:none;margin:1px 0 0"> <span id="paymentVerifiedText">Saya sudah memastikan pembayaran benar-benar masuk.</span></label></div><label class="pos-field-label" for="customerName">Pelanggan (opsional)</label><input id="customerName" type="text" maxlength="80" autocomplete="off" placeholder="Nama pelanggan" style="margin-top:5px"><label class="pos-field-label" for="cash">Uang diterima</label><input id="cash" type="number" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal pembayaran" style="margin-top:5px">
 <div class="total">Total: <span id="total">Rp 0</span></div><div class="change">Kembalian: <span id="change">Rp 0</span></div>
 <div class="actions">
 <button type="button" id="saveBtn">💾 Simpan Transaksi</button>
@@ -253,8 +253,19 @@ function saveTransaction(){
   const cash=Number(document.getElementById("cash").value||0);
   const customer=(document.getElementById("customerName")?.value||"").trim();
   if(!Number.isFinite(total)||total<=0){alert("Total transaksi tidak valid.");return;}
-  if(!Number.isFinite(cash)||cash<0){alert("Nominal pembayaran tidak valid.");return;}
-  if(cash<total){alert("Pembayaran "+method+" kurang "+rupiah(total-cash)+". Transaksi belum disimpan.");return;}
+  const isCash=method==="Tunai";
+  const verified=document.getElementById("paymentVerified")?.checked===true;
+  if(isCash){
+    if(!Number.isFinite(cash)||cash<0){alert("Nominal pembayaran tidak valid.");return;}
+    if(cash<total){alert("Pembayaran Tunai kurang "+rupiah(total-cash)+". Transaksi belum disimpan.");return;}
+  }else{
+    if(!verified){
+      alert(method==="QRIS"
+        ?"Periksa notifikasi/riwayat transaksi di aplikasi DANA Bisnis terlebih dahulu. Transaksi belum disimpan."
+        :"Pastikan pembayaran sudah masuk/berhasil sebelum menyimpan transaksi.");
+      return;
+    }
+  }
   const now=new Date();
   const tx={
     id:Date.now(),
@@ -264,8 +275,9 @@ function saveTransaction(){
     customer,
     paymentMethod:method,
     status:"LUNAS",
+    paymentVerified:isCash?true:verified,
     items:cart.map(x=>({code:x.code,name:x.name,price:Number(x.price)||0,qty:Number(x.qty)||0})),
-    total,cash,change:method==="Tunai"?cash-total:0
+    total,cash:isCash?cash:total,change:isCash?cash-total:0
   };
   const history=getHistory();
   if(history.some(x=>x.id===tx.id)){alert("ID transaksi duplikat. Silakan coba lagi.");return;}
@@ -273,11 +285,32 @@ function saveTransaction(){
   try{localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));}
   catch(e){alert("Transaksi gagal disimpan. Penyimpanan perangkat penuh atau tidak tersedia.");return;}
   document.getElementById("saveStatus").className="small status-ok";
-  document.getElementById("saveStatus").textContent="✓ Transaksi "+tx.invoice+" berhasil disimpan sebagai LUNAS.";
+  document.getElementById("saveStatus").textContent="✓ Transaksi "+tx.invoice+" tersimpan. Pembayaran "+method+" telah dikonfirmasi manual.";
   cart=[];document.getElementById("cash").value="";
   if(document.getElementById("customerName"))document.getElementById("customerName").value="";
+  if(document.getElementById("paymentVerified"))document.getElementById("paymentVerified").checked=false;
   renderCart();
+  updatePaymentGuide();
   showHistory();
+}
+function updatePaymentGuide(){
+  const method=document.getElementById("paymentMethod")?.value||"Tunai";
+  const guide=document.getElementById("paymentGuide");
+  const title=document.getElementById("paymentGuideTitle");
+  const body=document.getElementById("paymentGuideText");
+  const label=document.getElementById("paymentVerifiedText");
+  if(!guide)return;
+  const nonCash=method!=="Tunai";
+  guide.style.display=nonCash?"block":"none";
+  if(method==="QRIS"){
+    title.textContent="Pembayaran QRIS — DANA Bisnis";
+    body.textContent="Minta pelanggan memindai QRIS cetak resmi Apotek Naufal. Buka aplikasi DANA Bisnis dan periksa notifikasi/riwayat transaksi; cocokkan nominal dengan total belanja. QRIS cetak tidak mengirim status pembayaran otomatis ke aplikasi kasir.";
+    label.textContent="Saya sudah melihat pembayaran berhasil di DANA Bisnis dan nominalnya sesuai total transaksi.";
+  }else{
+    title.textContent="Konfirmasi pembayaran "+method;
+    body.textContent="Periksa bukti atau aplikasi pembayaran dan pastikan transaksi benar-benar berhasil sebelum disimpan.";
+    label.textContent="Saya sudah memastikan pembayaran berhasil dan nominalnya sesuai total transaksi.";
+  }
 }
 function showHistory(){
   const box=document.getElementById("historyBox");
@@ -343,6 +376,8 @@ function search(){
 document.getElementById("q").addEventListener("input",search);
 document.getElementById("cash").addEventListener("input",renderCart);
 document.getElementById("saveBtn").addEventListener("click",saveTransaction);
+document.getElementById("paymentMethod")?.addEventListener("change",updatePaymentGuide);
+updatePaymentGuide();
 document.getElementById("clearBtn").addEventListener("click",clearCart);
 document.getElementById("historyBtn").addEventListener("click",()=>{
   const b=document.getElementById("historyBox");
