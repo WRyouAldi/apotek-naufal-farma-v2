@@ -38,9 +38,9 @@
   more.innerHTML='<div class="nf-home-tools-title"><b>DATABASE & SINKRONISASI</b><small>Kelola item lokal dan perbarui data perangkat</small></div><div class="nf-home-tools"><button type="button" data-open-items><span>▤</span><b>Daftar Item</b><small>Tambah, edit, import CSV</small></button><button type="button" data-open-sync><span>↻</span><b>Sync Data</b><small>Perbarui dari cloud</small></button></div>';
   home.insertBefore(more,quick);
 
-  const price=make('nfPrice','Cek Harga','Cari nama, kode, barcode, dan harga jual.');
+  const price=make('nfPrice','Cek Harga','Pencarian produk, informasi harga, dan stok — tanpa proses pembayaran.');
   const priceIntro=document.createElement('div'); priceIntro.className='nf-page-intro';
-  priceIntro.textContent='Harga jual, satuan, dan stok dibaca dari database lokal.';
+  priceIntro.textContent='Cari berdasarkan nama, kode, atau barcode untuk melihat harga jual, satuan, dan stok. Untuk menambahkan barang ke keranjang dan memproses pembayaran, buka menu Kasir.';
   price.appendChild(priceIntro);
   if(nodes.search)price.appendChild(nodes.search);
   if(nodes.results)price.appendChild(nodes.results);
@@ -66,8 +66,8 @@
   if(nodes.bottom){
     nodes.bottom.innerHTML=
       '<button type="button" data-page="home"><span>⌂</span><b>Beranda</b></button>'+
-      '<button type="button" data-page="price"><span>⌕</span><b>Harga</b></button>'+
-      '<button type="button" data-page="transaction" aria-label="Buka Kasir"><span>▣</span><b>Kasir</b></button>'+
+      '<button type="button" data-page="price" aria-label="Cek Harga: pencarian produk dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
+      '<button type="button" data-page="transaction" aria-label="Kasir: keranjang dan pembayaran"><span>▣</span><b>Kasir</b></button>'+
       '<button type="button" data-page="items"><span>▤</span><b>Daftar Item</b></button>'+
       '<button type="button" data-page="sync"><span>↻</span><b>Sync Data</b></button>'+
       '<button type="button" data-page="report"><span>▥</span><b>Laporan</b></button>';
