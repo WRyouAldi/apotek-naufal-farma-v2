@@ -56,8 +56,15 @@
   if(nodes.cartAnchor)tx.appendChild(nodes.cartAnchor);
   if(nodes.cart)tx.appendChild(nodes.cart);
 
-  const paymentPage=make('nfPayment','QRIS','QRIS merchant berdiri sendiri, terpisah dari keranjang kasir.');
+  const paymentPage=make('nfPayment','QRIS','Pembayaran QRIS mandiri — tidak perlu membuka Kasir.');
+  const paymentIntro=document.createElement('div');paymentIntro.className='nf-page-intro';
+  paymentIntro.textContent='Gunakan halaman ini untuk menampilkan QRIS merchant dan memeriksa pembayaran di DANA Bisnis. Membuka QRIS tidak membuat transaksi penjualan dan tidak mengubah stok.';
+  paymentPage.appendChild(paymentIntro);
   if(legacyPayment){legacyPayment.style.display='block';paymentPage.appendChild(legacyPayment);}
+  const paymentActions=document.createElement('div');paymentActions.className='nf-payment-actions';
+  paymentActions.innerHTML='<div class="nf-payment-note"><b>Verifikasi pembayaran</b><p>Pastikan nominal dan status berhasil pada aplikasi DANA Bisnis sebelum menyatakan pembayaran diterima. Tampilan QRIS saja bukan bukti pembayaran.</p></div><button type="button" id="nfPaymentRefresh">↻ Periksa instruksi pembayaran</button>';
+  paymentPage.appendChild(paymentActions);
+  paymentActions.querySelector('#nfPaymentRefresh').addEventListener('click',()=>{window.nfPaymentOpen?.();paymentActions.querySelector('.nf-payment-note').classList.add('nf-note-pulse');setTimeout(()=>paymentActions.querySelector('.nf-payment-note')?.classList.remove('nf-note-pulse'),500)});
   const morePage=make('nfMore','Lainnya','Riwayat, laporan, produk, dan sinkronisasi.');
   const moreGrid=document.createElement('div');moreGrid.className='nf-more-grid';
   moreGrid.innerHTML='<button type="button" data-more="report"><span>▥</span><b>Laporan</b><small>Ringkasan penjualan</small></button><button type="button" data-more="items"><span>▤</span><b>Produk</b><small>Daftar dan kelola item</small></button><button type="button" data-more="sync"><span>↻</span><b>Sync Data</b><small>Perbarui database</small></button><button type="button" data-more="out"><span>⇥</span><b>Barang Keluar</b><small>Pencatatan barang keluar</small></button>';
