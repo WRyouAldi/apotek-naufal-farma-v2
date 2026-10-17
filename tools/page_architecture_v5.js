@@ -101,6 +101,20 @@
   priceQuery?.addEventListener('input',()=>{clearTimeout(priceTimer);priceTimer=setTimeout(()=>priceLookup(priceQuery.value),120)});
   priceClear?.addEventListener('click',()=>{priceQuery.value='';priceLookup('');priceQuery.focus()});
 
+  // Route scanner results according to the active destination. Scanning from
+  // Cek Harga must remain read-only; cashier scans keep the legacy cart flow.
+  const legacyBarcodeHandler=window.onNativeBarcodeScanned;
+  window.onNativeBarcodeScanned=function(code){
+    if(document.getElementById('nfPrice')?.classList.contains('nf-active')){
+      const value=String(code??'').trim();
+      if(!value||!priceQuery)return;
+      priceQuery.value=value;
+      priceLookup(value);
+      return;
+    }
+    if(typeof legacyBarcodeHandler==='function')return legacyBarcodeHandler(code);
+  };
+
   // Rebuild the existing navigation instead of creating a second navigation bar.
   if(nodes.bottom){
     nodes.bottom.innerHTML=
