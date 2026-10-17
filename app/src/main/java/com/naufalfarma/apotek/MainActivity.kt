@@ -190,6 +190,13 @@ class MainActivity : Activity() {
         fun salesHistory(date: String): String = productDb.salesHistory(date)
 
         @JavascriptInterface
+        fun voidSale(invoice: String, reason: String): String = try {
+            productDb.voidSale(invoice, reason)
+        } catch (e: Exception) {
+            JSONObject().put("ok", false).put("error", e.message ?: "Pembatalan transaksi gagal").toString()
+        }
+
+        @JavascriptInterface
         fun migrateLegacyTransactions(json: String): String = try {
             productDb.importLegacyTransactions(JSONArray(json))
         } catch (e: Exception) {
@@ -483,6 +490,56 @@ class MainActivity : Activity() {
                 db.setTransactionSuccessful()
             } finally { db.endTransaction() }
             return JSONObject().put("ok", true).put("imported", imported).put("skipped", skipped).toString()
+        }
+
+        fun voidSale(invoiceValue: String, reasonValue: String): String {
+            val invoice = invoiceValue.trim()
+            val reason = reasonValue.trim()
+            if (invoice.isBlank() || reason.length < 3) {
+                return JSONObject().put("ok", false).put("error", "Invoice dan alasan pembatalan wajib diisi (minimal 3 karakter)").toString()
+            }
+            val db = writableDatabase
+            db.beginTransaction()
+            try {
+                val row = db.rawQuery("SELECT id,status,transaction_json FROM sales WHERE invoice=?", arrayOf(invoice)).use { cur ->
+                    if (!cur.moveToFirst()) null else Triple(cur.getLong(0), cur.getString(1) ?: "", cur.getString(2) ?: "{}")
+                } ?: return JSONObject().put("ok", false).put("error", "Transaksi tidak ditemukan").toString()
+                if (row.second == "VOIDED") {
+                    db.setTransactionSuccessful()
+                    return JSONObject().put("ok", true).put("alreadyVoided", true).put("invoice", invoice).toString()
+                }
+                if (row.second != "LUNAS") {
+                    return JSONObject().put("ok", false).put("error", "Hanya transaksi LUNAS yang dapat dibatalkan").toString()
+                }
+                val lines = mutableListOf<Pair<Long, Double>>()
+                db.rawQuery("SELECT product_id,qty FROM sale_items WHERE sale_id=?", arrayOf(row.first.toString())).use { cur ->
+                    while (cur.moveToNext()) lines.add(cur.getLong(0) to cur.getDouble(1))
+                }
+                if (lines.isEmpty()) return JSONObject().put("ok", false).put("error", "Detail transaksi tidak ditemukan; stok tidak diubah").toString()
+                val now = System.currentTimeMillis()
+                for ((productId, qty) in lines) {
+                    if (qty <= 0.0) throw IllegalStateException("Kuantitas detail tidak valid")
+                    db.execSQL("UPDATE products SET stok=stok+?,updated_at=? WHERE id=?", arrayOf(qty, now, productId))
+                    if (DatabaseUtils.longForQuery(db, "SELECT changes()", null) != 1L) throw IllegalStateException("Produk #$productId tidak ditemukan; pembatalan dibatalkan")
+                    db.execSQL("UPDATE stock SET quantity=quantity+?,updated_at=? WHERE product_id=? AND office='default'", arrayOf(qty, now, productId))
+                    if (DatabaseUtils.longForQuery(db, "SELECT changes()", null) != 1L) throw IllegalStateException("Stok normalisasi produk #$productId tidak ditemukan; pembatalan dibatalkan")
+                }
+                val tx = try { JSONObject(row.third) } catch (_: Exception) { JSONObject() }
+                tx.put("status", "VOIDED")
+                tx.put("voidedAt", java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", java.util.Locale.US).format(java.util.Date()))
+                tx.put("voidReason", reason)
+                val values = ContentValues().apply {
+                    put("status", "VOIDED")
+                    put("transaction_json", tx.toString())
+                }
+                if (db.update("sales", values, "id=? AND status='LUNAS'", arrayOf(row.first.toString())) != 1) {
+                    throw IllegalStateException("Status transaksi berubah; pembatalan dibatalkan")
+                }
+                db.setTransactionSuccessful()
+                return JSONObject().put("ok", true).put("invoice", invoice).put("status", "VOIDED").put("reason", reason).toString()
+            } finally {
+                db.endTransaction()
+            }
         }
 
         fun salesHistory(date: String): String {
