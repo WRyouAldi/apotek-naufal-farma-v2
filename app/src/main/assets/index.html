@@ -572,10 +572,14 @@ body.pos-modal-open{overflow:hidden}
     document.body.appendChild(modal);
     const fields=modal.querySelector('#posPaymentFields');
     const labels=[...cart.querySelectorAll('.pos-field-label')];
-    labels.forEach(label=>fields.appendChild(label));
+    const labelFor=id=>labels.find(label=>label.htmlFor===id);
+    const methodLabel=labelFor('paymentMethod'),customerLabel=labelFor('customerName'),cashLabel=labelFor('cash');
+    if(methodLabel)fields.appendChild(methodLabel);
     fields.appendChild(method);
     if(guide)fields.appendChild(guide);
+    if(customerLabel)fields.appendChild(customerLabel);
     if(customer)fields.appendChild(customer);
+    if(cashLabel)fields.appendChild(cashLabel);
     if(cash)fields.appendChild(cash);
     if(save)modal.querySelector('.pos-checkout-actions').appendChild(save);
     save.textContent='✓ Konfirmasi & Simpan';
@@ -593,11 +597,11 @@ body.pos-modal-open{overflow:hidden}
       modal.querySelector('#posModalChange').textContent='Kembalian '+(cart.querySelector('#change')?.textContent||'Rp 0');
       const count=cart.querySelector('#count')?.textContent||'0 item';
       modal.querySelector('#posModalItemCount').textContent=count;
-      open.disabled=!cart.querySelector('#cart')?.children.length;
+      open.disabled=/^0\\s*item/i.test(count);
     }
     function show(){
       refresh();
-      if(open.disabled){alert('Tambahkan produk ke keranjang terlebih dahulu.');return}
+      if(/^0\\s*item/i.test(cart.querySelector('#count')?.textContent||'')){alert('Tambahkan produk ke keranjang terlebih dahulu.');return}
       modal.classList.add('pos-open');document.body.classList.add('pos-modal-open');
       updateMethod();
       modal.querySelector('#posCloseCheckout').focus();
