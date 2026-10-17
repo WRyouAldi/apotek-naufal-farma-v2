@@ -383,3 +383,53 @@ button.primary:hover,.actions button:not(.danger):hover,.cart button:not(.danger
 .nf-payment-note p{margin:6px 0 0;font-size:12px;line-height:1.55;color:#62756f}
 .nf-payment-actions>button{min-height:46px;padding:12px 15px;border:1px solid rgba(24,139,112,.2);border-radius:15px;background:rgba(255,255,255,.88);color:#126e59;font-size:13px;font-weight:800}
 .nf-payment-note.nf-note-pulse{box-shadow:0 0 0 4px rgba(24,139,112,.1)}
+
+
+/* Mobile POS corrective pass: full-width bottom navigation, stable safe areas, and consistent stock-out search */
+#bottomNavV15.nf-glass-nav{
+  position:fixed!important;left:12px!important;right:12px!important;bottom:calc(10px + env(safe-area-inset-bottom))!important;
+  width:auto!important;max-width:820px!important;margin:0 auto!important;
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:stretch!important;justify-content:stretch!important;gap:6px!important;
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+}
+#bottomNavV15.nf-glass-nav>button{
+  display:flex!important;width:100%!important;min-width:0!important;max-width:none!important;
+  flex:initial!important;align-items:center!important;justify-content:center!important;
+  margin:0!important;padding:7px 2px!important;gap:5px!important;
+}
+#bottomNavV15.nf-glass-nav>button b{display:block!important;max-width:100%;overflow:visible!important;text-align:center!important;font-size:10px!important}
+body:has(#bottomNavV15.nf-glass-nav) .wrap{padding-bottom:calc(126px + env(safe-area-inset-bottom))!important}
+#nfOut #barangKeluarSection{width:100%;max-width:100%;min-width:0;overflow:hidden}
+#nfOut .bk-search{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:stretch!important;gap:8px!important;width:100%!important}
+#nfOut .bk-search input{width:100%!important;min-width:0!important;height:50px!important;font-size:14px!important}
+#nfOut #bkScanBtn,#nfOut #nfOutScanBarcode{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-width:92px!important;min-height:50px!important;height:50px!important;padding:0 12px!important;
+  border:1px solid rgba(255,255,255,.65)!important;border-radius:14px!important;
+  background:linear-gradient(135deg,#126e59,#27a987)!important;color:#fff!important;
+  font-size:12px!important;font-weight:800!important;white-space:nowrap!important;
+  box-shadow:0 5px 13px rgba(24,139,112,.16)!important;
+}
+#nfOut .bk-hint{font-size:11px!important;line-height:1.45!important}
+#nfOut .bk-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#nfOut .bk-actions #bkSaveBtn{grid-column:1/-1!important;min-height:50px!important}
+#nfOut .bk-thermal{display:grid!important;grid-template-columns:minmax(0,1fr) 48px!important;gap:8px!important}
+#nfOut .bk-thermal select{width:100%!important;min-height:48px!important;font-size:12px!important}
+#nfOut .bk-thermal button{min-height:48px!important;border-radius:14px!important}
+#nfOut .bk-history-card{min-width:0!important;overflow-wrap:anywhere!important;padding:12px!important}
+#nfOut .bk-history-head{align-items:flex-start!important;gap:8px!important;flex-wrap:wrap!important}
+#nfOut .bk-history-card .small{font-size:12px!important;line-height:1.45!important;overflow-wrap:anywhere!important}
+#nfTransaction .nf-tx-tools{gap:8px!important}
+#nfTransaction .nf-tx-tools button{min-width:0!important;overflow-wrap:anywhere}
+#nfTransaction #searchArea,#nfTransaction #results,#nfTransaction .cart{width:100%!important;min-width:0!important}
+#nfTransaction .cart{overflow:hidden!important}
+@media(max-width:380px){
+ #bottomNavV15.nf-glass-nav{left:8px!important;right:8px!important;gap:3px!important;padding-left:6px!important;padding-right:6px!important}
+ #bottomNavV15.nf-glass-nav>button b{font-size:9px!important}
+ #nfOut #bkScanBtn,#nfOut #nfOutScanBarcode{min-width:78px!important;padding:0 8px!important;font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #bottomNavV15.nf-glass-nav>button{transition:none!important}
+}
