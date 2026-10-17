@@ -36,71 +36,111 @@ start = s.index('        private fun savePdfFromWebView(view: WebView, title: St
 end = s.index('        private fun toast(message: String)', start)
 
 new_func = '''        private fun savePdfFromWebView(view: WebView, title: String) {
+            // Use Android's WebView print adapter for real document pagination.
+            // Drawing a tall WebView onto repeated PdfDocument canvases clips content
+            // on some Android WebView versions, which caused the reported cut-off PDF.
+            val safeTitle = title.replace(Regex("[^A-Za-z0-9._-]"), "_")
+            val filename = if (safeTitle.lowercase().endsWith(".pdf")) safeTitle else "$safeTitle.pdf"
+            var outputUri: Uri? = null
+            var descriptor: android.os.ParcelFileDescriptor? = null
             try {
-                val pageWidth = 595
-                val pageHeight = 842
-                val measuredWidth = pageWidth
-                val baseScale = if (view.scale > 0f) view.scale else 1f
-                val rawContentWidth = maxOf((view.width * baseScale).toInt(), 1)
-                val fitScale = minOf(1f, pageWidth.toFloat() / rawContentWidth.toFloat())
-                val rawContentHeight = maxOf((view.contentHeight * baseScale).toInt(), 1)
-                val contentHeight = maxOf((rawContentHeight * fitScale).toInt(), 1)
-
-                view.measure(
-                    View.MeasureSpec.makeMeasureSpec(measuredWidth, View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(rawContentHeight, View.MeasureSpec.EXACTLY)
-                )
-                view.layout(0, 0, measuredWidth, rawContentHeight)
-
-                val document = PdfDocument()
-                val sourcePageHeight = maxOf((pageHeight / fitScale).toInt(), 1)
-                val pageCount = maxOf((rawContentHeight + sourcePageHeight - 1) / sourcePageHeight, 1)
-
-                for (pageNumber in 0 until pageCount) {
-                    val page = document.startPage(
-                        PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber + 1).create()
-                    )
-                    page.canvas.save()
-                    page.canvas.clipRect(0, 0, pageWidth, pageHeight)
-                    page.canvas.scale(fitScale, fitScale)
-                    page.canvas.translate(0f, -pageNumber.toFloat() * sourcePageHeight)
-                    view.draw(page.canvas)
-                    page.canvas.restore()
-                    document.finishPage(page)
+                val values = ContentValues().apply {
+                    put(MediaStore.Downloads.DISPLAY_NAME, filename)
+                    put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
+                    put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                    put(MediaStore.Downloads.IS_PENDING, 1)
                 }
-
-                val safeTitle = title.replace(Regex("[^A-Za-z0-9._-]"), "_")
-                val filename = if (safeTitle.lowercase().endsWith(".pdf")) safeTitle else "$safeTitle.pdf"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    val values = ContentValues().apply {
-                        put(MediaStore.Downloads.DISPLAY_NAME, filename)
-                        put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
-                        put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                        put(MediaStore.Downloads.IS_PENDING, 1)
-                    }
-                    val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                    outputUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
                         ?: throw IllegalStateException("Gagal membuat file PDF")
-                    contentResolver.openOutputStream(uri)?.use { document.writeTo(it) }
-                    values.clear()
-                    values.put(MediaStore.Downloads.IS_PENDING, 0)
-                    contentResolver.update(uri, values, null, null)
+                    descriptor = contentResolver.openFileDescriptor(outputUri, "w")
+                        ?: throw IllegalStateException("Gagal membuka file PDF")
                 } else {
                     val dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
                         ?: throw IllegalStateException("Folder Download tidak tersedia")
                     dir.mkdirs()
-                    FileOutputStream(File(dir, filename)).use { document.writeTo(it) }
+                    descriptor = android.os.ParcelFileDescriptor.open(
+                        File(dir, filename),
+                        android.os.ParcelFileDescriptor.MODE_CREATE or
+                            android.os.ParcelFileDescriptor.MODE_TRUNCATE or
+                            android.os.ParcelFileDescriptor.MODE_WRITE_ONLY
+                    )
                 }
-                document.close()
-                toast("PDF tersimpan di Download/$filename")
-                (view.parent as? ViewGroup)?.removeView(view)
-                view.destroy()
+
+                val adapter = view.createPrintDocumentAdapter(filename)
+                val attrs = android.print.PrintAttributes.Builder()
+                    .setMediaSize(android.print.PrintAttributes.MediaSize.ISO_A4)
+                    .setResolution(android.print.PrintAttributes.Resolution("naufal_pdf", "PDF", 300, 300))
+                    .setMinMargins(android.print.PrintAttributes.Margins.NO_MARGINS)
+                    .build()
+                val targetDescriptor = descriptor
+                    ?: throw IllegalStateException("File PDF tidak siap")
+
+                adapter.onLayout(
+                    null, attrs, android.os.CancellationSignal(),
+                    object : android.print.PrintDocumentAdapter.LayoutResultCallback() {
+                        override fun onLayoutFinished(
+                            info: android.print.PrintDocumentInfo,
+                            changed: Boolean
+                        ) {
+                            adapter.onWrite(
+                                arrayOf(android.print.PageRange.ALL_PAGES),
+                                targetDescriptor,
+                                android.os.CancellationSignal(),
+                                object : android.print.PrintDocumentAdapter.WriteResultCallback() {
+                                    override fun onWriteFinished(pages: Array<android.print.PageRange>) {
+                                        try {
+                                            targetDescriptor.close()
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
+                                                val done = ContentValues().apply {
+                                                    put(MediaStore.Downloads.IS_PENDING, 0)
+                                                }
+                                                contentResolver.update(outputUri!!, done, null, null)
+                                            }
+                                            toast("PDF A4 tersimpan di Download/$filename")
+                                        } catch (e: Exception) {
+                                            toast("PDF dibuat, tetapi finalisasi gagal: ${e.message}")
+                                        } finally {
+                                            (view.parent as? ViewGroup)?.removeView(view)
+                                            view.destroy()
+                                        }
+                                    }
+
+                                    override fun onWriteFailed(error: CharSequence?) {
+                                        try { targetDescriptor.close() } catch (_: Exception) {}
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
+                                            try { contentResolver.delete(outputUri!!, null, null) } catch (_: Exception) {}
+                                        }
+                                        toast("Gagal menulis PDF: ${error ?: "kesalahan tidak diketahui"}")
+                                        (view.parent as? ViewGroup)?.removeView(view)
+                                        view.destroy()
+                                    }
+                                }
+                            )
+                        }
+
+                        override fun onLayoutFailed(error: CharSequence?) {
+                            try { targetDescriptor.close() } catch (_: Exception) {}
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
+                                try { contentResolver.delete(outputUri!!, null, null) } catch (_: Exception) {}
+                            }
+                            toast("Gagal menata halaman PDF: ${error ?: "kesalahan tidak diketahui"}")
+                            (view.parent as? ViewGroup)?.removeView(view)
+                            view.destroy()
+                        }
+                    },
+                    null
+                )
             } catch (e: Exception) {
+                try { descriptor?.close() } catch (_: Exception) {}
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
+                    try { contentResolver.delete(outputUri!!, null, null) } catch (_: Exception) {}
+                }
                 toast("Gagal menyimpan PDF: ${e.message}")
                 (view.parent as? ViewGroup)?.removeView(view)
                 view.destroy()
             }
         }
-
 '''
 
 s = s[:start] + new_func + s[end:]
