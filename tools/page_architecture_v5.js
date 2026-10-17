@@ -40,12 +40,18 @@
 
   const price=make('nfPrice','Cek Harga','Pencarian produk, informasi harga, dan stok — tanpa proses pembayaran.');
   const priceIntro=document.createElement('div'); priceIntro.className='nf-page-intro';
-  priceIntro.textContent='Cari berdasarkan nama, kode, atau barcode untuk melihat harga jual, satuan, dan stok. Untuk menambahkan barang ke keranjang dan memproses pembayaran, buka menu Kasir.';
+  priceIntro.textContent='Cari nama, kode, atau barcode untuk melihat harga dan stok. Halaman ini hanya untuk pengecekan; tidak menambahkan produk ke keranjang.';
   price.appendChild(priceIntro);
-  if(nodes.search)price.appendChild(nodes.search);
-  if(nodes.results)price.appendChild(nodes.results);
+  const lookup=document.createElement('div'); lookup.className='nf-price-lookup';
+  lookup.innerHTML='<div class="nf-price-search"><span aria-hidden="true">⌕</span><input id="nfPriceQuery" type="search" placeholder="Nama obat, kode, barcode…" autocomplete="off" aria-label="Cari harga dan stok"><button type="button" id="nfPriceClear" aria-label="Hapus pencarian">×</button></div><div id="nfPriceResults" aria-live="polite"><div class="nf-price-empty">Ketik nama atau kode produk untuk mulai mencari.</div></div>';
+  price.appendChild(lookup);
 
-  const tx=make('nfTransaction','Transaksi','Keranjang penjualan dan pembayaran.');
+  const tx=make('nfTransaction','Kasir','Keranjang penjualan, kuantitas, dan pembayaran.');
+  const txIntro=document.createElement('div');txIntro.className='nf-page-intro';
+  txIntro.textContent='Pilih produk dari pencarian kasir untuk memasukkannya ke keranjang. Cek Harga tetap terpisah dan tidak mengubah transaksi.';
+  tx.appendChild(txIntro);
+  if(nodes.search)tx.appendChild(nodes.search);
+  if(nodes.results)tx.appendChild(nodes.results);
   if(nodes.cartAnchor)tx.appendChild(nodes.cartAnchor);
   if(nodes.cart)tx.appendChild(nodes.cart);
 
@@ -61,6 +67,39 @@
   sync.appendChild(syncIntro);
   const syncHost=document.createElement('div'); syncHost.id='nfSyncHost'; syncHost.className='nf-sync-host'; sync.appendChild(syncHost);
   setTimeout(()=>window.nfCrudInit?.(),0);
+
+  // Independent read-only price lookup: this page never invokes cart handlers.
+  const priceQuery=document.getElementById('nfPriceQuery');
+  const priceResults=document.getElementById('nfPriceResults');
+  const priceClear=document.getElementById('nfPriceClear');
+  let priceTimer=0;
+  const priceEsc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const priceRupiah=n=>'Rp '+(Number(n)||0).toLocaleString('id-ID');
+  function priceLookup(q){
+    q=String(q||'').trim().toLowerCase();
+    if(!priceResults)return;
+    if(!q){priceResults.innerHTML='<div class="nf-price-empty">Ketik nama atau kode produk untuk mulai mencari.</div>';return}
+    let list=[];
+    try{
+      if(window.Android&&typeof window.Android.listProducts==='function'){
+        const raw=window.Android.listProducts(q,100);
+        list=typeof raw==='string'?JSON.parse(raw):raw;
+      }else if(Array.isArray(window.ITEMS)){
+        list=window.ITEMS.filter(p=>[p.name,p.nama,p.code,p.barcode,p.brand,p.jenis].some(v=>String(v??'').toLowerCase().includes(q))).slice(0,100);
+      }
+    }catch(e){list=[]}
+    if(!Array.isArray(list)||!list.length){priceResults.innerHTML='<div class="nf-price-empty">Produk tidak ditemukan. Periksa kata kunci atau database produk.</div>';return}
+    priceResults.innerHTML=list.map(p=>{
+      const name=p.name??p.nama??p.item_name??'Produk tanpa nama';
+      const code=p.code??p.kode??p.barcode??'—';
+      const unit=p.unit??p.satuan??p.pack??'—';
+      const stock=p.stock??p.stok??p.qty??p.quantity;
+      const sell=p.sellPrice??p.sell_price??p.hargaJual??p.harga_jual??p.price??p.harga??0;
+      return '<article class="nf-price-result"><div class="nf-price-result-top"><div class="nf-price-product"><b>'+priceEsc(name)+'</b><small>'+priceEsc(code)+'</small></div><strong>'+priceRupiah(sell)+'</strong></div><div class="nf-price-result-meta"><span>Satuan: '+priceEsc(unit)+'</span><span>Stok: '+(stock===undefined?'—':priceEsc(stock))+'</span></div></article>';
+    }).join('');
+  }
+  priceQuery?.addEventListener('input',()=>{clearTimeout(priceTimer);priceTimer=setTimeout(()=>priceLookup(priceQuery.value),120)});
+  priceClear?.addEventListener('click',()=>{priceQuery.value='';priceLookup('');priceQuery.focus()});
 
   // Rebuild the existing navigation instead of creating a second navigation bar.
   if(nodes.bottom){
