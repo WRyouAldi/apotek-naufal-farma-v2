@@ -334,7 +334,7 @@ class MainActivity : Activity() {
             db.execSQL("CREATE TABLE IF NOT EXISTS stock (id INTEGER PRIMARY KEY AUTOINCREMENT, product_id INTEGER NOT NULL, office TEXT DEFAULT 'default', quantity REAL DEFAULT 0, updated_at INTEGER, UNIQUE(product_id, office), FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE CASCADE)")
             db.execSQL("CREATE TABLE IF NOT EXISTS db_meta (key TEXT PRIMARY KEY, value TEXT)")
             db.execSQL("CREATE TABLE IF NOT EXISTS sales (id INTEGER PRIMARY KEY AUTOINCREMENT, invoice TEXT NOT NULL UNIQUE, sold_at TEXT, sold_date TEXT, customer TEXT, payment_method TEXT, total INTEGER NOT NULL, cash INTEGER NOT NULL, change_amount INTEGER NOT NULL, status TEXT NOT NULL, transaction_json TEXT NOT NULL)")
-            db.execSQL("CREATE TABLE IF NOT EXISTS sale_items (id INTEGER PRIMARY KEY AUTOINCREMENT, sale_id INTEGER NOT NULL, product_id INTEGER NOT NULL, code TEXT, name TEXT NOT NULL, qty REAL NOT NULL, price INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(sale_id) REFERENCES sales(id) ON DELETE CASCADE, FOREIGN KEY(product_id) REFERENCES products(id))
+            db.execSQL("CREATE TABLE IF NOT EXISTS sale_items (id INTEGER PRIMARY KEY AUTOINCREMENT, sale_id INTEGER NOT NULL, product_id INTEGER NOT NULL, code TEXT, name TEXT NOT NULL, qty REAL NOT NULL, price INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(sale_id) REFERENCES sales(id) ON DELETE CASCADE, FOREIGN KEY(product_id) REFERENCES products(id))")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_sales_date ON sales(sold_date)")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_products_code ON products(code)")
             db.execSQL("CREATE INDEX IF NOT EXISTS idx_products_barcode ON products(barcode)")
