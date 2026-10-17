@@ -118,12 +118,12 @@
   // Rebuild the existing navigation instead of creating a second navigation bar.
   if(nodes.bottom){
     nodes.bottom.innerHTML=
-      '<button type="button" data-page="home"><span>⌂</span><b>Beranda</b></button>'+
-      '<button type="button" data-page="price" aria-label="Cek Harga: pencarian produk dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
       '<button type="button" data-page="transaction" aria-label="Kasir: keranjang dan pembayaran"><span>▣</span><b>Kasir</b></button>'+
+      '<button type="button" data-page="price" aria-label="Cek Harga: pencarian produk dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
       '<button type="button" data-page="items"><span>▤</span><b>Daftar Item</b></button>'+
       '<button type="button" data-page="sync"><span>↻</span><b>Sync Data</b></button>'+
-      '<button type="button" data-page="report"><span>▥</span><b>Laporan</b></button>';
+      '<button type="button" data-page="report"><span>▥</span><b>Laporan</b></button>'+
+      '<button type="button" data-page="home"><span>⌂</span><b>Beranda</b></button>';
     nodes.bottom.classList.add('nf-glass-nav');
     nodes.bottom.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>window.nfGo(b.dataset.page)));
   }
@@ -199,6 +199,6 @@
       active.classList.add('nf-page-enter');
     }
   };
-  window.nfGo('home');
+  // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.\n  window.nfGo('transaction');
 })();
 })();
