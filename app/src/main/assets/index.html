@@ -333,12 +333,16 @@ function showHistory(){
       <div class="small">${esc(t.date)} • ${t.items.reduce((a,x)=>a+x.qty,0)} item</div>
       <div style="margin-top:4px"><b>${rupiah(t.total)}</b> • Bayar ${rupiah(t.cash)} • Kembali ${rupiah(t.change)}</div>
       <div class="small" style="margin-top:4px">${t.items.map(x=>esc(x.name)+" × "+x.qty).join(", ")}</div>
-      <button class="danger" style="margin-top:7px;padding:6px 10px" onclick="deleteTransaction(${t.id})">Hapus</button>
+      ${window.Android && typeof window.Android.salesHistory==="function" ? '<div class="small" style="margin-top:7px;color:var(--g)">Transaksi tersimpan di SQLite • riwayat tidak dapat dihapus langsung.</div>' : '<button class="danger" style="margin-top:7px;padding:6px 10px" onclick="deleteTransaction(\''+String(t.id).replace(/\'/g,"")+\'\')">Hapus</button>'}
     </div>`).join("")+'</div>';
 }
 function deleteTransaction(id){
+  if(window.Android && typeof window.Android.salesHistory==="function"){
+    alert("Transaksi POS tersimpan di SQLite dan tidak boleh dihapus langsung agar stok serta audit penjualan tetap konsisten. Fitur pembatalan dengan jejak audit akan ditambahkan terpisah.");
+    return;
+  }
   if(!confirm("Hapus transaksi ini?"))return;
-  const history=getHistory().filter(t=>t.id!==id);
+  const history=getHistory().filter(t=>String(t.id)!==String(id));
   localStorage.setItem("naufal_farma_transactions",JSON.stringify(history));
   showHistory();
 }
@@ -358,6 +362,10 @@ function backupData(){
   }
 }
 function restoreData(){
+  if(window.Android && typeof window.Android.commitSale==="function"){
+    alert("Restore transaksi langsung ke database POS Android belum tersedia. Demi keamanan stok dan audit, file backup tidak akan ditulis ke localStorage seolah-olah sudah dipulihkan. Backup saat ini hanya untuk arsip/ekspor.");
+    return;
+  }
   const input=document.createElement("input");
   input.type="file";input.accept=".json,application/json";
   input.onchange=()=>{
