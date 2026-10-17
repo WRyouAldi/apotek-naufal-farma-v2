@@ -8,7 +8,8 @@ Menyelesaikan aplikasi POS apotek yang dapat dipakai untuk transaksi nyata setel
 ## 2. Aturan desain dan perubahan
 - Pertahankan desain lama Pearl Crystal Liquid Glass dan struktur navigasi V2.
 - Tidak membuat repository atau aplikasi baru.
-- Pertahankan database produk yang ada, termasuk kode/barcode, harga jual, harga beli, stok, supplier, dan lokasi/rak.
+- Pertahankan database produk yang ada, termasuk kode produk, harga jual, harga beli, stok, supplier, dan lokasi/rak.
+- Tidak perlu fitur scan barcode produk. QR hanya digunakan untuk menampilkan QRIS statis resmi merchant agar pelanggan memindainya untuk membayar.
 - Perubahan fungsi dilakukan bertahap dengan uji regresi.
 - Jangan mengganti atau menghapus data produk saat migrasi transaksi.
 - Jangan pernah menyimpan kredensial atau secret pembayaran di aplikasi klien.
@@ -22,7 +23,7 @@ Menyelesaikan aplikasi POS apotek yang dapat dipakai untuk transaksi nyata setel
 - Data transaksi baru disimpan dalam tabel sales dan sale_items.
 
 ## 4. Alur transaksi (wajib atomik)
-1. Kasir mencari atau memindai barcode produk.
+1. Kasir mencari produk berdasarkan nama atau kode produk; tidak ada pemindaian barcode produk.
 2. Produk ditambahkan ke keranjang dengan harga dan jumlah.
 3. Aplikasi menghitung total dari detail keranjang.
 4. Validasi metode pembayaran, nominal, dan konfirmasi pembayaran non-tunai.
@@ -48,7 +49,7 @@ Menyelesaikan aplikasi POS apotek yang dapat dipakai untuk transaksi nyata setel
 
 ## 7. Modul
 - Beranda: ringkasan dan akses cepat.
-- Cek Harga/Produk: pencarian, barcode, harga, stok, informasi produk.
+- Cek Harga/Produk: pencarian berdasarkan nama/kode, harga, stok, informasi produk.
 - Kasir: keranjang, jumlah, total, metode pembayaran, nominal tunai/kembalian, konfirmasi non-tunai.
 - Persediaan: data stok yang konsisten; perubahan stok tercatat.
 - Riwayat Penjualan: invoice, tanggal, item, total, metode, status, pencarian/filter.
@@ -67,7 +68,7 @@ Menyelesaikan aplikasi POS apotek yang dapat dipakai untuk transaksi nyata setel
 - Klik bayar ganda, retry invoice sama, invoice sama dengan detail berbeda.
 - Kegagalan penyimpanan di tengah transaksi harus rollback sales, sale_items, dan stok.
 ### Data
-- Produk dengan barcode/kode/nama duplikat atau kosong.
+- Produk dengan kode/nama duplikat atau kosong.
 - Migrasi transaksi lama berulang tidak menggandakan invoice dan tidak mengubah stok.
 - Void berhasil, void berulang, alasan kosong, detail hilang, rollback void.
 - Laporan tanggal hari ini, tanggal tanpa transaksi, pergantian bulan/tahun, dan transaksi void.
