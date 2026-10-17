@@ -199,6 +199,7 @@
       active.classList.add('nf-page-enter');
     }
   };
-  // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.\n  window.nfGo('transaction');
+  // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.
+  window.nfGo('transaction');
 })();
 })();
