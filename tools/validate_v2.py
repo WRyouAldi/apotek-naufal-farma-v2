@@ -42,7 +42,7 @@ check("POS cancellation has audit reason", "fun voidSale(invoiceValue: String, r
 check("POS cancellation restores stock atomically", "UPDATE products SET stok=stok+?" in main and "UPDATE stock SET quantity=quantity+?" in main and "status='LUNAS'" in main, "void restores both stock representations and only marks paid sales void inside one SQLite transaction")
 check("History exposes audited void action", "function voidTransaction(invoice)" in checkout and "window.Android.voidSale" in checkout and "data-invoice=" in checkout, "native history calls SQLite void API with invoice and cashier reason")
 check("Dedicated POS checkout workspace", 'id="posWorkspaceV1"' in checkout and ("modal.id='posCheckoutModal'" in checkout or 'id="posCheckoutModal"' in checkout) and ("open.id='posCheckoutOpen'" in checkout or "id='posCheckoutOpen'" in checkout or 'id="posCheckoutOpen"' in checkout), "checkout is presented in a dedicated payment sheet instead of only inline fields")
-check("QRIS merchant identity and asset safety", 'ID1026613777956' in checkout and 'QRIS resmi merchant belum tersedia' in checkout, "merchant identity is shown and missing QR image is not replaced with a fake code")
+check("QRIS merchant identity and asset safety", 'ID1026613777956' in checkout and 'id="pembayaranMandiri"' in checkout and "QRIS statis resmi" in checkout, "standalone QRIS menu keeps merchant identity and does not treat placeholder as a scannable asset")
 seed = ROOT / "app/src/main/assets/products_seed.json"
 if seed.exists():
     try:
