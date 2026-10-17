@@ -50,109 +50,28 @@ start = s.index('        private fun savePdfFromWebView(view: WebView, title: St
 end = s.index('        private fun toast(message: String)', start)
 
 new_func = '''        private fun savePdfFromWebView(view: WebView, title: String) {
-            // Use Android's WebView print adapter for real document pagination.
-            // Drawing a tall WebView onto repeated PdfDocument canvases clips content
-            // on some Android WebView versions, which caused the reported cut-off PDF.
+            // Delegate pagination and PDF generation to Android's native print pipeline.
+            // PrintDocumentAdapter callbacks have package-private constructors, so the
+            // supported public entry point is PrintManager.print().
             val safeTitle = title.replace(Regex("[^A-Za-z0-9._-]"), "_")
             val filename = if (safeTitle.lowercase().endsWith(".pdf")) safeTitle else "$safeTitle.pdf"
-            var outputUri: Uri? = null
-            var descriptor: android.os.ParcelFileDescriptor? = null
             try {
-                val values = ContentValues().apply {
-                    put(MediaStore.Downloads.DISPLAY_NAME, filename)
-                    put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
-                    put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                    put(MediaStore.Downloads.IS_PENDING, 1)
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    outputUri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                        ?: throw IllegalStateException("Gagal membuat file PDF")
-                    descriptor = contentResolver.openFileDescriptor(outputUri, "w")
-                        ?: throw IllegalStateException("Gagal membuka file PDF")
-                } else {
-                    val dir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-                        ?: throw IllegalStateException("Folder Download tidak tersedia")
-                    dir.mkdirs()
-                    descriptor = android.os.ParcelFileDescriptor.open(
-                        File(dir, filename),
-                        android.os.ParcelFileDescriptor.MODE_CREATE or
-                            android.os.ParcelFileDescriptor.MODE_TRUNCATE or
-                            android.os.ParcelFileDescriptor.MODE_WRITE_ONLY
-                    )
-                }
-
-                val adapter = view.createPrintDocumentAdapter(filename)
                 val attrs = android.print.PrintAttributes.Builder()
                     .setMediaSize(android.print.PrintAttributes.MediaSize.ISO_A4)
                     .setResolution(android.print.PrintAttributes.Resolution("naufal_pdf", "PDF", 300, 300))
                     .setMinMargins(android.print.PrintAttributes.Margins.NO_MARGINS)
                     .build()
-                val targetDescriptor = descriptor
-                    ?: throw IllegalStateException("File PDF tidak siap")
-
-                adapter.onLayout(
-                    null, attrs, android.os.CancellationSignal(),
-                    object : android.print.PrintDocumentAdapter.LayoutResultCallback() {
-                        override fun onLayoutFinished(
-                            info: android.print.PrintDocumentInfo,
-                            changed: Boolean
-                        ) {
-                            adapter.onWrite(
-                                arrayOf(android.print.PageRange.ALL_PAGES),
-                                targetDescriptor,
-                                android.os.CancellationSignal(),
-                                object : android.print.PrintDocumentAdapter.WriteResultCallback() {
-                                    override fun onWriteFinished(pages: Array<android.print.PageRange>) {
-                                        try {
-                                            targetDescriptor.close()
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
-                                                val done = ContentValues().apply {
-                                                    put(MediaStore.Downloads.IS_PENDING, 0)
-                                                }
-                                                contentResolver.update(outputUri!!, done, null, null)
-                                            }
-                                            toast("PDF A4 tersimpan di Download/$filename")
-                                        } catch (e: Exception) {
-                                            toast("PDF dibuat, tetapi finalisasi gagal: ${e.message}")
-                                        } finally {
-                                            (view.parent as? ViewGroup)?.removeView(view)
-                                            view.destroy()
-                                        }
-                                    }
-
-                                    override fun onWriteFailed(error: CharSequence?) {
-                                        try { targetDescriptor.close() } catch (_: Exception) {}
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
-                                            try { contentResolver.delete(outputUri!!, null, null) } catch (_: Exception) {}
-                                        }
-                                        toast("Gagal menulis PDF: ${error ?: "kesalahan tidak diketahui"}")
-                                        (view.parent as? ViewGroup)?.removeView(view)
-                                        view.destroy()
-                                    }
-                                }
-                            )
-                        }
-
-                        override fun onLayoutFailed(error: CharSequence?) {
-                            try { targetDescriptor.close() } catch (_: Exception) {}
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
-                                try { contentResolver.delete(outputUri!!, null, null) } catch (_: Exception) {}
-                            }
-                            toast("Gagal menata halaman PDF: ${error ?: "kesalahan tidak diketahui"}")
-                            (view.parent as? ViewGroup)?.removeView(view)
-                            view.destroy()
-                        }
-                    },
-                    null
-                )
+                val printManager = getSystemService(Context.PRINT_SERVICE) as android.print.PrintManager
+                printManager.print(filename, view.createPrintDocumentAdapter(filename), attrs)
+                toast("Pilih 'Save as PDF' pada dialog cetak untuk menyimpan laporan A4.")
             } catch (e: Exception) {
-                try { descriptor?.close() } catch (_: Exception) {}
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && outputUri != null) {
-                    try { contentResolver.delete(outputUri!!, null, null) } catch (_: Exception) {}
-                }
-                toast("Gagal menyimpan PDF: ${e.message}")
-                (view.parent as? ViewGroup)?.removeView(view)
-                view.destroy()
+                toast("Gagal membuka pencetakan PDF: ${e.message}")
+            } finally {
+                // Keep the WebView alive while Android's print adapter consumes it.
+                view.postDelayed({
+                    (view.parent as? ViewGroup)?.removeView(view)
+                    view.destroy()
+                }, 60000)
             }
         }
 '''
