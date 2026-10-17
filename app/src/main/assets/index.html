@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Apotek Naufal Farma - Database Baru + Barcode</title>
+<title>Apotek Naufal Farma — POS</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f5f4;color:#17211f;font-family:Arial,Helvetica,sans-serif}
 header{position:sticky;top:0;z-index:10;background:#0f6f55;color:white;padding:14px;box-shadow:0 2px 10px #0002}
@@ -187,15 +187,13 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
   <div class="section-head"><h3>Aksi Cepat</h3><span>Menu</span></div>
   <div class="quick-grid">
     <button type="button" class="quick-btn q-green" onclick="focusSearch()"><span>⌕</span><b>Cek Harga</b><small>Cari produk</small></button>
-    <button type="button" class="quick-btn q-blue" onclick="focusSearch(true)"><span>▥</span><b>Scan Barcode</b><small>Gunakan kamera</small></button>
     <button type="button" class="quick-btn q-indigo" onclick="focusCart()"><span>🛒</span><b>Transaksi</b><small>Keranjang</small></button>
     <button type="button" class="quick-btn q-orange" onclick="focusReport()"><span>▤</span><b>Laporan</b><small>Penjualan harian</small></button>
   </div>
 </section>
 
 <div class="search-card" id="searchArea">
-<div class="search"><button type="button" id="scanBarcode" aria-label="Scan barcode">▥</button><input id="q" placeholder="Cari obat, barcode, atau nama..." autocomplete="off"></div>
-<div id="barcodeStatus" class="small" style="margin-top:7px"></div>
+<div class="search"><input id="q" placeholder="Cari nama produk atau kode produk..." aria-label="Cari nama atau kode produk" autocomplete="off"></div>
 </div>
 <div class="small" style="margin:8px 2px 0">4.348 produk offline • Harga dari <b>Harga Jual</b>.</div>
 <div id="results"></div>
@@ -735,107 +733,13 @@ body.pos-modal-open{overflow:hidden}
 
 
 <script id="sampleUIUXHelpers">
-function focusSearch(scan){const el=document.getElementById("q");if(el){el.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>el.focus(),300);}if(scan){setTimeout(()=>{const b=document.getElementById("scanBarcode");if(b)b.click();},400);}}
+function focusSearch(){const el=document.getElementById("q");if(el){el.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>el.focus(),300);}}
 function focusCart(){const el=document.querySelector(".cart");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
 function focusReport(){const el=document.getElementById("laporanSection");if(el)el.scrollIntoView({behavior:"smooth",block:"start"});}
 function focusSettings(){const el=document.getElementById("backupBtn");if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.focus();}}
 </script>
 <!-- Native Android barcode bridge. In an APK, Android.scanBarcode() opens the native scanner. In a normal browser, it falls back to manual search. -->
-<script id="nativeBarcodeBridge">
-(function(){
-  function setStatus(t){
-    const el=document.getElementById("barcodeStatus");
-    if(el) el.textContent=t;
-  }
-  function showNativeProduct(code){
-    code=String(code||"").trim();
-    if(!code) return false;
-    if(typeof window.nfGo==="function") window.nfGo("price");
 
-    const input=document.getElementById("q");
-    if(input){
-      input.value=code;
-      try{ input.dispatchEvent(new Event("input",{bubbles:true})); }catch(e){}
-    }
-
-    // Barcode scanner returns the product CODE in this database as well as
-    // a conventional barcode. Resolve the exact item locally first so the
-    // result does not depend on SQLite/WebView timing.
-    let local=[];
-    try{
-      if(Array.isArray(window.ITEMS)){
-        local=window.ITEMS.filter(x=>
-          String(x.code||"").trim()===code ||
-          String(x.barcode||"").trim()===code
-        );
-      }
-    }catch(e){ local=[]; }
-
-    if(local.length){
-      window.__naufalResults=local;
-      if(typeof window.renderResults==="function"){
-        try{ window.renderResults(local); }catch(e){}
-      }
-      setStatus("Barcode terbaca: "+code+" • "+local[0].name);
-      setTimeout(()=>document.getElementById("q")?.focus(),80);
-      return true;
-    }
-
-    // Fall back to the persistent SQLite database for imported/updated data.
-    let rows=[];
-    try{
-      if(window.Android && typeof window.Android.searchProducts==="function"){
-        rows=JSON.parse(window.Android.searchProducts(code,20)||"[]");
-      }
-    }catch(e){ rows=[]; }
-
-    const exact=rows.filter(x=>
-      String(x.barcode||"").trim()===code ||
-      String(x.code||"").trim()===code
-    );
-
-    if(exact.length){
-      window.__naufalResults=exact;
-      if(typeof window.renderResults==="function"){
-        try{ window.renderResults(exact); }catch(e){}
-      }
-      setStatus("Barcode terbaca: "+code+" • "+exact[0].name);
-      setTimeout(()=>document.getElementById("q")?.focus(),80);
-      return true;
-    }
-
-    // Never leave the previous search result on screen when a barcode is
-    // not found; show an explicit empty state instead.
-    window.__naufalResults=[];
-    if(typeof window.renderResults==="function"){
-      try{ window.renderResults([]); }catch(e){}
-    }
-    setStatus("Barcode terbaca: "+code+" • item tidak ditemukan di database.");
-    return false;
-  }
-
-  window.onNativeBarcodeScanned=function(code){
-    code=String(code||"").trim();
-    if(!code) return;
-    showNativeProduct(code);
-  };
-
-  const btn=document.getElementById("scanBarcode");
-  if(btn){
-    btn.addEventListener("click",function(){
-      if(window.Android && typeof window.Android.scanBarcode==="function"){
-        setStatus("Membuka scanner...");
-        try{ window.Android.scanBarcode(); }
-        catch(e){ setStatus("Scanner Android gagal dibuka."); }
-      }else{
-        setStatus("Mode web: APK native scanner belum tersedia. Masukkan barcode secara manual.");
-        const input=document.getElementById("q");
-        if(input) input.focus();
-      }
-    });
-  }
-})();
-</script>
 
 <nav id="bottomNavV15" class="bottom-nav">
 <button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})"><span>⌂</span><b>Beranda</b></button>
