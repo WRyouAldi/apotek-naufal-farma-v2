@@ -53,6 +53,28 @@
   tx.appendChild(txIntro);
 
   // Transaction workspace: clear flow, scanner entry point, cart summary, checkout.
+  if(!document.getElementById('nfTransactionPolishStyle')){
+    const style=document.createElement('style');style.id='nfTransactionPolishStyle';
+    style.textContent=`
+      #nfTransaction .nf-tx-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+      #nfTransaction .nf-tx-tools button{min-width:0;min-height:100px;border-radius:17px;padding:13px;text-align:left;display:grid;grid-template-columns:36px 1fr;grid-template-rows:auto auto;align-content:center;column-gap:9px;row-gap:4px;box-shadow:0 5px 16px rgba(20,70,58,.08)}
+      #nfTransaction .nf-tx-tools button span{grid-row:1/3;width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;background:#ffffff30}
+      #nfTransaction .nf-tx-tools button b{align-self:end;font-size:13px;line-height:1.2}
+      #nfTransaction .nf-tx-tools button small{align-self:start;font-size:10px;line-height:1.3;opacity:.85}
+      #nfTransaction .nf-tx-primary{background:linear-gradient(135deg,#0b8a69,#08765b);color:#fff}
+      #nfTransaction .nf-tx-secondary{background:#fff;color:#19322c;border:1px solid #dce9e4}
+      #nfTransaction .nf-tx-secondary span{background:#e8f7f2!important;color:#0b8064}
+      #nfTransaction .nf-tx-summary{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}
+      #nfTransaction .nf-tx-summary>div{padding:12px;border-radius:14px;background:#fff;border:1px solid #e2ebe7}
+      #nfTransaction .nf-tx-summary small{display:block;color:#71807b;font-size:10px;margin-bottom:5px}
+      #nfTransaction .nf-tx-summary b{display:block;font-size:13px;color:#19322c}
+      #nfTransaction #searchArea{margin-top:10px}
+      #nfTransaction #nfScanBarcode{min-width:78px;white-space:nowrap}
+      #nfTransaction .cart{margin-bottom:18px}
+      @media(max-width:360px){#nfTransaction .nf-tx-tools{grid-template-columns:1fr}#nfTransaction .nf-tx-tools button{min-height:78px}}
+    `;
+    document.head.appendChild(style);
+  }
   const txTools=document.createElement('div');
   txTools.className='nf-tx-tools';
   txTools.innerHTML='<button type="button" id="nfTxScan" class="nf-tx-primary"><span>▦</span><b>Scan Barcode</b><small>Pindai produk untuk transaksi</small></button><button type="button" id="nfTxShowQris" class="nf-tx-secondary"><span>▧</span><b>Tampilkan QRIS</b><small>Pembayaran merchant terpisah</small></button>';
@@ -230,7 +252,7 @@
   const syncTxSummary=()=>{
     const count=txCart?.querySelector('#count')?.textContent?.trim()||'0 item';
     if(txCount)txCount.textContent=count;
-    if(txState)txState.textContent=/^0\\s*item/i.test(count)?'Siap menerima item':'Item siap diperiksa';
+    if(txState)txState.textContent=/^0\s*item/i.test(count)?'Siap menerima item':'Item siap diperiksa';
   };
   if(txCart){
     new MutationObserver(syncTxSummary).observe(txCart,{childList:true,subtree:true,characterData:true});
