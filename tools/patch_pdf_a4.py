@@ -61,7 +61,7 @@ new_func = '''        private fun savePdfFromWebView(view: WebView, title: Strin
                     .setResolution(android.print.PrintAttributes.Resolution("naufal_pdf", "PDF", 300, 300))
                     .setMinMargins(android.print.PrintAttributes.Margins.NO_MARGINS)
                     .build()
-                val printManager = getSystemService(Context.PRINT_SERVICE) as android.print.PrintManager
+                val printManager = getSystemService(android.content.Context.PRINT_SERVICE) as android.print.PrintManager
                 printManager.print(filename, view.createPrintDocumentAdapter(filename), attrs)
                 toast("Pilih 'Save as PDF' pada dialog cetak untuk menyimpan laporan A4.")
             } catch (e: Exception) {
