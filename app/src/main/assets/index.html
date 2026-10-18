@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Apotek Naufal Farma — POS</title>
+<title>Apotek D'she Farma — POS</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f5f4;color:#17211f;font-family:Arial,Helvetica,sans-serif}
 header{position:sticky;top:0;z-index:10;background:#0f6f55;color:white;padding:14px;box-shadow:0 2px 10px #0002}
@@ -157,7 +157,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 <body>
 <header>
   <div class="topbar">
-    <div class="brand-mark"><img src="branding/logo-mark.svg" alt="Apotek Naufal Farma"></div>
+    <div class="brand-mark"><img src="branding/logo-mark.svg" alt="Apotek D&#39;she Farma"></div>
     <div class="brand-text"><h1>Naufal Farma</h1><div>Apotek & Sehat Bersama</div></div>
     <button type="button" class="top-notify" onclick="focusReport()" aria-label="Laporan">♧</button>
   </div>
@@ -169,7 +169,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
     <h2>Halo, Admin 👋</h2>
     <p>Semoga harimu sehat dan lancar!</p>
   </div>
-  <div class="welcome-logo" aria-label="Logo Apotek Naufal Farma"><img src="branding/logo-mark.svg" alt="Logo Apotek Naufal Farma"></div>
+  <div class="welcome-logo" aria-label="Logo Apotek D&#39;she Farma"><img src="branding/logo-mark.svg" alt="Logo Apotek D&#39;she Farma"></div>
 </section>
 
 <section class="stats-grid">
@@ -386,7 +386,7 @@ function deleteTransaction(id){
 function backupData(){
   try{
     let legacyTransactions=[];try{const saved=JSON.parse(localStorage.getItem("naufal_farma_transactions")||"[]");if(Array.isArray(saved))legacyTransactions=saved;}catch(e){}
-    const payload={app:"Apotek Naufal Farma",version:2,exportedAt:new Date().toISOString(),transactions:getHistory(),legacyLocalStorageTransactions:legacyTransactions,notes:"Pada Android, transaksi utama berasal dari SQLite. legacyLocalStorageTransactions adalah arsip lama dan belum diimpor ke SQLite."};
+    const payload={app:"Apotek D\u0027she Farma",version:2,exportedAt:new Date().toISOString(),transactions:getHistory(),legacyLocalStorageTransactions:legacyTransactions,notes:"Pada Android, transaksi utama berasal dari SQLite. legacyLocalStorageTransactions adalah arsip lama dan belum diimpor ke SQLite."};
     const text=JSON.stringify(payload,null,2);
     const a=document.createElement("a");
     a.href="data:application/json;charset=utf-8,"+encodeURIComponent(text);
