@@ -417,7 +417,8 @@
     const addProduct=(product)=>{
       const qty=Number(qtyInput.value);
       if(!Number.isInteger(qty)||qty<1||qty>9999){hint.textContent='Qty harus bilangan bulat 1–9999.';qtyInput.focus();return false;}
-      if(!product){hint.textContent='Pilih produk dari saran terlebih dahulu.';return false;}\n      product={...product,price:Number(product.price??product.sellPrice??product.sell_price??product.hargaJual??product.harga_jual??0)};\n      if(!(product.price>0)){hint.textContent='Harga barang belum diatur untuk produk ini.';return false;}
+      if(!product){hint.textContent='Pilih produk dari saran terlebih dahulu.';return false;}
+      product={...product,price:Number(product.price??product.sellPrice??product.sell_price??product.hargaJual??product.harga_jual??0)};\n      if(!(product.price>0)){hint.textContent='Harga barang belum diatur untuk produk ini.';return false;}
       const existing=cart.find(c=>c.code===product.code&&c.name===product.name&&c.price===product.price);
       if(existing)existing.qty+=qty;else cart.push({...product,qty});
       renderCart();hint.textContent='✓ '+product.name+' × '+qty+' ditambahkan.';
