@@ -2479,6 +2479,60 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
     }
   }
 
+
+  /* HARD OVERRIDE v2: prevent legacy inline/light cards from overpowering Charcoal Silver. */
+  html[data-dshe-theme="dark"]{
+    --dshe-charcoal-card:#292d33;--dshe-charcoal-card-2:#24272c;
+    --dshe-charcoal-edge:#535963;--dshe-charcoal-text:#f2f4f7;--dshe-charcoal-muted:#c1c7d0;
+  }
+  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"]{
+    --dshe-charcoal-card:#292d33;--dshe-charcoal-card-2:#24272c;
+    --dshe-charcoal-edge:#535963;--dshe-charcoal-text:#f2f4f7;--dshe-charcoal-muted:#c1c7d0;
+  }}
+  html[data-dshe-theme="dark"] .nf-page [class*="card"],
+  html[data-dshe-theme="dark"] .nf-page [class*="tile"],
+  html[data-dshe-theme="dark"] .nf-page [class*="stat"],
+  html[data-dshe-theme="dark"] .nf-page [class*="quick"],
+  html[data-dshe-theme="dark"] .nf-page [class*="summary"],
+  html[data-dshe-theme="dark"] .nf-page [class*="lookup"],
+  html[data-dshe-theme="dark"] .nf-page [class*="result"],
+  html[data-dshe-theme="dark"] .nf-page [class*="intro"],
+  html[data-dshe-theme="dark"] .nf-page [class*="operational"],
+  html[data-dshe-theme="dark"] .nf-home-tools button,
+  html[data-dshe-theme="dark"] .nf-home-stats > *,
+  html[data-dshe-theme="dark"] .nf-home-tools > *,
+  html[data-dshe-theme="dark"] .welcome-card,
+  html[data-dshe-theme="dark"] .stat-card,
+  html[data-dshe-theme="dark"] .quick-card,
+  html[data-dshe-theme="dark"] .nf-more-grid > button{
+    background-color:var(--dshe-charcoal-card)!important;
+    background-image:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.012))!important;
+    color:var(--dshe-charcoal-text)!important;border-color:var(--dshe-charcoal-edge)!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 8px 22px rgba(0,0,0,.2)!important;
+  }
+  html[data-dshe-theme="dark"] .nf-page [class*="card"] *,
+  html[data-dshe-theme="dark"] .nf-page [class*="tile"] *,
+  html[data-dshe-theme="dark"] .nf-page [class*="stat"] *,
+  html[data-dshe-theme="dark"] .nf-page [class*="quick"] *,
+  html[data-dshe-theme="dark"] .nf-page [class*="summary"] *,
+  html[data-dshe-theme="dark"] .nf-home-tools button *,
+  html[data-dshe-theme="dark"] .welcome-card *,
+  html[data-dshe-theme="dark"] .stat-card *,
+  html[data-dshe-theme="dark"] .quick-card *{
+    color:var(--dshe-charcoal-text)!important;-webkit-text-fill-color:var(--dshe-charcoal-text)!important;
+  }
+  html[data-dshe-theme="dark"] .nf-page [class*="card"] small,
+  html[data-dshe-theme="dark"] .nf-page [class*="tile"] small,
+  html[data-dshe-theme="dark"] .nf-page [class*="stat"] small,
+  html[data-dshe-theme="dark"] .nf-page [class*="quick"] small,
+  html[data-dshe-theme="dark"] .nf-home-tools button small,
+  html[data-dshe-theme="dark"] .welcome-card p{
+    color:var(--dshe-charcoal-muted)!important;-webkit-text-fill-color:var(--dshe-charcoal-muted)!important;
+  }
+  /* Preserve white QR image canvas for scanning. */
+  html[data-dshe-theme="dark"] img[alt*="QR"],html[data-dshe-theme="dark"] img[src*="qris"],
+  html[data-dshe-theme="dark"] .qris-image,html[data-dshe-theme="dark"] .qr-code-canvas{background:#fff!important}
+
   `;
   document.head.appendChild(css);
   const key='dshe-farma-theme';
