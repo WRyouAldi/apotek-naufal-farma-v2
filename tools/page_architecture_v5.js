@@ -709,8 +709,8 @@
   .nf-page .nf-input-table-head span{color:var(--dshe-muted)!important}
   .nf-page .nf-table-subtotal{font-weight:800!important}
   /* Dark Pearl filter: override legacy light surfaces and low-contrast text on every POS page. */
-  html[data-dshe-theme="dark"] .nf-page,
-  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"] .nf-page} {color:var(--dshe-text)!important}
+  html[data-dshe-theme="dark"] .nf-page {color:var(--dshe-text)!important}
+  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"] .nf-page {color:var(--dshe-text)!important}}
   html[data-dshe-theme="dark"] .nf-page-intro,
   html[data-dshe-theme="dark"] .nf-price-lookup,
   html[data-dshe-theme="dark"] .nf-price-result,
@@ -719,8 +719,11 @@
   html[data-dshe-theme="dark"] #nfTransaction .cart,
   html[data-dshe-theme="dark"] #nfTransaction .nf-tx-summary>div,
   html[data-dshe-theme="dark"] .nf-more-grid button,
-  html[data-dshe-theme="dark"] .nf-payment-note,
-  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"] .nf-page-intro,
+  html[data-dshe-theme="dark"] .nf-payment-note {
+    background:var(--dshe-surface)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important;box-shadow:var(--dshe-shadow)!important
+  }
+  @media(prefers-color-scheme:dark){
+    html[data-dshe-theme="system"] .nf-page-intro,
     html[data-dshe-theme="system"] .nf-price-lookup,
     html[data-dshe-theme="system"] .nf-price-result,
     html[data-dshe-theme="system"] .nf-price-search,
@@ -728,8 +731,9 @@
     html[data-dshe-theme="system"] #nfTransaction .cart,
     html[data-dshe-theme="system"] #nfTransaction .nf-tx-summary>div,
     html[data-dshe-theme="system"] .nf-more-grid button,
-    html[data-dshe-theme="system"] .nf-payment-note} {
-    background:var(--dshe-surface)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important;box-shadow:var(--dshe-shadow)!important
+    html[data-dshe-theme="system"] .nf-payment-note {
+      background:var(--dshe-surface)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important;box-shadow:var(--dshe-shadow)!important
+    }
   }
   html[data-dshe-theme="dark"] .nf-page-intro,
   html[data-dshe-theme="dark"] .nf-price-empty,
