@@ -39,6 +39,25 @@ jobs:
       - name: Prepare APK HTML
         run: python3 tools/prepare_apk_v3.py
 
+      - name: Verify Charcoal Silver theme is embedded in APK source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('app/src/main/assets/index.html')
+          s=p.read_text(encoding='utf-8')
+          checks={
+            'Charcoal Silver hard override':'HARD OVERRIDE v2: prevent legacy inline/light cards',
+            'Dark Pearl selector':'html[data-dshe-theme="dark"]',
+            'dark card surface':'--dshe-charcoal-card:#292d33',
+            'card text contrast':'--dshe-charcoal-text:#f2f4f7',
+            'QR canvas preservation':'Preserve white QR image canvas for scanning',
+          }
+          missing=[name for name,needle in checks.items() if needle not in s]
+          if missing:
+            raise SystemExit('APK theme verification failed; missing: '+', '.join(missing))
+          print('Charcoal Silver CSS verified in app/src/main/assets/index.html')
+          PY
+
       - name: Inject robust CSV importer
         run: |
           python3 - <<'PY'
