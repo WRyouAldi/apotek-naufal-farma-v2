@@ -25,6 +25,9 @@ check("A4 PDF uses native pagination", "PrintManager" in pdf and "createPrintDoc
 check("PDF tables fit and wrap", "table-layout:fixed" in pdf and "overflow-wrap:anywhere" in pdf and "display:table-header-group" in pdf, "fixed table layout, wrapping and repeated headers configured")
 key = "naufal_farma_transactions"
 check("Report and receipt share transaction key", key in report and key in tx, "both modules use the same local transaction history")
+check("Native reports read SQLite as the source of truth", "window.Android.salesHistory" in report and "window.Android.salesHistory" in tx, "reports and receipts must read native SQLite, not stale localStorage copies")
+check("APK build uses canonical web UI baseline", "web_source=Path('docs/index.html')" in (ROOT / "tools/prepare_apk_v3.py").read_text(encoding="utf-8"), "latest web UI is synced before native build transformations")
+check("APK source strips injected modules before reinjection", "'csvImportV2','githubCloudSyncV1'" in (ROOT / "tools/prepare_apk_v3.py").read_text(encoding="utf-8"), "CSV/cloud modules must not be duplicated during build")
 check("Report totals have item fallback", "function total(t)" in report and "reduce((a,i)=>a+sub(i),0)" in report, "totals can be calculated from line items")
 check("Native report reads SQLite history", "window.Android.salesHistory" in checkout and "function loadHistory()" in checkout, "Android reports use native SQLite sales as the primary source")
 check("Voided sales excluded from net reports", 'String(tx.status||"LUNAS").toUpperCase()!=="VOIDED"' in checkout, "voided sales remain auditable but do not inflate daily net sales")

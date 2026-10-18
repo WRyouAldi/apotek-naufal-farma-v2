@@ -5,7 +5,15 @@
   const KEY='naufal_farma_transactions';
   const BK_KEY='naufal_farma_barang_keluar';
   function read(key){try{const x=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
-  const history=()=>read(KEY),bkHistory=()=>read(BK_KEY);
+  function history(){
+    // Android SQLite is the single source of truth for native POS transactions.
+    // A valid empty array is authoritative; never fall back to a stale localStorage copy on Android.
+    if(window.Android&&typeof window.Android.salesHistory==='function'){
+      try{const rows=JSON.parse(window.Android.salesHistory('*'));return Array.isArray(rows)?rows:[]}catch(e){console.error('SQLite sales history unavailable',e);return[]}
+    }
+    return read(KEY);
+  }
+  const bkHistory=()=>read(BK_KEY);
   function dateOf(tx){if(tx&&tx.iso){const d=new Date(tx.iso);if(!isNaN(d))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}const s=String(tx?.date||'');let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return m[3]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');m=s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/);return m?m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0'):''}
   function items(tx){return Array.isArray(tx?.items)?tx.items:[]}
   function qty(i){return Number(i?.qty??i?.quantity??0)||0}

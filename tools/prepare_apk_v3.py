@@ -2,7 +2,14 @@ from pathlib import Path
 import base64, json, re, zlib
 
 p=Path('app/src/main/assets/index.html')
-s=p.read_text(encoding='utf-8')
+# docs/index.html is the canonical mobile/web UI baseline. Sync it into the APK
+# before deterministic data and native-bridge patches, so web fixes reach Android.
+web_source=Path('docs/index.html')
+if web_source.exists():
+    s=web_source.read_text(encoding='utf-8')
+    p.write_text(s,encoding='utf-8')
+else:
+    s=p.read_text(encoding='utf-8')
 parts=sorted(Path('tools/harga_beli_parts').glob('[0-9][0-9]'))
 encoded=''.join(x.read_text(encoding='ascii').strip() for x in parts)
 costs=json.loads(zlib.decompress(base64.b64decode(encoded,validate=True)).decode('utf-8'))
@@ -24,7 +31,7 @@ if 'window.Android.saveReport(filename, xls' not in s:
     marker='    const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});'
     if marker in s: s=s.replace(marker,nd+marker,1)
 
-for script_id in ['barangKeluarV3','barangKeluarV2','daftarItemCrudV1','databaseManagerV1','reportUiV2','naufalPageArchitectureV4','naufalPageArchitectureV5','transactionPrintV1']:
+for script_id in ['barangKeluarV3','barangKeluarV2','daftarItemCrudV1','databaseManagerV1','reportUiV2','naufalPageArchitectureV4','naufalPageArchitectureV5','transactionPrintV1','csvImportV2','githubCloudSyncV1']:
     s=re.sub(r'<script id="'+script_id+r'">.*?</script>\s*','',s,flags=re.S)
 s=re.sub(r'<script id="naufalPageArchitectureV3">.*?</script>\s*','',s,flags=re.S)
 s=re.sub(r'<script id="naufalLiquidLayoutFix">.*?</script>\s*','',s,flags=re.S)

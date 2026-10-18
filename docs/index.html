@@ -1428,7 +1428,15 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   const KEY='naufal_farma_transactions';
   const BK_KEY='naufal_farma_barang_keluar';
   function read(key){try{const x=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
-  const history=()=>read(KEY),bkHistory=()=>read(BK_KEY);
+  function history(){
+    // Android SQLite is the single source of truth for native POS transactions.
+    // A valid empty array is authoritative; never fall back to a stale localStorage copy on Android.
+    if(window.Android&&typeof window.Android.salesHistory==='function'){
+      try{const rows=JSON.parse(window.Android.salesHistory('*'));return Array.isArray(rows)?rows:[]}catch(e){console.error('SQLite sales history unavailable',e);return[]}
+    }
+    return read(KEY);
+  }
+  const bkHistory=()=>read(BK_KEY);
   function dateOf(tx){if(tx&&tx.iso){const d=new Date(tx.iso);if(!isNaN(d))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}const s=String(tx?.date||'');let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);if(m)return m[3]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[1]).padStart(2,'0');m=s.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/);return m?m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0'):''}
   function items(tx){return Array.isArray(tx?.items)?tx.items:[]}
   function qty(i){return Number(i?.qty??i?.quantity??0)||0}
@@ -2290,7 +2298,13 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   const $=id=>document.getElementById(id);
   const rupiah=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const read=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}};
+  const read=()=>{
+    // Native receipts/history must read the same SQLite transactions as checkout and reports.
+    if(window.Android&&typeof window.Android.salesHistory==='function'){
+      try{const rows=JSON.parse(window.Android.salesHistory('*'));return Array.isArray(rows)?rows:[]}catch(e){console.error('SQLite sales history unavailable',e);return[]}
+    }
+    try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}
+  };
   const items=t=>Array.isArray(t?.items)?t.items:[];
   const qty=i=>Number(i?.qty??i?.quantity??0)||0;
   const price=i=>Number(i?.price??i?.harga??i?.unitPrice??0)||0;

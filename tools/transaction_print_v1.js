@@ -4,7 +4,13 @@
   const $=id=>document.getElementById(id);
   const rupiah=n=>'Rp '+Number(n||0).toLocaleString('id-ID');
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const read=()=>{try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}};
+  const read=()=>{
+    // Native receipts/history must read the same SQLite transactions as checkout and reports.
+    if(window.Android&&typeof window.Android.salesHistory==='function'){
+      try{const rows=JSON.parse(window.Android.salesHistory('*'));return Array.isArray(rows)?rows:[]}catch(e){console.error('SQLite sales history unavailable',e);return[]}
+    }
+    try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}
+  };
   const items=t=>Array.isArray(t?.items)?t.items:[];
   const qty=i=>Number(i?.qty??i?.quantity??0)||0;
   const price=i=>Number(i?.price??i?.harga??i?.unitPrice??0)||0;
