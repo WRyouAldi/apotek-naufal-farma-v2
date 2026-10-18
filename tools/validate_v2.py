@@ -53,6 +53,9 @@ check("POS cancellation restores stock atomically", "UPDATE products SET stok=st
 check("History exposes audited void action", "function voidTransaction(invoice)" in checkout and "window.Android.voidSale" in checkout and "data-invoice=" in checkout, "native history calls SQLite void API with invoice and cashier reason")
 check("Dedicated POS checkout workspace", 'id="posWorkspaceV1"' in checkout and ("modal.id='posCheckoutModal'" in checkout or 'id="posCheckoutModal"' in checkout) and ("open.id='posCheckoutOpen'" in checkout or "id='posCheckoutOpen'" in checkout or 'id="posCheckoutOpen"' in checkout), "checkout is presented in a dedicated payment sheet instead of only inline fields")
 check("QRIS merchant identity and asset safety", 'ID1026613777956' in checkout and 'id="pembayaranMandiri"' in checkout and "QRIS statis resmi" in checkout, "standalone QRIS menu keeps merchant identity and does not treat placeholder as a scannable asset")
+check("P1 Dark Pearl covers dynamic modules", "dsheP1AllPages" in checkout and "#barangKeluarSection" in checkout and ".nf-crud-card" in checkout and "#nfCloudCard" in checkout and ".nf-glass-nav" in checkout, "Barang Keluar, Daftar Item, Cloud Sync and navigation share the P1 theme override")
+check("P1 preserves scannable QRIS white canvas", "QRIS scanning surface must stay white" in checkout and ".payment-qris-frame img" in checkout and "background:#fff!important" in checkout, "QRIS image/canvas remains white and unfiltered in dark mode")
+check("P1 dark theme keeps light theme untouched", "Light mode remains unchanged" in checkout and 'html[data-dshe-theme="dark"] .nf-crud-box' in checkout, "global module overrides are scoped to Dark Pearl/system dark rather than recoloring light mode")
 seed = ROOT / "app/src/main/assets/products_seed.json"
 if seed.exists():
     try:
