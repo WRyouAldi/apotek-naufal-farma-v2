@@ -417,7 +417,7 @@
     const addProduct=(product)=>{
       const qty=Number(qtyInput.value);
       if(!Number.isInteger(qty)||qty<1||qty>9999){hint.textContent='Qty harus bilangan bulat 1–9999.';qtyInput.focus();return false;}
-      if(!product||!(Number(product.price)>0)){hint.textContent='Harga barang belum diatur.';return false;}
+      if(!product){hint.textContent='Pilih produk dari saran terlebih dahulu.';return false;}\n      product={...product,price:Number(product.price??product.sellPrice??product.sell_price??product.hargaJual??product.harga_jual??0)};\n      if(!(product.price>0)){hint.textContent='Harga barang belum diatur untuk produk ini.';return false;}
       const existing=cart.find(c=>c.code===product.code&&c.name===product.name&&c.price===product.price);
       if(existing)existing.qty+=qty;else cart.push({...product,qty});
       renderCart();hint.textContent='✓ '+product.name+' × '+qty+' ditambahkan.';
@@ -472,10 +472,10 @@
         if(c===term||b===term)score=12000;else if(n===term)score=10000;else if(n.startsWith(term))score=8000;else if(c.startsWith(term)||b.startsWith(term))score=7000;
         else if(tokens.every(t=>n.includes(t)||c.includes(t)||b.includes(t)))score=5000+tokens.reduce((s,t)=>s+(n.includes(t)?100:0)+(c.includes(t)?80:0)+(b.includes(t)?120:0),0);
         return{x,score};
-      }).filter(v=>v.score>0&&Number(v.x.price)>0).sort((a,b)=>b.score-a.score||String(a.x.name).localeCompare(String(b.x.name),'id'));
+      }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score||String(a.x.name).localeCompare(String(b.x.name),'id'));
       if(!matches.length){autoBox.style.display='block';autoBox.innerHTML='<div style="padding:12px;color:#71817b;font-size:12px">Barang tidak ditemukan.</div>';hint.textContent='Periksa ejaan, kode, atau barcode.';return;}
       autoBox.style.display='block';
-      autoBox.innerHTML=matches.slice(0,6).map((v,i)=>'<button type="button" role="option" data-auto="'+i+'" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;text-align:left;border-radius:0;border-bottom:1px solid #edf2ef;background:#fff;color:#24453a"><span style="min-width:0;flex:1"><b style="display:block;font-size:12px;line-height:1.35">'+escapeAuto(v.x.name||'Barang')+'</b><small style="display:block;margin-top:3px;font-size:10px;color:#71817b">'+escapeAuto(v.x.code||v.x.barcode||'Tanpa kode')+'</small></span><b style="font-size:12px;white-space:nowrap;color:#087b5d">'+(typeof rupiah==='function'?rupiah(v.x.price):escapeAuto(v.x.price))+'</b></button>').join('');
+      autoBox.innerHTML=matches.slice(0,6).map((v,i)=>'<button type="button" role="option" data-auto="'+i+'" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;text-align:left;border-radius:0;border-bottom:1px solid #edf2ef;background:#fff;color:#24453a"><span style="min-width:0;flex:1"><b style="display:block;font-size:12px;line-height:1.35">'+escapeAuto(v.x.name||'Barang')+'</b><small style="display:block;margin-top:3px;font-size:10px;color:#71817b">'+escapeAuto(v.x.code||v.x.barcode||'Tanpa kode')+'</small></span><b style="font-size:12px;white-space:nowrap;color:#087b5d">'+(typeof rupiah==='function'?rupiah(v.x.price??v.x.sellPrice??v.x.sell_price??v.x.hargaJual??v.x.harga_jual??0):escapeAuto(v.x.price??v.x.sellPrice??v.x.sell_price??v.x.hargaJual??v.x.harga_jual??0))+'</b></button>').join('');
       Array.from(autoBox.querySelectorAll('[data-auto]')).forEach(btn=>btn.addEventListener('click',()=>{const chosen=matches[Number(btn.dataset.auto)]?.x;if(chosen)addProduct(chosen);}));
       hint.textContent=matches.length+' produk cocok — ketuk pilihan untuk memasukkan.';
     };
