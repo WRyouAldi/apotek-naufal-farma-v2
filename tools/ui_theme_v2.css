@@ -1188,3 +1188,82 @@ html[data-dshe-theme="dark"] .alert *,
 html[data-dshe-theme="dark"] .status-message *{
   color:inherit!important;-webkit-text-fill-color:currentColor!important;
 }
+
+
+/* FINAL PASS: target actual production classes as well as page wrappers.
+   Keep the locked Pearl Crystal structure; normalize surfaces, not POS behavior. */
+html[data-dshe-theme="dark"] .payment-hub,
+html[data-dshe-theme="dark"] #nfPayment .payment-hub,
+html[data-dshe-theme="dark"] #pembayaranMandiri.payment-hub{
+  background:linear-gradient(145deg,rgba(48,52,59,.98),rgba(31,34,40,.99))!important;
+  color:#f2f4f7!important;border:1px solid rgba(211,219,229,.30)!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.09)!important;
+}
+html[data-dshe-theme="dark"] .payment-hub .payment-hub-head h2,
+html[data-dshe-theme="dark"] .payment-hub .payment-hub-head .eyebrow,
+html[data-dshe-theme="dark"] .payment-hub .payment-hub-head p,
+html[data-dshe-theme="dark"] .payment-hub .payment-merchant,
+html[data-dshe-theme="dark"] .payment-hub .payment-merchant h3,
+html[data-dshe-theme="dark"] .payment-hub .payment-merchant small,
+html[data-dshe-theme="dark"] .payment-hub .payment-merchant div,
+html[data-dshe-theme="dark"] .payment-hub .payment-merchant b{
+  color:#f1f4f7!important;-webkit-text-fill-color:#f1f4f7!important;
+}
+html[data-dshe-theme="dark"] .payment-hub .payment-merchant{
+  background:linear-gradient(145deg,#343941,#292d34)!important;
+  border:1px solid rgba(211,219,229,.24)!important;border-radius:20px!important;
+}
+html[data-dshe-theme="dark"] .payment-hub .payment-qris-frame{
+  background:rgba(234,239,243,.08)!important;border:1px dashed rgba(207,216,226,.38)!important;
+}
+html[data-dshe-theme="dark"] .payment-hub .payment-qris-placehol,
+html[data-dshe-theme="dark"] .payment-hub .payment-qris-placeholder{
+  color:#c7ced8!important;
+}
+html[data-dshe-theme="dark"] .payment-hub .payment-qris-frame img,
+html[data-dshe-theme="dark"] .payment-hub .payment-qris-frame canvas{
+  background:#fff!important;filter:none!important;opacity:1!important;
+}
+html[data-dshe-theme="dark"] #nfItems .nf-crud-host{
+  background:linear-gradient(145deg,#292d33,#202329)!important;
+  color:#f1f3f6!important;border-color:#505762!important;
+}
+html[data-dshe-theme="dark"] #nfItems .nf-crud-host > *,
+html[data-dshe-theme="dark"] #nfItems .nf-crud-host .card,
+html[data-dshe-theme="dark"] #nfItems .nf-crud-host .panel{
+  color:#f1f3f6!important;
+}
+html[data-dshe-theme="dark"] .nf-page,
+html[data-dshe-theme="dark"] .nf-page .card{
+  color:#f1f3f6;
+}
+html[data-dshe-theme="dark"] .nf-page input,
+html[data-dshe-theme="dark"] .nf-page select,
+html[data-dshe-theme="dark"] .nf-page textarea,
+html[data-dshe-theme="dark"] #nfPayment input,
+html[data-dshe-theme="dark"] #nfPayment select{
+  background:#202329!important;color:#f2f4f7!important;
+  -webkit-text-fill-color:#f2f4f7!important;border-color:#59616c!important;
+}
+html[data-dshe-theme="dark"] .nf-page input::placeholder,
+html[data-dshe-theme="dark"] .nf-page textarea::placeholder{
+  color:#b5bec9!important;-webkit-text-fill-color:#b5bec9!important;opacity:1!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .search,
+html[data-dshe-theme="dark"] #nfTransaction .qty,
+html[data-dshe-theme="dark"] #nfTransaction .cart,
+html[data-dshe-theme="dark"] #nfTransaction .total,
+html[data-dshe-theme="dark"] #nfTransaction .cart-empty{
+  background:linear-gradient(145deg,#30343b,#25292f)!important;
+  color:#f1f3f6!important;border-color:#555e69!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .scan-hint,
+html[data-dshe-theme="dark"] #nfTransaction .hint,
+html[data-dshe-theme="dark"] #nfTransaction small{
+  color:#c7ced8!important;-webkit-text-fill-color:#c7ced8!important;
+}
+html[data-dshe-theme="dark"] .nf-more-link{
+  background:linear-gradient(145deg,#30343b,#25292f)!important;
+  color:#f1f3f6!important;border:1px solid rgba(211,219,229,.25)!important;
+}
+html[data-dshe-theme="dark"] .nf-more-link button{color:#f1f3f6!important}
