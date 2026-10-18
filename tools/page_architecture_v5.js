@@ -461,7 +461,7 @@
       const term=String(cashierInput.value||'').trim().toLocaleLowerCase('id-ID');
       document.getElementById('nfInputChoices')?.remove();
       if(term.length<1){autoBox.style.display='none';autoBox.innerHTML='';hint.textContent='Mulai ketik nama/kode barang, atau scan barcode.';return;}
-      const tokens=term.split(/\\s+/).filter(Boolean);
+      const tokens=term.split(/\s+/).filter(Boolean);
       const matches=ITEMS.map(x=>{
         const name=String(x.name||'').trim(),code=String(x.code||'').trim(),barcode=String(x.barcode||'').trim();
         const n=name.toLocaleLowerCase('id-ID'),c=code.toLocaleLowerCase('id-ID'),b=barcode.toLocaleLowerCase('id-ID');
