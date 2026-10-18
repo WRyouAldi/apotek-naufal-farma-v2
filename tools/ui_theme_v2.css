@@ -559,3 +559,15 @@ button:disabled{opacity:.55!important;cursor:not-allowed!important;transform:non
   .nf-home-tools button{min-height:86px!important}
 }
 
+
+
+/* Cashier quantity-before-add controls — Pearl Light and Dark Pearl compatible. */
+.nf-result-card .row{align-items:center;gap:12px}
+.nf-result-action{flex:0 0 auto;min-width:132px;max-width:46%;display:flex;flex-direction:column;align-items:stretch;gap:7px;text-align:right}
+.nf-result-action .price{font-size:16px}
+.nf-result-qty{display:grid;grid-template-columns:30px minmax(34px,1fr) 30px;gap:4px;align-items:center}
+.nf-result-qty button{height:34px;min-width:30px;padding:0;border-radius:10px;background:var(--dshe-soft,#e8f6f1)!important;color:var(--dshe-text,#202b29)!important;border:1px solid var(--dshe-line,#dce7e3)!important;font-size:18px;font-weight:800}
+.nf-result-qty input{width:100%;min-width:0;height:34px;padding:3px 2px;text-align:center;font-size:14px;font-weight:800;border:1px solid var(--dshe-line,#dce7e3)!important;border-radius:10px;background:var(--dshe-input,#fff)!important;color:var(--dshe-text,#202b29)!important}
+.nf-result-qty input::-webkit-inner-spin-button,.nf-result-qty input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.nf-result-add{min-height:36px;padding:8px 10px!important;border-radius:11px!important;font-size:12px!important;font-weight:800!important;white-space:normal;line-height:1.2}
+@media(max-width:380px){.nf-result-action{min-width:116px;max-width:49%}.nf-result-action .price{font-size:14px}.nf-result-add{font-size:11px!important;padding:8px 6px!important}.nf-result-qty{grid-template-columns:28px minmax(30px,1fr) 28px;gap:3px}}
