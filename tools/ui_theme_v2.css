@@ -896,3 +896,47 @@ html[data-dshe-theme="dark"] .nf-home-tools button small{color:#c1c8d2!important
  html[data-dshe-theme="dark"] .nf-operational-hero{min-height:116px!important;padding:15px 13px!important;border-radius:22px!important}
  html[data-dshe-theme="dark"] .stat-card{min-height:94px!important;padding:12px!important;border-radius:18px!important}
 }
+
+
+/* Final visual alignment to user's monochrome frosted-glass reference.
+   Fixes the actual mismatch visible in screenshot: bright database panel and overly bright blobs. */
+html[data-dshe-theme="dark"] .nf-home-tools,
+html[data-dshe-theme="dark"] .nf-home-tools-wrap,
+html[data-dshe-theme="dark"] .nf-home-tools-panel,
+html[data-dshe-theme="dark"] .nf-home-tools-section{
+  background:linear-gradient(145deg,rgba(59,63,71,.88),rgba(34,37,43,.96))!important;
+  color:#f0f3f6!important;
+  border:1px solid rgba(213,220,229,.30)!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+html[data-dshe-theme="dark"] .nf-home-tools-title,
+html[data-dshe-theme="dark"] .nf-home-tools-title *,
+html[data-dshe-theme="dark"] .nf-home-tools p,
+html[data-dshe-theme="dark"] .nf-home-tools small{
+  color:#d7dce4!important;-webkit-text-fill-color:#d7dce4!important;
+}
+html[data-dshe-theme="dark"] .stat-card:after,
+html[data-dshe-theme="dark"] .quick-btn:after,
+html[data-dshe-theme="dark"] .quick-btn:before{
+  opacity:.22!important;
+  filter:blur(1px)!important;
+}
+html[data-dshe-theme="dark"] .stat-card:after{
+  background:radial-gradient(circle,rgba(220,227,236,.22),rgba(220,227,236,0) 70%)!important;
+}
+html[data-dshe-theme="dark"] .quick-btn:after{
+  background:radial-gradient(circle,rgba(200,208,218,.18),rgba(200,208,218,0) 72%)!important;
+}
+html[data-dshe-theme="dark"] .quick-btn .icon,
+html[data-dshe-theme="dark"] .quick-btn .quick-icon,
+html[data-dshe-theme="dark"] .nf-home-tools button>span{
+  background:linear-gradient(145deg,#dce1e8,#aeb7c3)!important;
+  color:#303640!important;border:1px solid rgba(255,255,255,.64)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 5px 12px rgba(0,0,0,.18)!important;
+}
+html[data-dshe-theme="dark"] .nf-home-tools button{
+  background:linear-gradient(145deg,rgba(57,61,69,.96),rgba(32,35,41,.98))!important;
+}
+html[data-dshe-theme="dark"] .nf-home-tools button b,
+html[data-dshe-theme="dark"] .quick-btn b,
+html[data-dshe-theme="dark"] .quick-btn strong{color:#f2f4f7!important}
