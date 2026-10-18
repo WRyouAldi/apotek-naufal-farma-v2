@@ -632,7 +632,7 @@
       const small=row.querySelector('.small');
       const qty=row.querySelector('.qty');
       if(!name||!small||!qty)return;
-      const matches=(small.textContent||'').match(/(.+?)\\s*[×x]\\s*(\\d+)\\s*=\\s*(.+)/i);
+      const matches=(small.textContent||'').match(/(.+?)\s*[×x]\s*(\d+)\s*=\s*(.+)/i);
       const price=matches?matches[1].trim():'—';
       const subtotal=matches?matches[3].trim():'—';
       const product=document.createElement('div');product.className='nf-table-product';
