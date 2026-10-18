@@ -2069,9 +2069,10 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
       const small=row.querySelector('.small');
       const qty=row.querySelector('.qty');
       if(!name||!small||!qty)return;
-      const matches=(small.textContent||'').match(/(.+?)\s*[×x]\s*(\d+)\s*=\s*(.+)/i);
-      const price=matches?matches[1].trim():'—';
-      const subtotal=matches?matches[3].trim():'—';
+      const lineText=(small.textContent||'').replace(/\s+/g,' ').trim();
+      const parts=lineText.split(/\s*[×x]\s*|\s*=\s*/);
+      const price=parts.length>=3?parts[0].trim():'—';
+      const subtotal=parts.length>=3?parts[2].trim():'—';
       const product=document.createElement('div');product.className='nf-table-product';
       name.parentElement.insertBefore(product,name);product.appendChild(name);
       product.appendChild(small);
