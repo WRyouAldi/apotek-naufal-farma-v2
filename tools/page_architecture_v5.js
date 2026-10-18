@@ -398,19 +398,65 @@
     }
   };
   // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.
-  // POS input-list workflow: Enter adds an exact code/barcode match to the open list.
-  // Search suggestions remain available for names/partial queries.
+  // Scan/type workflow: keep the product catalogue hidden; Enter adds one matched product to the input list.
   const cashierInput=document.getElementById('q');
+  const txResultList=document.getElementById('results');
+  if(txResultList){
+    txResultList.setAttribute('aria-live','polite');
+    txResultList.style.display='none';
+  }
   if(cashierInput && !cashierInput.dataset.nfListInputBound){
     cashierInput.dataset.nfListInputBound='1';
+    cashierInput.placeholder='Ketik nama/kode barang, lalu Enter atau Scan barcode';
+    const inputHint=document.createElement('div');
+    inputHint.id='nfInputHint';
+    inputHint.className='small';
+    inputHint.setAttribute('aria-live','polite');
+    inputHint.style.cssText='padding:5px 4px 0;color:#71817b;font-size:11px;line-height:1.45';
+    inputHint.textContent='Daftar katalog disembunyikan. Barang yang cocok akan masuk ke daftar input.';
+    const searchArea=document.getElementById('searchArea');
+    if(searchArea)searchArea.appendChild(inputHint);
     cashierInput.addEventListener('keydown',function(event){
       if(event.key!=='Enter')return;
       const term=String(cashierInput.value||'').trim().toLocaleLowerCase('id-ID');
       if(!term)return;
-      const exact=currentResults.findIndex(p=>
-        [p.code,p.barcode].some(v=>String(v||'').trim().toLocaleLowerCase('id-ID')===term)
-      );
-      if(exact>=0){event.preventDefault();add(exact);cashierInput.value='';cashierInput.dispatchEvent(new Event('input',{bubbles:true}));cashierInput.focus();}
+      event.preventDefault();
+      const terms=term.split(/\\s+/).filter(Boolean);
+      const scored=ITEMS.map(x=>{
+        const code=String(x.code||'').trim().toLocaleLowerCase('id-ID');
+        const barcode=String(x.barcode||'').trim().toLocaleLowerCase('id-ID');
+        const name=String(x.name||'').toLocaleLowerCase('id-ID');
+        const text=code+' '+barcode+' '+name+' '+String(x.jenis||'').toLocaleLowerCase('id-ID');
+        let score=0;
+        if(code===term)score=1000;
+        else if(barcode===term)score=1200;
+        else {
+          for(const t of terms){
+            if(code.includes(t))score+=40;
+            if(barcode.includes(t))score+=60;
+            if(name.includes(t))score+=20;
+            if(text.includes(t))score+=5;
+          }
+        }
+        return {x,score};
+      }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score);
+      const exact=scored.find(v=>String(v.x.code||'').trim().toLocaleLowerCase('id-ID')===term||String(v.x.barcode||'').trim().toLocaleLowerCase('id-ID')===term);
+      const chosen=exact||((scored.length===1)?scored[0]:null);
+      if(chosen && chosen.x.price>0){
+        const f=cart.find(c=>c.code===chosen.x.code&&c.name===chosen.x.name&&c.price===chosen.x.price);
+        if(f)f.qty++;else cart.push({...chosen.x,qty:1});
+        renderCart();
+        if(inputHint)inputHint.textContent='✓ '+chosen.x.name+' ditambahkan • ketik/scan barang berikutnya.';
+        cashierInput.value='';
+        if(txResultList)txResultList.innerHTML='';
+        cashierInput.focus();
+      }else if(scored.length>1){
+        if(inputHint)inputHint.textContent='Ditemukan '+scored.length+' kecocokan. Tambahkan kata pada nama/kode agar lebih spesifik.';
+      }else if(scored.length===1 && scored[0].x.price<=0){
+        if(inputHint)inputHint.textContent='Harga barang belum diatur: '+scored[0].x.name;
+      }else{
+        if(inputHint)inputHint.textContent='Barang tidak ditemukan. Periksa nama, kode, atau barcode.';
+      }
     });
   }
   // Keep the entered-items list readable as rows on mobile, without replacing existing cart logic.
@@ -544,6 +590,10 @@
     enhanceInputTable();
   }
 
+  // Input-only cashier mode: hide the catalogue list at all times; the entered-items table stays visible.
+  if(txResults)txResults.style.display='none';
+  const txSearchInput=document.getElementById('q');
+  if(txSearchInput)txSearchInput.setAttribute('aria-label','Ketik kode/nama atau scan barcode untuk memasukkan barang');
   window.nfGo('transaction');
 })();
 })();
