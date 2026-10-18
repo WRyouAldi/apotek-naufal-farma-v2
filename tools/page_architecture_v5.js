@@ -438,8 +438,11 @@
       if(exact)return exact.x;
       const exactNames=scored.filter(v=>String(v.x.name||'').trim().toLocaleLowerCase('id-ID')===term);
       if(exactNames.length===1)return exactNames[0].x;
-      if(scored.length===1)return scored[0].x;
-      if(scored.length>1&&showChoices){
+      // Never auto-add a fuzzy match from manual typing: require an exact code/barcode/name.
+      // Ambiguous or partial names must be selected explicitly from the suggestions.
+      const prefixNames=ITEMS.filter(x=>String(x.name||'').trim().toLocaleLowerCase('id-ID').startsWith(term)&&Number(x.price)>0);
+      if(prefixNames.length===1 && showChoices===false)return prefixNames[0];
+      if(scored.length>0&&showChoices){
         hint.textContent='Pilih produk yang benar:';
         let choices=document.getElementById('nfInputChoices');
         if(!choices){choices=document.createElement('div');choices.id='nfInputChoices';choices.style.cssText='display:grid;gap:6px;margin-top:8px';hint.parentElement.appendChild(choices);}
