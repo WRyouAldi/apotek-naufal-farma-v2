@@ -586,9 +586,23 @@ class MainActivity : Activity() {
                 db.beginTransaction()
                 try {
                     for (i in 0 until rows.length()) {
-                        val o = rows.getJSONObject(i)
+                        val seedRow = rows.getJSONObject(i)
+                        val existingId = findId(
+                            db,
+                            seedRow.optString("code").trim(),
+                            seedRow.optString("barcode").trim(),
+                            seedRow.optString("name").trim()
+                        )
+                        // App startup seed updates product metadata, never live inventory.
+                        // Preserve the current stock in both legacy and normalized tables.
+                        val o = JSONObject(seedRow.toString())
+                        if (existingId != null) {
+                            db.rawQuery("SELECT stok FROM products WHERE id=?", arrayOf(existingId.toString())).use { cursor ->
+                                if (cursor.moveToFirst()) o.put("stok", cursor.getDouble(0))
+                            }
+                        }
                         val id = upsertNormalized(db, o)
-                        syncNormalizedChildren(db, id, o)
+                        syncNormalizedChildren(db, id, o, preserveExistingStock = existingId != null)
                     }
                     db.delete("db_meta", "key=?", arrayOf("seed_version"))
                     db.execSQL("INSERT INTO db_meta(key,value) VALUES('seed_version',?)", arrayOf(seedVersion))
@@ -607,7 +621,12 @@ class MainActivity : Activity() {
             return db.insertOrThrow("products",null,values)
         }
 
-        private fun syncNormalizedChildren(db: SQLiteDatabase, productId: Long, o: JSONObject) {
+        private fun syncNormalizedChildren(
+            db: SQLiteDatabase,
+            productId: Long,
+            o: JSONObject,
+            preserveExistingStock: Boolean = false
+        ) {
             val unit=o.optString("satuan").trim()
             val barcode=o.optString("barcode").trim()
             val cost = if (o.has("cost")) o.optLong("cost") else if (o.has("purchase_price")) o.optLong("purchase_price") else run {
@@ -617,12 +636,19 @@ class MainActivity : Activity() {
             }
             val price=o.optLong("price",0L)
             val now=System.currentTimeMillis()
+            // Read existing normalized inventory before rebuilding derived rows.
+            // Explicit CSV imports keep their historical behavior; seed refreshes preserve live stock.
+            val preservedStock = if (preserveExistingStock) {
+                db.rawQuery("SELECT quantity FROM stock WHERE product_id=? AND office='default' LIMIT 1", arrayOf(productId.toString())).use {
+                    if (it.moveToFirst()) it.getDouble(0) else o.optDouble("stok", 0.0)
+                }
+            } else o.optDouble("stok", 0.0)
             db.delete("product_units","product_id=?",arrayOf(productId.toString()))
             db.delete("product_prices","product_id=?",arrayOf(productId.toString()))
             db.delete("stock","product_id=?",arrayOf(productId.toString()))
             db.execSQL("INSERT INTO product_units(product_id,unit,conversion,barcode,purchase_price,updated_at) VALUES(?,?,?,?,?,?)",arrayOf(productId,unit.ifEmpty{"PCS"},1.0,barcode,cost,now))
             db.execSQL("INSERT INTO product_prices(product_id,unit,level,quantity_until,percentage,price,updated_at) VALUES(?,?,?,?,?,?,?)",arrayOf(productId,unit.ifEmpty{"PCS"},1,0.0,0.0,price,now))
-            db.execSQL("INSERT INTO stock(product_id,office,quantity,updated_at) VALUES(?,?,?,?)",arrayOf(productId,"default",o.optDouble("stok",0.0),now))
+            db.execSQL("INSERT INTO stock(product_id,office,quantity,updated_at) VALUES(?,?,?,?)",arrayOf(productId,"default",preservedStock,now))
         }
 
         fun seedChunk(rows: JSONArray): String {
