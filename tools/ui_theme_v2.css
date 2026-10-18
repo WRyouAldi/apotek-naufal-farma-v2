@@ -1001,3 +1001,63 @@ html[data-dshe-theme="dark"] .nf-glass-nav>button.active span{transform:translat
  html[data-dshe-theme="dark"] #bottomNavV15.nf-glass-nav>button b,
  html[data-dshe-theme="dark"] .nf-glass-nav>button b{font-size:9px!important}
 }
+
+
+/* DARK MODE CONTRAST AUDIT — real selectors used by the rendered home UI */
+html[data-dshe-theme="dark"] .nf-more-link{
+  background:linear-gradient(145deg,rgba(54,58,66,.88),rgba(31,34,40,.96))!important;
+  color:#f1f3f6!important;border:1px solid rgba(215,222,231,.32)!important;
+  border-radius:26px!important;padding:18px!important;
+  box-shadow:0 14px 32px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools-title b{color:#f3f5f8!important;-webkit-text-fill-color:#f3f5f8!important}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools-title small{color:#c6cdd6!important;-webkit-text-fill-color:#c6cdd6!important}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools{
+  background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;
+}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools button{
+  color:#f3f5f8!important;background:linear-gradient(145deg,#353a42,#25292f)!important;
+  border:1px solid rgba(215,222,231,.34)!important;
+}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools button b{color:#f4f6f8!important;-webkit-text-fill-color:#f4f6f8!important}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools button small{color:#c8ced7!important;-webkit-text-fill-color:#c8ced7!important}
+html[data-dshe-theme="dark"] .nf-more-link .nf-home-tools button>span{
+  display:grid!important;place-items:center!important;background:linear-gradient(145deg,#cbd2dc,#8e99a8)!important;
+  color:#252a31!important;border-color:rgba(255,255,255,.58)!important;
+}
+html[data-dshe-theme="dark"] .welcome-card,
+html[data-dshe-theme="dark"] .stat-card,
+html[data-dshe-theme="dark"] .quick-btn,
+html[data-dshe-theme="dark"] .nf-page-intro,
+html[data-dshe-theme="dark"] .payment-hub,
+html[data-dshe-theme="dark"] .payment-merchant,
+html[data-dshe-theme="dark"] .nf-result-card{
+  color:#f1f3f6!important;
+  border-color:rgba(210,218,228,.30)!important;
+}
+html[data-dshe-theme="dark"] .welcome-copy .eyebrow,
+html[data-dshe-theme="dark"] .welcome-copy p,
+html[data-dshe-theme="dark"] .stat-card small,
+html[data-dshe-theme="dark"] .stat-card em,
+html[data-dshe-theme="dark"] .quick-btn small,
+html[data-dshe-theme="dark"] .nf-page-intro,
+html[data-dshe-theme="dark"] .payment-hub p,
+html[data-dshe-theme="dark"] .payment-merchant small{
+  color:#c7ced8!important;-webkit-text-fill-color:#c7ced8!important;
+}
+html[data-dshe-theme="dark"] .stat-card b,
+html[data-dshe-theme="dark"] .welcome-copy h2,
+html[data-dshe-theme="dark"] .quick-btn b,
+html[data-dshe-theme="dark"] .payment-hub h2,
+html[data-dshe-theme="dark"] .payment-merchant h3,
+html[data-dshe-theme="dark"] .payment-merchant div{
+  color:#f4f6f8!important;-webkit-text-fill-color:#f4f6f8!important;
+}
+html[data-dshe-theme="dark"] input,
+html[data-dshe-theme="dark"] select,
+html[data-dshe-theme="dark"] textarea{
+  color:#f1f3f6!important;background-color:#24282e!important;border-color:#59616c!important;
+}
+html[data-dshe-theme="dark"] input::placeholder,
+html[data-dshe-theme="dark"] textarea::placeholder{color:#aeb7c3!important;opacity:1!important}
+html[data-dshe-theme="dark"] :disabled{opacity:.62}
