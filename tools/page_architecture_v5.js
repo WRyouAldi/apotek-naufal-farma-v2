@@ -410,7 +410,7 @@
     panel.id='nfInputControls';
     panel.style.cssText='display:flex;align-items:end;gap:8px;margin-top:8px';
     panel.innerHTML='<label style="flex:1;display:block;font-size:11px;font-weight:700;color:#65766f">Qty<input id="nfInputQty" type="number" min="1" max="9999" step="1" inputmode="numeric" value="1" aria-label="Jumlah barang" style="display:block;width:100%;height:42px;margin-top:5px;padding:8px 10px;border:1px solid #d9e6df;border-radius:11px;background:#fff;font-size:15px"></label><span style="flex:2;font-size:11px;line-height:1.45;color:#71817b;padding-bottom:8px">Scan barcode = langsung masuk. Ketik manual = tekan Enter.</span>';
-    const hint=document.createElement('div');hint.id='nfInputHint';hint.className='small';hint.setAttribute('aria-live','polite');hint.style.cssText='padding:6px 4px 0;color:#71817b;font-size:11px;line-height:1.45';hint.textContent='Siap menerima barang.';
+    const hint=document.createElement('div');hint.id='nfInputHint';hint.className='small';hint.setAttribute('aria-live','polite');hint.style.cssText='padding:6px 4px 0;color:#71817b;font-size:11px;line-height:1.45';hint.textContent='Mulai ketik nama/kode barang, atau scan barcode.';
     const searchArea=document.getElementById('searchArea');if(searchArea)searchArea.append(panel,hint);
     const qtyInput=panel.querySelector('#nfInputQty');
     let pendingProduct=null;
@@ -421,7 +421,7 @@
       const existing=cart.find(c=>c.code===product.code&&c.name===product.name&&c.price===product.price);
       if(existing)existing.qty+=qty;else cart.push({...product,qty});
       renderCart();hint.textContent='✓ '+product.name+' × '+qty+' ditambahkan.';
-      pendingProduct=null;cashierInput.value='';qtyInput.value='1';document.getElementById('nfInputChoices')?.remove();
+      pendingProduct=null;cashierInput.value='';qtyInput.value='1';document.getElementById('nfInputChoices')?.remove();if(autoBox){autoBox.style.display='none';autoBox.innerHTML='';}
       if(txResultList)txResultList.innerHTML='';
       cashierInput.focus();return true;
     };
@@ -448,7 +448,36 @@
       }else if(!scored.length)hint.textContent='Barang tidak ditemukan. Coba kode/barcode.';
       return null;
     };
-    cashierInput.addEventListener('input',()=>{pendingProduct=null;});
+    // Live autocomplete: show compact product suggestions while the cashier types.
+    let autoBox=document.getElementById('nfAutocomplete');
+    if(!autoBox){
+      autoBox=document.createElement('div');autoBox.id='nfAutocomplete';autoBox.setAttribute('role','listbox');autoBox.setAttribute('aria-label','Saran produk');
+      autoBox.style.cssText='display:none;position:relative;z-index:30;margin-top:6px;border:1px solid #dce8e2;border-radius:14px;background:rgba(255,255,255,.98);box-shadow:0 12px 28px rgba(25,67,52,.12);overflow:hidden';
+      const controls=document.getElementById('nfInputControls');
+      if(controls)controls.insertAdjacentElement('afterend',autoBox);else cashierInput.insertAdjacentElement('afterend',autoBox);
+    }
+    const escapeAuto=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const updateAutocomplete=()=>{
+      const term=String(cashierInput.value||'').trim().toLocaleLowerCase('id-ID');
+      document.getElementById('nfInputChoices')?.remove();
+      if(term.length<1){autoBox.style.display='none';autoBox.innerHTML='';hint.textContent='Mulai ketik nama/kode barang, atau scan barcode.';return;}
+      const tokens=term.split(/\\s+/).filter(Boolean);
+      const matches=ITEMS.map(x=>{
+        const name=String(x.name||'').trim(),code=String(x.code||'').trim(),barcode=String(x.barcode||'').trim();
+        const n=name.toLocaleLowerCase('id-ID'),c=code.toLocaleLowerCase('id-ID'),b=barcode.toLocaleLowerCase('id-ID');
+        let score=0;
+        if(c===term||b===term)score=12000;else if(n===term)score=10000;else if(n.startsWith(term))score=8000;else if(c.startsWith(term)||b.startsWith(term))score=7000;
+        else if(tokens.every(t=>n.includes(t)||c.includes(t)||b.includes(t)))score=5000+tokens.reduce((s,t)=>s+(n.includes(t)?100:0)+(c.includes(t)?80:0)+(b.includes(t)?120:0),0);
+        return{x,score};
+      }).filter(v=>v.score>0&&Number(v.x.price)>0).sort((a,b)=>b.score-a.score||String(a.x.name).localeCompare(String(b.x.name),'id'));
+      if(!matches.length){autoBox.style.display='block';autoBox.innerHTML='<div style="padding:12px;color:#71817b;font-size:12px">Barang tidak ditemukan.</div>';hint.textContent='Periksa ejaan, kode, atau barcode.';return;}
+      autoBox.style.display='block';
+      autoBox.innerHTML=matches.slice(0,6).map((v,i)=>'<button type="button" role="option" data-auto="'+i+'" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;text-align:left;border-radius:0;border-bottom:1px solid #edf2ef;background:#fff;color:#24453a"><span style="min-width:0;flex:1"><b style="display:block;font-size:12px;line-height:1.35">'+escapeAuto(v.x.name||'Barang')+'</b><small style="display:block;margin-top:3px;font-size:10px;color:#71817b">'+escapeAuto(v.x.code||v.x.barcode||'Tanpa kode')+'</small></span><b style="font-size:12px;white-space:nowrap;color:#087b5d">'+(typeof rupiah==='function'?rupiah(v.x.price):escapeAuto(v.x.price))+'</b></button>').join('');
+      Array.from(autoBox.querySelectorAll('[data-auto]')).forEach(btn=>btn.addEventListener('click',()=>{const chosen=matches[Number(btn.dataset.auto)]?.x;if(chosen)addProduct(chosen);}));
+      hint.textContent=matches.length+' produk cocok — ketuk pilihan untuk memasukkan.';
+    };
+    cashierInput.addEventListener('input',()=>{pendingProduct=null;updateAutocomplete();});
+
     cashierInput.addEventListener('keydown',event=>{
       if(event.key!=='Enter')return;event.preventDefault();
       const product=pendingProduct||findProduct(cashierInput.value);
