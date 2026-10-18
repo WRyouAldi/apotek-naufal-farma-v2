@@ -158,7 +158,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 <header>
   <div class="topbar">
     <div class="brand-mark"><img src="branding/logo-mark.svg" alt="Apotek D&#39;she Farma"></div>
-    <div class="brand-text"><h1>Naufal Farma</h1><div>Apotek & Sehat Bersama</div></div>
+    <div class="brand-text"><h1>D'she Farma</h1><div>Apotek • POS Mobile</div></div>
     <button type="button" class="top-notify" onclick="focusReport()" aria-label="Laporan">♧</button>
   </div>
 </header>
@@ -580,7 +580,7 @@ renderResults(ITEMS.slice(0,30));renderCart();
       'body{font-family:Arial;font-size:10pt}h1{font-size:16pt;margin:0}h3{font-size:10pt;font-weight:normal;margin:2px 0 10px}'+
       'table{border-collapse:collapse;width:100%;table-layout:fixed}th,td{border:1px solid #aaa;padding:5px;word-break:break-word}th{background:#eee}'+
       '.r{text-align:right;mso-number-format:"#,##0"}.total{width:300px;margin-top:12px}.total th{text-align:left}.total td{text-align:right;font-weight:bold}'+
-      '</style></head><body><h1>APOTEK NAUFAL FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
+      '</style></head><body><h1>APOTEK D'SHE FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
       '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table></body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
@@ -601,7 +601,7 @@ renderResults(ITEMS.slice(0,30));renderCart();
       });
     });
     const bodyHtml=
-      '<h1>APOTEK NAUFAL FARMA</h1>'+
+      '<h1>APOTEK D'SHE FARMA</h1>'+
       '<h2>LAPORAN PENJUALAN HARIAN</h2>'+
       '<p style="text-align:center;margin:0 0 14px">'+esc(date)+'</p>'+
       '<table><thead><tr><th>Nama Barang</th><th style="width:10%">Qty</th><th style="width:19%">Harga</th><th style="width:21%">Subtotal</th></tr></thead><tbody>'+rows+'</tbody></table>'+
