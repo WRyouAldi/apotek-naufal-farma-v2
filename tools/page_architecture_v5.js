@@ -426,6 +426,50 @@
     `;
     document.head.appendChild(listStyle);
   }
+  // Compact POS list layout: replace tall product cards visually with dense rows.
+  if(!document.getElementById('nfCompactInputListV1')){
+    const compact=document.createElement('style');compact.id='nfCompactInputListV1';
+    compact.textContent=`
+      /* Search results: dense, spreadsheet-like list for large catalogues. */
+      #nfTransaction #results{margin:8px 0 14px}
+      #nfTransaction #results>.card{margin:0!important;padding:9px 10px!important;border:0!important;border-bottom:1px solid #e3ebe7!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+      #nfTransaction #results>.card:first-child{border-top:1px solid #e3ebe7!important}
+      #nfTransaction #results>.card .row{align-items:center!important;gap:8px!important}
+      #nfTransaction #results .code{font-size:10px!important;margin-bottom:2px}
+      #nfTransaction #results .name{font-size:12px!important;line-height:1.25!important}
+      #nfTransaction #results .meta{font-size:10px!important;margin-top:2px!important}
+      #nfTransaction #results .price{font-size:12px!important}
+      #nfTransaction #results button{font-size:11px!important;padding:7px 9px!important;min-height:32px!important;border-radius:9px!important;margin-top:4px!important;white-space:nowrap}
+      /* Remove the large QRIS promotional card from the item-input workflow. QRIS remains in its own tab. */
+      #nfTransaction .nf-tx-tools{display:none!important}
+      #nfTransaction .nf-tx-summary{margin:0 0 8px!important}
+      #nfTransaction .nf-tx-summary>div{padding:8px 10px!important;border-radius:12px!important}
+      #nfTransaction .nf-tx-summary small{font-size:9px!important;margin-bottom:3px!important}
+      #nfTransaction .nf-tx-summary b{font-size:11px!important}
+      /* Entered items: dense table-like rows instead of large item cards. */
+      #nfTransaction .cart{padding:10px!important;margin-top:8px!important}
+      #nfTransaction .cart>.row{padding-bottom:8px!important;margin-bottom:2px!important}
+      #nfTransaction .cart .itemline{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;column-gap:8px!important;row-gap:3px!important;padding:8px 0!important;border-bottom:1px solid #e6eeea!important}
+      #nfTransaction .cart .itemline .name{grid-column:1!important;font-size:12px!important;line-height:1.25!important;margin:0!important}
+      #nfTransaction .cart .itemline .small{grid-column:1!important;font-size:10px!important;line-height:1.35!important;margin:0!important}
+      #nfTransaction .cart .itemline .qty{grid-column:2!important;grid-row:1/3!important;gap:4px!important;margin:0!important;align-self:center!important}
+      #nfTransaction .cart .itemline .qty button{min-width:30px!important;min-height:30px!important;padding:3px 8px!important;border-radius:8px!important}
+      #nfTransaction .cart .itemline .qty span{min-width:20px!important;font-size:12px!important}
+      #nfTransaction .cart .total{font-size:18px!important;margin-top:8px!important}
+      #nfTransaction .cart .actions{gap:6px!important;margin-top:8px!important}
+      #nfTransaction .cart .actions button{font-size:12px!important;padding:9px 8px!important;min-height:38px!important}
+      #nfTransaction .search-card{padding:8px!important;margin-bottom:8px!important}
+      #nfTransaction .search input{height:44px!important;font-size:13px!important}
+      #nfTransaction #nfScanBarcode{height:44px!important;min-width:62px!important;font-size:12px!important}
+      @media(max-width:380px){
+        #nfTransaction #results>.card{padding:8px 7px!important}
+        #nfTransaction #results .name{font-size:11px!important}
+        #nfTransaction #results .price{font-size:11px!important}
+        #nfTransaction .cart .itemline .qty button{min-width:27px!important}
+      }
+    `;
+    document.head.appendChild(compact);
+  }
   window.nfGo('transaction');
 })();
 })();
