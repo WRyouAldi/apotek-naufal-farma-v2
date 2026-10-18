@@ -664,7 +664,8 @@
   if(txResults)txResults.style.display='none';
   const txSearchInput=document.getElementById('q');
   if(txSearchInput)txSearchInput.setAttribute('aria-label','Ketik kode/nama atau scan barcode untuk memasukkan barang');
-  window.nfGo('transaction');
+  // Start on Dashboard so the Hero and live operational data are visible on launch.
+  window.nfGo('home');
 })();
 })();
 

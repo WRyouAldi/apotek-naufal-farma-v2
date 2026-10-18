@@ -583,7 +583,8 @@ renderResults(ITEMS.slice(0,30));renderCart();
       '.r{text-align:right;mso-number-format:"#,##0"}.total{width:300px;margin-top:12px}.total th{text-align:left}.total td{text-align:right;font-weight:bold}'+
       '</style></head><body><h1>APOTEK D'SHE FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
-      '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table></body></html>';
+      '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table>
+</body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     a.href=url;a.download="Laporan-"+date+".xls";a.style.display="none";document.body.appendChild(a);a.click();
