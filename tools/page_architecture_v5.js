@@ -659,3 +659,53 @@
   window.nfGo('transaction');
 })();
 })();
+
+/* D'she Farma Smart Theme: system / light / dark */
+(function(){
+  if(document.getElementById('dsheThemeStyle'))return;
+  const css=document.createElement('style');css.id='dsheThemeStyle';
+  css.textContent=`
+  :root{color-scheme:light;--dshe-bg:#f3faf8;--dshe-card:rgba(255,255,255,.88);--dshe-text:#17211f;--dshe-muted:#667873;--dshe-line:#d7e9e3;--dshe-input:#fff;--dshe-accent:#087b65;--dshe-soft:#e8f8f2}
+  html[data-dshe-theme="dark"]{color-scheme:dark;--dshe-bg:#101a19;--dshe-card:rgba(29,43,41,.96);--dshe-text:#edf7f4;--dshe-muted:#b1c4be;--dshe-line:#354d47;--dshe-input:#172522;--dshe-accent:#73dfc3;--dshe-soft:#203c34}
+  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"]{color-scheme:dark;--dshe-bg:#101a19;--dshe-card:rgba(29,43,41,.96);--dshe-text:#edf7f4;--dshe-muted:#b1c4be;--dshe-line:#354d47;--dshe-input:#172522;--dshe-accent:#73dfc3;--dshe-soft:#203c34}}
+  body{background:var(--dshe-bg)!important;color:var(--dshe-text)!important}
+  header{background:linear-gradient(120deg,#075f50,#168d76)!important;color:#fff!important}
+  .card,.nf-page,.nf-page-head,.nf-operational-hero,.nf-input-table-head,.nf-page .card{background-color:var(--dshe-card)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
+  .nf-page h2,.nf-page h3,.nf-page p,.nf-page label,.nf-page .name,.nf-page .total,.nf-page .small,.nf-page span{color:inherit}
+  input,select,textarea{background:var(--dshe-input)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
+  input::placeholder,textarea::placeholder{color:var(--dshe-muted)!important}
+  .nf-page .nf-table-price{color:var(--dshe-text)!important}.nf-page .nf-table-subtotal{color:var(--dshe-accent)!important}
+  .nf-page .nf-input-table-head{color:var(--dshe-muted)!important;border-color:var(--dshe-line)!important}
+  .nf-page .nf-back{color:var(--dshe-text)!important;background:var(--dshe-soft)!important}
+  #dsheThemeControl{display:flex;align-items:center;gap:6px;margin:8px 0 12px;padding:8px 10px;border:1px solid var(--dshe-line);border-radius:14px;background:var(--dshe-card);color:var(--dshe-text);font-size:12px}
+  #dsheThemeControl label{font-weight:700;white-space:nowrap}#dsheThemeControl select{padding:8px 10px;border-radius:10px;min-width:0;flex:1;font-size:12px}
+  .nf-page .nf-operational-hero p{color:var(--dshe-muted)!important}
+  .nf-page .nf-table-price,.nf-page .nf-table-subtotal{overflow-wrap:anywhere}
+  `;
+  document.head.appendChild(css);
+  const key='dshe-farma-theme';
+  const apply=(mode)=>{
+    const valid=['system','light','dark'].includes(mode)?mode:'system';
+    document.documentElement.dataset.dsheTheme=valid;
+    try{localStorage.setItem(key,valid)}catch(e){}
+    const sel=document.querySelector('#dsheThemeControl select');if(sel)sel.value=valid;
+  };
+  let mode='system';try{mode=localStorage.getItem(key)||'system'}catch(e){}
+  apply(mode);
+  const mount=()=>{
+    if(document.getElementById('dsheThemeControl'))return;
+    const home=document.getElementById('nfHome')||document.querySelector('.wrap');
+    if(!home)return;
+    const control=document.createElement('div');control.id='dsheThemeControl';
+    control.innerHTML='<label for="dsheThemeSelect">Tema</label><select id="dsheThemeSelect" aria-label="Tema aplikasi"><option value="system">Ikuti sistem HP</option><option value="light">Selalu terang</option><option value="dark">Selalu gelap</option></select>';
+    const hero=home.querySelector('.nf-operational-hero');
+    if(hero&&hero.parentElement)hero.parentElement.insertBefore(control,hero.nextSibling);
+    else home.insertBefore(control,home.firstChild);
+    control.querySelector('select').addEventListener('change',e=>apply(e.target.value));
+    control.querySelector('select').value=mode;
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+  new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});
+  const mq=window.matchMedia('(prefers-color-scheme: dark)');
+  if(mq.addEventListener)mq.addEventListener('change',()=>{let v='system';try{v=localStorage.getItem(key)||'system'}catch(e){}if(v==='system')apply(v)});
+})();
