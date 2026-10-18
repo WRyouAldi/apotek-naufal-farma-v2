@@ -1491,14 +1491,22 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   price.appendChild(lookup);
 
   const tx=make('nfTransaction','Kasir','Keranjang penjualan, kuantitas, dan pembayaran.');
-  const txIntro=document.createElement('div');txIntro.className='nf-page-intro';
-  txIntro.textContent='Pilih produk dari pencarian kasir untuk memasukkannya ke keranjang. Cek Harga tetap terpisah dan tidak mengubah transaksi.';
-  tx.appendChild(txIntro);
+  // Keep cashier screen transaction-first: no dashboard/hero intro above product search.
 
   // Transaction workspace: clear flow, scanner entry point, cart summary, checkout.
   if(!document.getElementById('nfVisualPolishV6')){
     const style=document.createElement('style');style.id='nfVisualPolishV6';
     style.textContent=`
+      #nfHome .nf-operational-hero{display:flex;align-items:center;gap:14px;padding:17px 16px!important;margin:0 0 14px!important;border-radius:22px!important;min-height:0!important}
+      #nfHome .nf-hero-copy{min-width:0;flex:1}
+      #nfHome .nf-hero-eyebrow{font-size:9px;letter-spacing:1.2px}
+      #nfHome .nf-operational-hero h2{font-size:clamp(20px,5.2vw,25px);line-height:1.15;margin:8px 0 5px}
+      #nfHome .nf-operational-hero p{font-size:11px;line-height:1.45;margin:0 0 12px;max-width:290px}
+      #nfHome .nf-hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+      #nfHome .nf-hero-actions button{min-height:40px;padding:9px 11px;border-radius:12px;font-size:11px}
+      #nfHome .nf-hero-orb{width:70px;height:70px;flex:0 0 70px;border-radius:20px;overflow:hidden}
+      #nfHome .nf-hero-orb img{display:block;width:100%;height:100%;object-fit:cover}
+      @media(max-width:360px){#nfHome .nf-operational-hero{padding:14px 12px!important;gap:8px}#nfHome .nf-hero-orb{width:54px;height:54px;flex-basis:54px}#nfHome .nf-hero-actions button{font-size:10px;padding:8px}}
       .nf-page{max-width:760px;margin:0 auto;padding:12px 12px calc(100px + env(safe-area-inset-bottom));color:#172f29}
       .nf-page-head{display:flex;align-items:center;gap:12px;padding:10px 2px 16px;margin-bottom:8px}
       .nf-page-head h2{font-size:clamp(21px,5vw,27px);letter-spacing:-.55px;font-weight:850;margin:0;color:#17362d}
