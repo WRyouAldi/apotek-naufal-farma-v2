@@ -2548,8 +2548,6 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
       --dp-shadow:0 10px 28px rgba(0,0,0,.25);
     }
   }
-  html[data-dshe-theme="dark"] body,
-  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"] body{background:var(--dp-bg)!important;color:var(--dp-text)!important}}
   html[data-dshe-theme="dark"] body{background:var(--dp-bg)!important;color:var(--dp-text)!important}
   @media(prefers-color-scheme:dark){
     html[data-dshe-theme="system"] body{background:var(--dp-bg)!important;color:var(--dp-text)!important}
@@ -2558,7 +2556,7 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   html[data-dshe-theme="dark"] main,
   html[data-dshe-theme="dark"] .nf-page,
   html[data-dshe-theme="dark"] .nf-page-content,
-  html[data-dshe-theme="dark"] .content,
+  html[data-dshe-theme="dark"] .content{background-color:transparent!important;color:var(--dp-text)!important}
   @media(prefers-color-scheme:dark){
     html[data-dshe-theme="system"] .wrap,html[data-dshe-theme="system"] main,
     html[data-dshe-theme="system"] .nf-page,html[data-dshe-theme="system"] .nf-page-content,
