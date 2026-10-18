@@ -229,13 +229,14 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 function renderResults(list){
  currentResults=list.slice(0,80); const el=document.getElementById("results");
  if(!currentResults.length){el.innerHTML='<div class="empty">Barang tidak ditemukan.</div>';return;}
- el.innerHTML=currentResults.map((x,i)=>`<div class="card"><div class="row"><div style="min-width:0">
+ el.innerHTML=currentResults.map((x,i)=>`<div class="card nf-result-card"><div class="row"><div style="min-width:0;flex:1">
  <div class="code">${esc(x.code)}</div><div class="name">${esc(x.name||"(Nama tidak tercantum)")}</div>
  ${x.jenis?`<div class="meta">${esc(x.jenis)}</div>`:""}${x.price>0?"":'<span class="badge">Harga belum diatur</span>'}</div>
- <div style="text-align:right"><div class="price">${x.price>0?rupiah(x.price):"—"}</div>
- ${x.price>0?`<button onclick="add(${i})" style="margin-top:7px">Tambah</button>`:""}</div></div></div>`).join("");
+ <div class="nf-result-action"><div class="price">${x.price>0?rupiah(x.price):"—"}</div>
+ ${x.price>0?`<div class="nf-result-qty" aria-label="Jumlah sebelum ditambahkan"><button type="button" onclick="adjustResultQty(${i},-1)" aria-label="Kurangi jumlah">−</button><input id="resultQty-${i}" type="number" inputmode="numeric" min="1" max="9999" step="1" value="1" aria-label="Jumlah ${esc(x.name||"produk")}"><button type="button" onclick="adjustResultQty(${i},1)" aria-label="Tambah jumlah">+</button></div><button type="button" onclick="add(${i})" class="nf-result-add">Tambah ke keranjang</button>`:""}</div></div></div>`).join("");
 }
-function add(i){const x=currentResults[i];if(!x||x.price<=0)return;const f=cart.find(c=>c.code===x.code&&c.name===x.name&&c.price===x.price);if(f)f.qty++;else cart.push({...x,qty:1});renderCart();}
+function adjustResultQty(i,delta){const input=document.getElementById("resultQty-"+i);if(!input)return;const current=Math.max(1,Math.floor(Number(input.value)||1));input.value=String(Math.min(9999,Math.max(1,current+delta)));}
+function add(i){const x=currentResults[i];if(!x||x.price<=0)return;const input=document.getElementById("resultQty-"+i);const qty=Math.min(9999,Math.max(1,Math.floor(Number(input?.value)||1)));const f=cart.find(c=>c.code===x.code&&c.name===x.name&&c.price===x.price);if(f)f.qty=Math.min(999999,f.qty+qty);else cart.push({...x,qty});renderCart();if(input)input.value="1";}
 function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);renderCart();}
 function renderCart(){
  const el=document.getElementById("cart"),count=cart.reduce((a,c)=>a+c.qty,0);document.getElementById("count").textContent=count+" item";
