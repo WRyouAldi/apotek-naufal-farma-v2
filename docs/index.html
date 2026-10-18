@@ -1850,12 +1850,12 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   if(txResultList){txResultList.setAttribute('aria-live','polite');txResultList.style.display='none';}
   if(cashierInput && !cashierInput.dataset.nfListInputBound){
     cashierInput.dataset.nfListInputBound='1';
-    cashierInput.placeholder='Ketik kode/nama barang lalu Enter, atau Scan';
+    cashierInput.placeholder='Ketik nama / kode / barcode obat…';
     const panel=document.createElement('div');
     panel.id='nfInputControls';
     panel.style.cssText='display:flex;align-items:end;gap:8px;margin-top:8px';
     panel.innerHTML='<label style="flex:1;display:block;font-size:11px;font-weight:700;color:#65766f">Qty<input id="nfInputQty" type="number" min="1" max="9999" step="1" inputmode="numeric" value="1" aria-label="Jumlah barang" style="display:block;width:100%;height:42px;margin-top:5px;padding:8px 10px;border:1px solid #d9e6df;border-radius:11px;background:#fff;font-size:15px"></label><span style="flex:2;font-size:11px;line-height:1.45;color:#71817b;padding-bottom:8px">Scan barcode = langsung masuk. Ketik manual = tekan Enter.</span>';
-    const hint=document.createElement('div');hint.id='nfInputHint';hint.className='small';hint.setAttribute('aria-live','polite');hint.style.cssText='padding:6px 4px 0;color:#71817b;font-size:11px;line-height:1.45';hint.textContent='Mulai ketik nama/kode barang, atau scan barcode.';
+    const hint=document.createElement('div');hint.id='nfInputHint';hint.className='small';hint.setAttribute('aria-live','polite');hint.style.cssText='display:block!important;visibility:visible!important;opacity:1!important;padding:8px 10px;margin-top:7px;color:#245d50;background:#eaf8f3;border:1px solid #ccebe0;border-radius:10px;font-size:12px;font-weight:600;line-height:1.45';hint.textContent='Mulai ketik nama/kode barang, atau scan barcode.';
     const searchArea=document.getElementById('searchArea');if(searchArea)searchArea.append(panel,hint);
     const qtyInput=panel.querySelector('#nfInputQty');
     let pendingProduct=null;
