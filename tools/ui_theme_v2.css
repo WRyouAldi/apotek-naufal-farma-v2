@@ -472,3 +472,44 @@ body:has(#bottomNavV15.nf-glass-nav) .wrap{padding-bottom:calc(126px + env(safe-
  .nf-hero-actions button{min-height:35px;padding:0 9px;font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.nf-hero-actions button{transition:none!important}}
+
+
+/* UX hardening pass — preserve Pearl Crystal Liquid Glass; layout and accessibility only */
+:root{scroll-padding-top:12px;scroll-padding-bottom:calc(112px + env(safe-area-inset-bottom))}
+html{scroll-behavior:smooth}
+body{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+.nf-page{width:100%;min-width:0;overflow-wrap:anywhere}
+.nf-page[aria-hidden="true"]{pointer-events:none}
+.nf-page-head{min-width:0}
+.nf-page-head>div{flex:1;min-width:0}
+.nf-page-intro{overflow-wrap:anywhere}
+#nfTransaction .nf-page-intro{padding:10px 12px!important;margin-bottom:10px!important;font-size:11px!important;line-height:1.5!important}
+#nfTransaction .search{min-width:0;width:100%;gap:7px!important}
+#nfTransaction .search input{width:100%;min-width:0;font-size:14px!important}
+#nfTransaction .cart .row{min-width:0;gap:8px!important}
+#nfTransaction .cart .row>*{min-width:0;overflow-wrap:anywhere}
+#nfTransaction .total{gap:12px!important}
+#nfTransaction .total #total{overflow-wrap:anywhere;text-align:right}
+#nfTransaction .actions button{overflow-wrap:anywhere;white-space:normal}
+#nfTransaction input,#nfTransaction select,#nfOut input,#nfOut select,#nfItems input,#nfItems select{font-size:16px!important}
+.nf-glass-nav button{min-width:0!important;touch-action:manipulation}
+.nf-glass-nav button span{line-height:1!important}
+.nf-glass-nav button b{line-height:1.2!important;overflow-wrap:anywhere}
+.nf-operational-hero .nf-hero-actions button{touch-action:manipulation}
+.nf-operational-hero .nf-hero-copy{overflow-wrap:anywhere}
+#nfOut #bkScanBtn,#nfOut #nfOutScanBarcode{touch-action:manipulation}
+button:disabled{opacity:.55!important;cursor:not-allowed!important;transform:none!important}
+@media(max-width:340px){
+ .wrap{padding-left:9px!important;padding-right:9px!important}
+ .nf-page{padding-left:7px!important;padding-right:7px!important}
+ .nf-page-head h2{font-size:20px!important}
+ .nf-operational-hero{align-items:flex-start!important}
+ .nf-hero-orb{display:none!important}
+ .nf-hero-actions button{flex:1 1 auto}
+ #bottomNavV15.nf-glass-nav>button b{font-size:8px!important}
+ #nfTransaction .total{align-items:flex-start!important;flex-direction:column!important}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ .nf-page{animation:none!important}
+}
