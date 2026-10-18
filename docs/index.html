@@ -1890,6 +1890,22 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
       }else if(!scored.length)hint.textContent='Barang tidak ditemukan. Coba kode/barcode.';
       return null;
     };
+    // Keep cashier search and live suggestions visible and styled like the Cek Harga search.
+    if(!document.getElementById('nfCashierSearchVisibleFix')){
+      const style=document.createElement('style');style.id='nfCashierSearchVisibleFix';
+      style.textContent=`
+        #nfTransaction #searchArea{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;overflow:visible!important;margin:12px 0!important;padding:12px!important;border:1px solid rgba(116,129,148,.18)!important;border-radius:20px!important;background:rgba(255,255,255,.82)!important;box-shadow:0 8px 24px rgba(41,49,63,.06)!important}
+        #nfTransaction #searchArea .search{display:flex!important;align-items:center!important;gap:8px!important;margin:0!important}
+        #nfTransaction #searchArea input#q{display:block!important;visibility:visible!important;opacity:1!important;flex:1!important;min-width:0!important;width:100%!important;min-height:50px!important;padding:12px 14px!important;border:1px solid #dce8e2!important;border-radius:14px!important;background:#fff!important;color:#202632!important;font-size:15px!important}
+        #nfTransaction #nfInputControls{display:flex!important;visibility:visible!important;gap:8px!important;margin-top:9px!important}
+        #nfTransaction #nfAutocomplete{display:block;position:relative!important;z-index:50!important;max-height:300px!important;overflow:auto!important;margin-top:8px!important;border:1px solid rgba(116,129,148,.18)!important;border-radius:15px!important;background:rgba(255,255,255,.98)!important;box-shadow:0 12px 28px rgba(41,49,63,.12)!important}
+        #nfTransaction #nfAutocomplete[style*="display: none"]{display:none!important}
+        #nfTransaction #nfAutocomplete button{min-height:52px!important;color:#202632!important;background:transparent!important}
+        #nfTransaction #nfAutocomplete button:active{background:#e8f7f2!important}
+        #nfTransaction #nfInputHint{display:block!important;min-height:16px}
+      `;
+      document.head.appendChild(style);
+    }
     // Live autocomplete: show compact product suggestions while the cashier types.
     let autoBox=document.getElementById('nfAutocomplete');
     if(!autoBox){
