@@ -1061,3 +1061,130 @@ html[data-dshe-theme="dark"] textarea{
 html[data-dshe-theme="dark"] input::placeholder,
 html[data-dshe-theme="dark"] textarea::placeholder{color:#aeb7c3!important;opacity:1!important}
 html[data-dshe-theme="dark"] :disabled{opacity:.62}
+
+
+/* CROSS-PAGE DARK MODE NORMALIZATION — fix light surfaces visible on Kasir, Item and QRIS */
+html[data-dshe-theme="dark"] #nfTransaction,
+html[data-dshe-theme="dark"] #nfTransaction .search-panel,
+html[data-dshe-theme="dark"] #nfTransaction .input-panel,
+html[data-dshe-theme="dark"] #nfTransaction .scan-panel,
+html[data-dshe-theme="dark"] #nfTransaction .qty-panel,
+html[data-dshe-theme="dark"] #nfTransaction .transaction-entry,
+html[data-dshe-theme="dark"] #nfTransaction .cart,
+html[data-dshe-theme="dark"] #nfTransaction .cart-panel{
+  background:linear-gradient(145deg,#292d33,#202329)!important;
+  color:#f2f4f7!important;border-color:#505762!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .search,
+html[data-dshe-theme="dark"] #nfTransaction .search-wrap,
+html[data-dshe-theme="dark"] #nfTransaction .search-box{
+  background:rgba(31,35,41,.96)!important;color:#f2f4f7!important;
+  border:1px solid #626b76!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .search input,
+html[data-dshe-theme="dark"] #nfTransaction input[type="text"],
+html[data-dshe-theme="dark"] #nfTransaction input[type="number"],
+html[data-dshe-theme="dark"] #nfTransaction input[type="search"]{
+  background:#202329!important;color:#f2f4f7!important;
+  -webkit-text-fill-color:#f2f4f7!important;border:1px solid #58616c!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .scan-hint,
+html[data-dshe-theme="dark"] #nfTransaction .hint,
+html[data-dshe-theme="dark"] #nfTransaction .help-text{
+  color:#c7ced8!important;-webkit-text-fill-color:#c7ced8!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .empty,
+html[data-dshe-theme="dark"] #nfTransaction .cart-empty{
+  background:linear-gradient(145deg,#292d33,#22252b)!important;
+  color:#e7ebf0!important;border:1px solid #4c535d!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .total,
+html[data-dshe-theme="dark"] #nfTransaction .total-box{
+  background:linear-gradient(145deg,#30353c,#25292f)!important;
+  color:#f4f6f8!important;border:1px solid #59616c!important;
+}
+html[data-dshe-theme="dark"] #nfTransaction .total *,
+html[data-dshe-theme="dark"] #nfTransaction .total-box *{
+  color:#f4f6f8!important;-webkit-text-fill-color:#f4f6f8!important;
+}
+
+/* Product list and CSV tools: darken actual page cards, keep controls readable */
+html[data-dshe-theme="dark"] #nfItems,
+html[data-dshe-theme="dark"] #nfItems .card,
+html[data-dshe-theme="dark"] #nfItems .items-panel,
+html[data-dshe-theme="dark"] #nfItems .database-panel,
+html[data-dshe-theme="dark"] #nfItems .csv-panel,
+html[data-dshe-theme="dark"] #nfItems .import-panel,
+html[data-dshe-theme="dark"] #nfItems .product-list,
+html[data-dshe-theme="dark"] #nfItems .item-row,
+html[data-dshe-theme="dark"] #nfItems .product-row{
+  background:linear-gradient(145deg,#292d33,#202329)!important;
+  color:#f1f3f6!important;border-color:#505762!important;
+}
+html[data-dshe-theme="dark"] #nfItems input,
+html[data-dshe-theme="dark"] #nfItems select,
+html[data-dshe-theme="dark"] #nfItems textarea{
+  background:#202329!important;color:#f2f4f7!important;
+  -webkit-text-fill-color:#f2f4f7!important;border:1px solid #58616c!important;
+}
+html[data-dshe-theme="dark"] #nfItems input::placeholder,
+html[data-dshe-theme="dark"] #nfItems textarea::placeholder{color:#aeb7c3!important;-webkit-text-fill-color:#aeb7c3!important}
+html[data-dshe-theme="dark"] #nfItems small,
+html[data-dshe-theme="dark"] #nfItems .muted,
+html[data-dshe-theme="dark"] #nfItems .hint{color:#c5ccd6!important;-webkit-text-fill-color:#c5ccd6!important}
+html[data-dshe-theme="dark"] #nfItems h1,
+html[data-dshe-theme="dark"] #nfItems h2,
+html[data-dshe-theme="dark"] #nfItems h3,
+html[data-dshe-theme="dark"] #nfItems label,
+html[data-dshe-theme="dark"] #nfItems strong,
+html[data-dshe-theme="dark"] #nfItems b{color:#f2f4f7!important;-webkit-text-fill-color:#f2f4f7!important}
+
+/* QRIS page: dark surfaces and readable merchant text; only the actual QR artwork stays white */
+html[data-dshe-theme="dark"] #pembayaranMandiri,
+html[data-dshe-theme="dark"] #pembayaranMandiri .payment-hub-head,
+html[data-dshe-theme="dark"] #pembayaranMandiri .payment-merchant,
+html[data-dshe-theme="dark"] #pembayaranMandiri .payment-info,
+html[data-dshe-theme="dark"] #pembayaranMandiri .payment-note,
+html[data-dshe-theme="dark"] #pembayaranMandiri .qris-card,
+html[data-dshe-theme="dark"] #pembayaranMandiri .qris-frame{
+  background:linear-gradient(145deg,#292d33,#202329)!important;
+  color:#f2f4f7!important;border-color:#505762!important;
+}
+html[data-dshe-theme="dark"] #pembayaranMandiri .eyebrow,
+html[data-dshe-theme="dark"] #pembayaranMandiri p,
+html[data-dshe-theme="dark"] #pembayaranMandiri small,
+html[data-dshe-theme="dark"] #pembayaranMandiri label,
+html[data-dshe-theme="dark"] #pembayaranMandiri .subtitle{
+  color:#c7ced8!important;-webkit-text-fill-color:#c7ced8!important;
+}
+html[data-dshe-theme="dark"] #pembayaranMandiri h1,
+html[data-dshe-theme="dark"] #pembayaranMandiri h2,
+html[data-dshe-theme="dark"] #pembayaranMandiri h3,
+html[data-dshe-theme="dark"] #pembayaranMandiri .payment-merchant *{
+  color:#f2f4f7!important;-webkit-text-fill-color:#f2f4f7!important;
+}
+html[data-dshe-theme="dark"] #pembayaranMandiri img,
+html[data-dshe-theme="dark"] #pembayaranMandiri canvas,
+html[data-dshe-theme="dark"] #pembayaranMandiri .qris-image,
+html[data-dshe-theme="dark"] #pembayaranMandiri .qr-code-canvas{
+  background:#fff!important;filter:none!important;opacity:1!important;
+}
+html[data-dshe-theme="dark"] #pembayaranMandiri .qris-image,
+html[data-dshe-theme="dark"] #pembayaranMandiri .qr-code-canvas{
+  border:1px solid #d9dee5!important;border-radius:14px!important;
+}
+
+/* Shared readable status and helper surfaces */
+html[data-dshe-theme="dark"] .nf-page-intro,
+html[data-dshe-theme="dark"] .notice,
+html[data-dshe-theme="dark"] .alert,
+html[data-dshe-theme="dark"] .status-message{
+  background:rgba(42,46,53,.92)!important;color:#e8ecf1!important;
+  border-color:rgba(199,207,218,.28)!important;
+}
+html[data-dshe-theme="dark"] .nf-page-intro *,
+html[data-dshe-theme="dark"] .notice *,
+html[data-dshe-theme="dark"] .alert *,
+html[data-dshe-theme="dark"] .status-message *{
+  color:inherit!important;-webkit-text-fill-color:currentColor!important;
+}
