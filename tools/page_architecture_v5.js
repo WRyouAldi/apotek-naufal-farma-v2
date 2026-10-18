@@ -35,7 +35,7 @@
   // Compact Operational Hero: useful actions first, without consuming cashier workspace.
   welcome.classList.add('nf-operational-hero');
   welcome.setAttribute('aria-label',"Ringkasan operasional Apotek D'she Farma");
-  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> OPERATIONAL OVERVIEW</span><h2>Apotek D'she Farma</h2><p>Kelola penjualan, cek produk, dan mulai pemindaian dengan cepat.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div></div><div class="nf-hero-orb" aria-label="Logo D\u0027she Farma"><img src="logo_dshe_farma.svg" alt="D\u0027she Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
+  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> PEARL CRYSTAL · POS MOBILE</span><h2>Apotek D'she Farma</h2><p>Penjualan, scan barcode, dan pengecekan produk dalam satu alur yang praktis.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div><div class="nf-hero-status"><span></span> Dashboard siap · pilih tindakan</div></div><div class="nf-hero-orb" aria-label="Logo D\u0027she Farma"><img src="logo_dshe_farma.svg" alt="D\u0027she Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
   home.append(welcome,stats,quick);
   welcome.querySelector('[data-hero-cashier]').addEventListener('click',()=>window.nfGo('transaction'));
   welcome.querySelector('[data-hero-scan]').addEventListener('click',()=>window.focusSearch(true));
@@ -62,7 +62,10 @@
     style.textContent=`
       #nfHome .nf-operational-hero{display:flex;align-items:center;gap:14px;padding:17px 16px!important;margin:0 0 14px!important;border-radius:22px!important;min-height:0!important}
       #nfHome .nf-hero-copy{min-width:0;flex:1}
-      #nfHome .nf-hero-eyebrow{font-size:9px;letter-spacing:1.2px}
+      #nfHome .nf-hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:850;letter-spacing:1.15px;color:var(--dshe-muted,#687873)}
+      #nfHome .nf-hero-eyebrow i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#6bc8ad;box-shadow:0 0 0 4px rgba(107,200,173,.15)}
+      #nfHome .nf-hero-status{display:flex;align-items:center;gap:6px;margin-top:11px;font-size:10px;color:var(--dshe-muted,#687873)}
+      #nfHome .nf-hero-status span{width:6px;height:6px;border-radius:50%;background:#51b99a;box-shadow:0 0 0 3px rgba(81,185,154,.13)}
       #nfHome .nf-operational-hero h2{font-size:clamp(20px,5.2vw,25px);line-height:1.15;margin:8px 0 5px}
       #nfHome .nf-operational-hero p{font-size:11px;line-height:1.45;margin:0 0 12px;max-width:290px}
       #nfHome .nf-hero-actions{display:flex;gap:8px;flex-wrap:wrap}
