@@ -596,3 +596,45 @@ button:disabled{opacity:.55!important;cursor:not-allowed!important;transform:non
  #nfTransaction .nf-tx-tools #nfTxShowQris{width:100%!important;justify-content:flex-start!important}
 }
 
+/* Strong structural POS mobile redesign: header, product entry, cart and checkout */
+#nfTransaction .nf-tx-meta{
+ display:grid!important;grid-template-columns:minmax(0,1fr) minmax(112px,.8fr)!important;
+ gap:10px!important;align-items:center!important;margin:0 0 14px!important;padding:13px!important;
+ border:1px solid rgba(255,255,255,.98)!important;border-radius:19px!important;
+ background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(220,244,235,.8))!important;
+ box-shadow:0 8px 22px rgba(30,65,53,.06),inset 0 1px 0 #fff!important;
+}
+#nfTransaction .nf-tx-meta-main{display:flex;align-items:center;gap:9px;min-width:0}
+#nfTransaction .nf-tx-live-dot{width:10px;height:10px;flex:0 0 10px;border-radius:50%;background:#20a982;box-shadow:0 0 0 5px rgba(32,169,130,.12)}
+#nfTransaction .nf-tx-meta-main b{display:block;color:#173d31;font-size:11px;letter-spacing:.7px}
+#nfTransaction .nf-tx-meta-main small{display:block;margin-top:4px;color:#74847d;font-size:10px;line-height:1.35}
+#nfTransaction .nf-tx-customer{display:flex;flex-direction:column;gap:4px;min-width:0}
+#nfTransaction .nf-tx-customer span{font-size:10px;font-weight:700;color:#718078}
+#nfTransaction .nf-tx-customer select{width:100%;min-width:0;height:39px;padding:0 9px;border-radius:11px;border:1px solid #dce9e2;background:#fff;color:#203d32;font-size:13px}
+#nfTransaction .nf-tx-section-label{display:flex!important;flex-direction:column!important;gap:3px!important;margin:12px 2px 8px!important}
+#nfTransaction .nf-tx-section-label b{font-size:15px!important;font-weight:850!important;color:#20382f!important;letter-spacing:-.25px}
+#nfTransaction .nf-tx-section-label small{font-size:10px!important;line-height:1.4!important;color:#7b8983!important}
+#nfTransaction .nf-tx-cart-label{margin-top:18px!important}
+#nfTransaction .nf-tx-tools{display:flex!important;justify-content:flex-start!important;margin:0 0 8px!important}
+#nfTransaction .nf-tx-tools #nfTxShowQris{min-height:40px!important;padding:7px 10px!important;background:rgba(255,255,255,.78)!important;box-shadow:none!important}
+#nfTransaction .nf-tx-summary{margin:0 0 14px!important}
+#nfTransaction #searchArea{padding:8px!important;border-radius:17px!important;background:rgba(255,255,255,.78)!important}
+#nfTransaction #results:empty{display:none!important}
+#nfTransaction .cart{margin-top:0!important;padding:14px!important}
+#nfTransaction .cart .total{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:10px!important;padding:16px!important;margin:14px 0 8px!important;
+ border-radius:17px!important;background:linear-gradient(125deg,#dff5eb,#f8fffb)!important;
+ border:1px solid rgba(24,139,112,.18)!important;
+}
+#nfTransaction .cart .total #total{font-size:clamp(24px,7vw,32px)!important;font-weight:900!important;color:#087b5d!important}
+#nfTransaction .cart .actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+#nfTransaction .cart .actions #saveBtn{grid-column:1/-1!important;min-height:54px!important;font-size:15px!important;letter-spacing:.1px!important}
+#nfTransaction .cart .actions button{min-width:0!important;min-height:44px!important}
+@media(max-width:360px){
+ #nfTransaction .nf-tx-meta{grid-template-columns:minmax(0,1fr)!important}
+ #nfTransaction .nf-tx-customer{display:grid;grid-template-columns:70px minmax(0,1fr);align-items:center}
+ #nfTransaction .nf-tx-customer span{font-size:11px}
+ #nfTransaction .cart .total{align-items:flex-start!important;flex-direction:column!important}
+}
+
