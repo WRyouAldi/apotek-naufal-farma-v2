@@ -35,7 +35,7 @@
   // Compact Operational Hero: useful actions first, without consuming cashier workspace.
   welcome.classList.add('nf-operational-hero');
   welcome.setAttribute('aria-label',"Ringkasan operasional Apotek D'she Farma");
-  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> OPERATIONAL OVERVIEW</span><h2>Apotek D'she Farma</h2><p>Kelola penjualan, cek produk, dan mulai pemindaian dengan cepat.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div></div><div class="nf-hero-orb" aria-hidden="true"><span>NF</span></div>`;
+  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> OPERATIONAL OVERVIEW</span><h2>Apotek D'she Farma</h2><p>Kelola penjualan, cek produk, dan mulai pemindaian dengan cepat.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div></div><div class="nf-hero-orb" aria-label="Logo D\u0027she Farma"><img src="logo_dshe_farma.svg" alt="D\u0027she Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
   home.append(welcome,stats,quick);
   welcome.querySelector('[data-hero-cashier]').addEventListener('click',()=>window.nfGo('transaction'));
   welcome.querySelector('[data-hero-scan]').addEventListener('click',()=>window.focusSearch(true));
