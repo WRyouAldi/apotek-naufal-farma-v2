@@ -786,6 +786,21 @@
     html[data-dshe-theme="system"] .nf-price-search button,
     html[data-dshe-theme="system"] .nf-back {background:var(--dshe-soft)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
   }
+  /* Compact mobile layout and restrained, accessible micro-interactions */
+  #nfPrice .nf-page-head{margin-bottom:2px;padding-bottom:10px}
+  #nfPrice .nf-page-intro{font-size:11px;line-height:1.45;padding:10px 12px;margin:0 0 10px;border-radius:13px}
+  #nfPrice .nf-price-lookup{padding:10px;border-radius:17px}
+  #nfPrice .nf-price-search{min-height:48px;padding:4px 5px 4px 10px;gap:6px}
+  #nfPrice .nf-price-search input{font-size:14px;min-width:0}
+  #nfPrice #nfPriceResults{min-height:0}
+  #nfPrice .nf-price-empty{padding:15px 10px;margin-top:9px;border-radius:13px;font-size:12px;line-height:1.5}
+  #nfPrice .nf-price-result{padding:12px;margin-top:9px;border-radius:14px}
+  #nfPrice .nf-price-result-meta{margin-top:9px;padding-top:8px}
+  .nf-page button,.nf-glass-nav button{transition:transform .16s ease,filter .16s ease,background-color .16s ease,border-color .16s ease}
+  .nf-page button:active,.nf-glass-nav button:active{transform:scale(.98)}
+  .nf-page input,.nf-page select,.nf-page textarea{transition:border-color .16s ease,box-shadow .16s ease}
+  .nf-page input:focus-visible,.nf-page select:focus-visible,.nf-page textarea:focus-visible,.nf-page button:focus-visible{outline:2px solid var(--dshe-accent,#c6ccd5);outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){.nf-page button,.nf-glass-nav button,.nf-page input,.nf-page select,.nf-page textarea{transition:none!important}.nf-page button:active,.nf-glass-nav button:active{transform:none}}
   `;
   document.head.appendChild(css);
   const key='dshe-farma-theme';
