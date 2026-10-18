@@ -142,6 +142,20 @@
   if(nodes.cart)tx.insertBefore(txCartLabel,nodes.cart);
   if(nodes.cartAnchor)tx.appendChild(nodes.cartAnchor);
   if(nodes.cart)tx.appendChild(nodes.cart);
+  // Mirror the live cart total into a prominent POS total panel near the transaction header.
+  // The original total remains in the cart as the authoritative value and its controls are untouched.
+  const cartTotal=nodes.cart?.querySelector('.total');
+  if(cartTotal){
+    const totalPanel=document.createElement('section');
+    totalPanel.className='nf-tx-total-panel';
+    totalPanel.setAttribute('aria-live','polite');
+    totalPanel.innerHTML='<div><small>TOTAL PEMBAYARAN</small><b id="nfTxGrandTotal">Rp 0</b></div><span class="nf-tx-total-badge">IDR</span>';
+    tx.insertBefore(totalPanel,txMeta.nextSibling);
+    const totalValue=cartTotal.querySelector('#total')||cartTotal.querySelector('[id*="total" i]')||cartTotal;
+    const syncGrandTotal=()=>{const target=document.getElementById('nfTxGrandTotal');if(target)target.textContent=(totalValue.textContent||'Rp 0').trim()};
+    new MutationObserver(syncGrandTotal).observe(cartTotal,{childList:true,subtree:true,characterData:true,attributes:true});
+    syncGrandTotal();
+  }
 
   const paymentPage=make('nfPayment','QRIS','Pembayaran QRIS mandiri — tidak perlu membuka Kasir.');
   const paymentIntro=document.createElement('div');paymentIntro.className='nf-page-intro';
