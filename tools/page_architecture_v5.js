@@ -398,7 +398,7 @@
     }
   };
   // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.
-  // Scan/type workflow: keep the product catalogue hidden; Enter adds one matched product to the input list.
+  // Scan/type + quantity workflow: choose quantity before submitting each item.
   const cashierInput=document.getElementById('q');
   const txResultList=document.getElementById('results');
   if(txResultList){
@@ -408,56 +408,74 @@
   if(cashierInput && !cashierInput.dataset.nfListInputBound){
     cashierInput.dataset.nfListInputBound='1';
     cashierInput.placeholder='Ketik nama/kode barang, lalu Enter atau Scan barcode';
+    const inputPanel=document.createElement('div');
+    inputPanel.id='nfInputControls';
+    inputPanel.style.cssText='display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:8px;align-items:end;margin-top:8px';
+    inputPanel.innerHTML='<label style="display:block;font-size:11px;font-weight:700;color:#65766f">Jumlah sebelum input<input id="nfInputQty" type="number" min="1" max="9999" step="1" inputmode="numeric" value="1" aria-label="Jumlah barang sebelum ditambahkan" style="display:block;width:100%;height:42px;margin-top:5px;padding:8px 10px;border:1px solid #d9e6df;border-radius:11px;background:#fff;font-size:15px"></label><button id="nfAddTypedItem" type="button" style="height:42px;border-radius:11px;background:#087f62;color:#fff;font-weight:800">＋ Input</button>';
     const inputHint=document.createElement('div');
-    inputHint.id='nfInputHint';
-    inputHint.className='small';
-    inputHint.setAttribute('aria-live','polite');
-    inputHint.style.cssText='padding:5px 4px 0;color:#71817b;font-size:11px;line-height:1.45';
-    inputHint.textContent='Daftar katalog disembunyikan. Barang yang cocok akan masuk ke daftar input.';
+    inputHint.id='nfInputHint';inputHint.className='small';inputHint.setAttribute('aria-live','polite');
+    inputHint.style.cssText='padding:6px 4px 0;color:#71817b;font-size:11px;line-height:1.45';
+    inputHint.textContent='Ketik/scan barang, tentukan jumlah, lalu tekan Enter atau Input.';
     const searchArea=document.getElementById('searchArea');
-    if(searchArea)searchArea.appendChild(inputHint);
-    cashierInput.addEventListener('keydown',function(event){
-      if(event.key!=='Enter')return;
+    if(searchArea){searchArea.append(inputPanel,inputHint);}
+    const qtyInput=inputPanel.querySelector('#nfInputQty');
+    let pendingProduct=null;
+    const addPendingProduct=()=>{
+      if(!pendingProduct){if(inputHint)inputHint.textContent='Masukkan nama, kode, atau scan barcode terlebih dahulu.';cashierInput.focus();return;}
+      const qty=Number(qtyInput.value);
+      if(!Number.isInteger(qty)||qty<1||qty>9999){if(inputHint)inputHint.textContent='Jumlah harus berupa bilangan bulat 1–9999.';qtyInput.focus();return;}
+      if(!(Number(pendingProduct.price)>0)){if(inputHint)inputHint.textContent='Harga barang belum diatur: '+pendingProduct.name;return;}
+      const f=cart.find(c=>c.code===pendingProduct.code&&c.name===pendingProduct.name&&c.price===pendingProduct.price);
+      if(f)f.qty+=qty;else cart.push({...pendingProduct,qty});
+      renderCart();
+      if(inputHint)inputHint.textContent='✓ '+pendingProduct.name+' × '+qty+' masuk ke daftar input.';
+      pendingProduct=null;cashierInput.value='';qtyInput.value='1';
+      if(txResultList)txResultList.innerHTML='';
+      cashierInput.focus();
+    };
+    const resolveTypedProduct=()=>{
       const term=String(cashierInput.value||'').trim().toLocaleLowerCase('id-ID');
-      if(!term)return;
-      event.preventDefault();
-      const terms=term.split(/\\s+/).filter(Boolean);
+      if(!term)return null;
       const scored=ITEMS.map(x=>{
         const code=String(x.code||'').trim().toLocaleLowerCase('id-ID');
         const barcode=String(x.barcode||'').trim().toLocaleLowerCase('id-ID');
         const name=String(x.name||'').toLocaleLowerCase('id-ID');
         const text=code+' '+barcode+' '+name+' '+String(x.jenis||'').toLocaleLowerCase('id-ID');
         let score=0;
-        if(code===term)score=1000;
-        else if(barcode===term)score=1200;
-        else {
-          for(const t of terms){
-            if(code.includes(t))score+=40;
-            if(barcode.includes(t))score+=60;
-            if(name.includes(t))score+=20;
-            if(text.includes(t))score+=5;
-          }
+        if(code===term)score=10000;
+        else if(barcode===term)score=12000;
+        else for(const t of term.split(/\\s+/).filter(Boolean)){
+          if(code.includes(t))score+=40;
+          if(barcode.includes(t))score+=60;
+          if(name.includes(t))score+=20;
+          if(text.includes(t))score+=5;
         }
         return {x,score};
       }).filter(v=>v.score>0).sort((a,b)=>b.score-a.score);
       const exact=scored.find(v=>String(v.x.code||'').trim().toLocaleLowerCase('id-ID')===term||String(v.x.barcode||'').trim().toLocaleLowerCase('id-ID')===term);
       const chosen=exact||((scored.length===1)?scored[0]:null);
-      if(chosen && chosen.x.price>0){
-        const f=cart.find(c=>c.code===chosen.x.code&&c.name===chosen.x.name&&c.price===chosen.x.price);
-        if(f)f.qty++;else cart.push({...chosen.x,qty:1});
-        renderCart();
-        if(inputHint)inputHint.textContent='✓ '+chosen.x.name+' ditambahkan • ketik/scan barang berikutnya.';
-        cashierInput.value='';
-        if(txResultList)txResultList.innerHTML='';
-        cashierInput.focus();
-      }else if(scored.length>1){
-        if(inputHint)inputHint.textContent='Ditemukan '+scored.length+' kecocokan. Tambahkan kata pada nama/kode agar lebih spesifik.';
-      }else if(scored.length===1 && scored[0].x.price<=0){
-        if(inputHint)inputHint.textContent='Harga barang belum diatur: '+scored[0].x.name;
-      }else{
-        if(inputHint)inputHint.textContent='Barang tidak ditemukan. Periksa nama, kode, atau barcode.';
-      }
+      if(chosen){pendingProduct=chosen.x;return chosen.x;}
+      if(inputHint)inputHint.textContent=scored.length>1?'Ditemukan '+scored.length+' kecocokan. Gunakan kode/barcode yang lebih spesifik.':'Barang tidak ditemukan. Periksa nama, kode, atau barcode.';
+      return null;
+    };
+    const submitFromInput=()=>{
+      if(!pendingProduct && !resolveTypedProduct())return;
+      addPendingProduct();
+    };
+    cashierInput.addEventListener('keydown',event=>{
+      if(event.key!=='Enter')return;
+      event.preventDefault();submitFromInput();
     });
+    inputPanel.querySelector('#nfAddTypedItem').addEventListener('click',submitFromInput);
+    // Scanner bridge fills the same input; resolving happens on Enter or the Input button.
+    cashierInput.addEventListener('input',()=>{pendingProduct=null;});
+    window.nfPrepareScannedProduct=function(code){
+      cashierInput.value=String(code||'').trim();
+      pendingProduct=null;
+      const product=resolveTypedProduct();
+      if(product && inputHint)inputHint.textContent='Terbaca: '+product.name+'. Atur jumlah lalu tekan Input.';
+      cashierInput.focus();
+    };
   }
   // Keep the entered-items list readable as rows on mobile, without replacing existing cart logic.
   if(!document.getElementById('nfInputListStyle')){
