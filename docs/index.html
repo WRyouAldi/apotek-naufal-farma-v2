@@ -4173,4 +4173,192 @@ html[data-dshe-theme="dark"] #barangKeluarSection button{max-width:100%;overflow
 }
 </style>
 
+
+<style id="dsheP1AllPages">
+/* P1: unify every dynamic module with the locked Dark Pearl / Charcoal Silver palette.
+   Light mode remains unchanged; preserve the QRIS scanning canvas in white. */
+html[data-dshe-theme="dark"]{
+ --p1-bg:#1b1e23;--p1-card:#292d33;--p1-surface:#24272c;--p1-input:#1d2025;
+ --p1-border:#535963;--p1-text:#f2f4f7;--p1-muted:#c1c7d0;--p1-mint:#9ad7c5;
+}
+html[data-dshe-theme="dark"] .nf-page,
+html[data-dshe-theme="dark"] .nf-page .card,
+html[data-dshe-theme="dark"] #barangKeluarSection,
+html[data-dshe-theme="dark"] .nf-crud-card,
+html[data-dshe-theme="dark"] .nf-crud-item,
+html[data-dshe-theme="dark"] .nf-crud-box,
+html[data-dshe-theme="dark"] .nf-crud-import,
+html[data-dshe-theme="dark"] .nf-crud-import-row select,
+html[data-dshe-theme="dark"] .nf-crud-tools select,
+html[data-dshe-theme="dark"] .nf-sync-host,
+html[data-dshe-theme="dark"] #nfCloudCard,
+html[data-dshe-theme="dark"] .nf-price-lookup,
+html[data-dshe-theme="dark"] .nf-price-result,
+html[data-dshe-theme="dark"] .nf-page-intro,
+html[data-dshe-theme="dark"] .bk-history-card{
+ background:var(--p1-card)!important;color:var(--p1-text)!important;
+ border-color:var(--p1-border)!important;box-shadow:0 8px 22px rgba(0,0,0,.16)!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-result,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-row,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-summary,
+html[data-dshe-theme="dark"] .nf-crud-item,
+html[data-dshe-theme="dark"] .nf-crud-import,
+html[data-dshe-theme="dark"] .nf-price-result,
+html[data-dshe-theme="dark"] .nf-sync-host .nf-sync-row{
+ border-color:var(--p1-border)!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection input,
+html[data-dshe-theme="dark"] #barangKeluarSection select,
+html[data-dshe-theme="dark"] #barangKeluarSection textarea,
+html[data-dshe-theme="dark"] .nf-crud-card input,
+html[data-dshe-theme="dark"] .nf-crud-box input,
+html[data-dshe-theme="dark"] .nf-crud-box select,
+html[data-dshe-theme="dark"] .nf-crud-import-row select,
+html[data-dshe-theme="dark"] .nf-crud-tools select,
+html[data-dshe-theme="dark"] .nf-price-search,
+html[data-dshe-theme="dark"] .nf-price-lookup input,
+html[data-dshe-theme="dark"] .nf-price-lookup select,
+html[data-dshe-theme="dark"] .nf-sync-host input,
+html[data-dshe-theme="dark"] .nf-sync-host select,
+html[data-dshe-theme="dark"] .nf-sync-host textarea{
+ background:var(--p1-input)!important;color:var(--p1-text)!important;
+ -webkit-text-fill-color:var(--p1-text)!important;border-color:var(--p1-border)!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection input::placeholder,
+html[data-dshe-theme="dark"] .nf-crud-card input::placeholder,
+html[data-dshe-theme="dark"] .nf-crud-box input::placeholder,
+html[data-dshe-theme="dark"] .nf-price-search::placeholder,
+html[data-dshe-theme="dark"] .nf-sync-host input::placeholder{
+ color:var(--p1-muted)!important;-webkit-text-fill-color:var(--p1-muted)!important;opacity:1!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-head h3,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-name,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-list-title,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-history-title,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-total span,
+html[data-dshe-theme="dark"] .nf-crud-name,
+html[data-dshe-theme="dark"] .nf-crud-import-title,
+html[data-dshe-theme="dark"] .nf-crud-box h3,
+html[data-dshe-theme="dark"] .nf-price-result *,
+html[data-dshe-theme="dark"] .nf-sync-host h2,
+html[data-dshe-theme="dark"] .nf-sync-host h3{
+ color:var(--p1-text)!important;-webkit-text-fill-color:var(--p1-text)!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-hint,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-result-meta,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-row-bottom,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-history-card .small,
+html[data-dshe-theme="dark"] .nf-crud-count,
+html[data-dshe-theme="dark"] .nf-crud-code,
+html[data-dshe-theme="dark"] .nf-crud-meta,
+html[data-dshe-theme="dark"] .nf-crud-import-sub,
+html[data-dshe-theme="dark"] .nf-crud-field label,
+html[data-dshe-theme="dark"] .nf-crud-empty,
+html[data-dshe-theme="dark"] .nf-sync-host small,
+html[data-dshe-theme="dark"] .nf-sync-host p,
+html[data-dshe-theme="dark"] .nf-sync-host label{
+ color:var(--p1-muted)!important;-webkit-text-fill-color:var(--p1-muted)!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-result-price,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-total b,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-row-bottom b,
+html[data-dshe-theme="dark"] .nf-crud-price{
+ color:var(--p1-mint)!important;-webkit-text-fill-color:var(--p1-mint)!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-result button,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-actions .pdf,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-one-pdf,
+html[data-dshe-theme="dark"] .nf-edit,
+html[data-dshe-theme="dark"] .nf-crud-cancel{
+ background:#343b42!important;color:#d5f3e9!important;border:1px solid #5a7069!important;
+}
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-remove,
+html[data-dshe-theme="dark"] .nf-del{
+ background:#482d32!important;color:#ffd9dd!important;border:1px solid #82545b!important;
+}
+html[data-dshe-theme="dark"] .nf-crud-modal{background:rgba(0,0,0,.72)!important}
+html[data-dshe-theme="dark"] .nf-crud-box{background:#24272c!important;color:var(--p1-text)!important;border:1px solid var(--p1-border)!important}
+html[data-dshe-theme="dark"] .nf-crud-import-icon{background:#37685b!important;color:#f2f4f7!important}
+html[data-dshe-theme="dark"] .nf-crud-import-btn,
+html[data-dshe-theme="dark"] .nf-crud-add,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-actions .primary{
+ background:#477f70!important;color:#fff!important;border:1px solid #6aa08f!important;
+}
+html[data-dshe-theme="dark"] #nfCloudCard{
+ background:linear-gradient(145deg,#292d33,#24272c)!important;border:1px solid var(--p1-border)!important;
+}
+html[data-dshe-theme="dark"] #nfCloudCard div{color:var(--p1-muted)}
+html[data-dshe-theme="dark"] #nfCloudCard div[style*="font-weight:900"]{color:var(--p1-text)!important}
+html[data-dshe-theme="dark"] #nfCloudSync{background:#477f70!important;color:#fff!important;border:1px solid #6aa08f!important}
+html[data-dshe-theme="dark"] #nfCloudStatus{color:var(--p1-muted)!important}
+html[data-dshe-theme="dark"] .nf-glass-nav{
+ background:rgba(29,32,37,.94)!important;border-color:rgba(193,199,208,.24)!important;
+ -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+}
+html[data-dshe-theme="dark"] .nf-glass-nav button{color:#c1c7d0!important}
+html[data-dshe-theme="dark"] .nf-glass-nav button.active{color:#f2f4f7!important;background:#343a42!important}
+html[data-dshe-theme="dark"] .nf-glass-nav button.active span{color:#a8e1cf!important}
+html[data-dshe-theme="dark"] .nf-page .empty,
+html[data-dshe-theme="dark"] .nf-page .status,
+html[data-dshe-theme="dark"] .nf-page .small{color:var(--p1-muted)}
+/* QRIS scanning surface must stay white in every theme. */
+html[data-dshe-theme="dark"] .payment-qris-frame img,
+html[data-dshe-theme="dark"] .payment-qris-frame canvas,
+html[data-dshe-theme="dark"] .nf-qris-image-wrap,
+html[data-dshe-theme="dark"] .pos-qris-art{background:#fff!important;color:#17211e!important;filter:none!important;opacity:1!important}
+@media(prefers-color-scheme:dark){
+ html[data-dshe-theme="system"] #barangKeluarSection,
+ html[data-dshe-theme="system"] .nf-crud-card,
+ html[data-dshe-theme="system"] .nf-crud-item,
+ html[data-dshe-theme="system"] .nf-crud-box,
+ html[data-dshe-theme="system"] .nf-crud-import,
+ html[data-dshe-theme="system"] .nf-sync-host,
+ html[data-dshe-theme="system"] #nfCloudCard,
+ html[data-dshe-theme="system"] .nf-price-lookup,
+ html[data-dshe-theme="system"] .nf-price-result,
+ html[data-dshe-theme="system"] .nf-page-intro,
+ html[data-dshe-theme="system"] .bk-history-card{
+  background:#292d33!important;color:#f2f4f7!important;border-color:#535963!important;box-shadow:0 8px 22px rgba(0,0,0,.16)!important;
+ }
+ html[data-dshe-theme="system"] #barangKeluarSection input,
+ html[data-dshe-theme="system"] #barangKeluarSection select,
+ html[data-dshe-theme="system"] .nf-crud-card input,
+ html[data-dshe-theme="system"] .nf-crud-box input,
+ html[data-dshe-theme="system"] .nf-crud-box select,
+ html[data-dshe-theme="system"] .nf-price-search,
+ html[data-dshe-theme="system"] .nf-sync-host input,
+ html[data-dshe-theme="system"] .nf-sync-host select{
+  background:#1d2025!important;color:#f2f4f7!important;-webkit-text-fill-color:#f2f4f7!important;border-color:#535963!important;
+ }
+ html[data-dshe-theme="system"] #barangKeluarSection .bk-hint,
+ html[data-dshe-theme="system"] #barangKeluarSection .bk-result-meta,
+ html[data-dshe-theme="system"] #barangKeluarSection .bk-row-bottom,
+ html[data-dshe-theme="system"] .nf-crud-count,
+ html[data-dshe-theme="system"] .nf-crud-code,
+ html[data-dshe-theme="system"] .nf-crud-meta,
+ html[data-dshe-theme="system"] .nf-crud-import-sub,
+ html[data-dshe-theme="system"] .nf-crud-field label,
+ html[data-dshe-theme="system"] .nf-crud-empty,
+ html[data-dshe-theme="system"] .nf-sync-host small,
+ html[data-dshe-theme="system"] .nf-sync-host p{color:#c1c7d0!important;-webkit-text-fill-color:#c1c7d0!important}
+ html[data-dshe-theme="system"] #nfCloudSync,
+ html[data-dshe-theme="system"] .nf-crud-add,
+ html[data-dshe-theme="system"] #barangKeluarSection .bk-actions .primary{background:#477f70!important;color:#fff!important}
+ html[data-dshe-theme="system"] .nf-glass-nav{background:rgba(29,32,37,.94)!important;border-color:rgba(193,199,208,.24)!important}
+ html[data-dshe-theme="system"] .nf-glass-nav button{color:#c1c7d0!important}
+ html[data-dshe-theme="system"] .nf-glass-nav button.active{color:#f2f4f7!important;background:#343a42!important}
+ html[data-dshe-theme="system"] .payment-qris-frame img,
+ html[data-dshe-theme="system"] .payment-qris-frame canvas,
+ html[data-dshe-theme="system"] .nf-qris-image-wrap,
+ html[data-dshe-theme="system"] .pos-qris-art{background:#fff!important;color:#17211e!important;filter:none!important;opacity:1!important}
+}
+@media(max-width:380px){
+ html[data-dshe-theme="dark"] #barangKeluarSection{padding:10px!important}
+ html[data-dshe-theme="dark"] #barangKeluarSection .bk-search{display:grid;grid-template-columns:minmax(0,1fr) 58px;gap:6px}
+ html[data-dshe-theme="dark"] #barangKeluarSection .bk-search input{width:100%;min-width:0}
+ html[data-dshe-theme="dark"] .nf-glass-nav button b{font-size:9px}
+}
+</style>
+
 </body></html>
