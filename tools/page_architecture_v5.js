@@ -708,6 +708,80 @@
   .nf-page .nf-hero-scan{background:var(--dshe-soft)!important;color:var(--dshe-text)!important;border:1px solid var(--dshe-line)!important}
   .nf-page .nf-input-table-head span{color:var(--dshe-muted)!important}
   .nf-page .nf-table-subtotal{font-weight:800!important}
+  /* Dark Pearl filter: override legacy light surfaces and low-contrast text on every POS page. */
+  html[data-dshe-theme="dark"] .nf-page,
+  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"] .nf-page} {color:var(--dshe-text)!important}
+  html[data-dshe-theme="dark"] .nf-page-intro,
+  html[data-dshe-theme="dark"] .nf-price-lookup,
+  html[data-dshe-theme="dark"] .nf-price-result,
+  html[data-dshe-theme="dark"] .nf-price-search,
+  html[data-dshe-theme="dark"] #nfTransaction .search,
+  html[data-dshe-theme="dark"] #nfTransaction .cart,
+  html[data-dshe-theme="dark"] #nfTransaction .nf-tx-summary>div,
+  html[data-dshe-theme="dark"] .nf-more-grid button,
+  html[data-dshe-theme="dark"] .nf-payment-note,
+  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"] .nf-page-intro,
+    html[data-dshe-theme="system"] .nf-price-lookup,
+    html[data-dshe-theme="system"] .nf-price-result,
+    html[data-dshe-theme="system"] .nf-price-search,
+    html[data-dshe-theme="system"] #nfTransaction .search,
+    html[data-dshe-theme="system"] #nfTransaction .cart,
+    html[data-dshe-theme="system"] #nfTransaction .nf-tx-summary>div,
+    html[data-dshe-theme="system"] .nf-more-grid button,
+    html[data-dshe-theme="system"] .nf-payment-note} {
+    background:var(--dshe-surface)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important;box-shadow:var(--dshe-shadow)!important
+  }
+  html[data-dshe-theme="dark"] .nf-page-intro,
+  html[data-dshe-theme="dark"] .nf-price-empty,
+  html[data-dshe-theme="dark"] .nf-price-product b,
+  html[data-dshe-theme="dark"] .nf-price-result-meta,
+  html[data-dshe-theme="dark"] .nf-page-head h2,
+  html[data-dshe-theme="dark"] .nf-page-head p,
+  html[data-dshe-theme="dark"] .nf-page label,
+  html[data-dshe-theme="dark"] .nf-page p,
+  html[data-dshe-theme="dark"] .nf-page small,
+  html[data-dshe-theme="dark"] .nf-page span,
+  html[data-dshe-theme="dark"] .nf-more-grid button b,
+  html[data-dshe-theme="dark"] .nf-more-grid button small {
+    color:var(--dshe-text)!important
+  }
+  html[data-dshe-theme="dark"] .nf-page-intro,
+  html[data-dshe-theme="dark"] .nf-price-empty,
+  html[data-dshe-theme="dark"] .nf-price-product small,
+  html[data-dshe-theme="dark"] .nf-price-result-meta,
+  html[data-dshe-theme="dark"] .nf-page-head p {color:var(--dshe-muted)!important}
+  html[data-dshe-theme="dark"] .nf-price-search input,
+  html[data-dshe-theme="dark"] #nfTransaction .search input {color:var(--dshe-text)!important;background:transparent!important}
+  html[data-dshe-theme="dark"] .nf-price-search input::placeholder,
+  html[data-dshe-theme="dark"] #nfTransaction .search input::placeholder {color:var(--dshe-muted)!important;opacity:1}
+  html[data-dshe-theme="dark"] .nf-price-search button,
+  html[data-dshe-theme="dark"] .nf-back {background:var(--dshe-soft)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
+  html[data-dshe-theme="dark"] .nf-price-result-top strong,
+  html[data-dshe-theme="dark"] .nf-page .nf-table-subtotal {color:#d9e0e8!important}
+  html[data-dshe-theme="dark"] .nf-hero-primary {background:linear-gradient(135deg,#d9dde3,#aeb5c0)!important;color:#202329!important}
+  @media(prefers-color-scheme:dark){
+    html[data-dshe-theme="system"] .nf-page-intro,
+    html[data-dshe-theme="system"] .nf-price-empty,
+    html[data-dshe-theme="system"] .nf-price-product b,
+    html[data-dshe-theme="system"] .nf-price-result-meta,
+    html[data-dshe-theme="system"] .nf-page-head h2,
+    html[data-dshe-theme="system"] .nf-page-head p,
+    html[data-dshe-theme="system"] .nf-page label,
+    html[data-dshe-theme="system"] .nf-page p,
+    html[data-dshe-theme="system"] .nf-page small,
+    html[data-dshe-theme="system"] .nf-page span,
+    html[data-dshe-theme="system"] .nf-more-grid button b,
+    html[data-dshe-theme="system"] .nf-more-grid button small {color:var(--dshe-text)!important}
+    html[data-dshe-theme="system"] .nf-page-intro,
+    html[data-dshe-theme="system"] .nf-price-empty,
+    html[data-dshe-theme="system"] .nf-price-product small,
+    html[data-dshe-theme="system"] .nf-price-result-meta,
+    html[data-dshe-theme="system"] .nf-page-head p {color:var(--dshe-muted)!important}
+    html[data-dshe-theme="system"] .nf-price-search input,
+    html[data-dshe-theme="system"] #nfTransaction .search input {color:var(--dshe-text)!important;background:transparent!important}
+    html[data-dshe-theme="system"] .nf-price-search button,
+    html[data-dshe-theme="system"] .nf-back {background:var(--dshe-soft)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
+  }
   `;
   document.head.appendChild(css);
   const key='dshe-farma-theme';
