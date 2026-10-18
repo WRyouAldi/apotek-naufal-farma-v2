@@ -286,10 +286,12 @@
   // Rebuild the existing navigation instead of creating a second navigation bar.
   if(nodes.bottom){
     nodes.bottom.innerHTML=
+      '<button type="button" data-page="home" aria-label="Dashboard"><span>⌂</span><b>Home</b></button>'+
       '<button type="button" data-page="transaction" aria-label="Kasir"><span>▣</span><b>Kasir</b></button>'+
       '<button type="button" data-page="payment" aria-label="QRIS merchant"><span>▦</span><b>QRIS</b></button>'+
       '<button type="button" data-page="price" aria-label="Cek harga dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
       '<button type="button" data-page="more" aria-label="Menu lainnya"><span>☷</span><b>Lainnya</b></button>';
+    nodes.bottom.style.gridTemplateColumns='repeat(5,minmax(0,1fr))';
     nodes.bottom.classList.add('nf-glass-nav');
     nodes.bottom.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>window.nfGo(b.dataset.page)));
   }
@@ -414,7 +416,7 @@
       active.classList.add('nf-page-enter');
     }
   };
-  // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.
+  // POS mobile opens on Dashboard; the dedicated Home tab keeps the Hero reachable from every page.
   // Simplified cashier flow: set Qty once, then type+Enter or scan to add immediately.
   const cashierInput=document.getElementById('q');
   const txResultList=document.getElementById('results');
