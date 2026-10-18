@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#edf8f6"/><stop offset="1" stop-color="#ccefe7"/></linearGradient><linearGradient id="mint" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a4f2df"/><stop offset=".45" stop-color="#27b99b"/><stop offset="1" stop-color="#08735f"/></linearGradient></defs><rect x="8" y="8" width="496" height="496" rx="100" fill="url(#bg)" stroke="#fff" stroke-width="10"/><path d="M220 75h72v82h82v72h-82v82h-72v-82h-82v-72h82z" fill="url(#mint)" stroke="#fff" stroke-width="9" stroke-linejoin="round"/><path d="M258 300c-5-49 18-88 72-122 22-15 35-37 42-61 18 51 12 90-13 122-24 32-60 49-101 61z" fill="url(#mint)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/><text x="256" y="385" text-anchor="middle" font-family="Arial,sans-serif" font-weight="800" font-size="49" letter-spacing="-2" fill="#202632">D’she <tspan fill="#269f87">Farma</tspan></text><path d="M100 416h70m172 0h70" stroke="#78b9ad" stroke-width="4" stroke-linecap="round"/><text x="256" y="430" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" letter-spacing="10" fill="#687477">APOTEK</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="D'she Farma Apotek">
+<defs>
+ <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#faffff"/><stop offset=".48" stop-color="#e9f8f7"/><stop offset="1" stop-color="#d5f3ed"/></linearGradient>
+ <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".35" stop-color="#bfe9e8"/><stop offset=".62" stop-color="#fff"/><stop offset="1" stop-color="#a4e4dc"/></linearGradient>
+ <linearGradient id="teal" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#a8fff0"/><stop offset=".25" stop-color="#52d7c0"/><stop offset=".62" stop-color="#18a98f"/><stop offset="1" stop-color="#08745f"/></linearGradient>
+ <linearGradient id="leaf" x1=".1" y1="0" x2=".7" y2="1"><stop stop-color="#bafff0"/><stop offset=".5" stop-color="#44cfb3"/><stop offset="1" stop-color="#07866e"/></linearGradient>
+ <radialGradient id="shine" cx=".2" cy=".05" r="1"><stop stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+ <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#3b9d91" flood-opacity=".18"/></filter>
+</defs>
+<rect x="24" y="24" width="976" height="976" rx="185" fill="url(#glass)" stroke="#fff" stroke-width="18"/>
+<rect x="43" y="43" width="938" height="938" rx="168" fill="none" stroke="url(#rim)" stroke-width="18"/>
+<path d="M78 190C150 60 320 52 492 54S840 55 945 172" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round" opacity=".85"/>
+<path d="M690 38C820 60 960 168 979 305L979 415C850 400 750 330 712 220Z" fill="#bdece5" opacity=".3"/>
+<g filter="url(#shadow)">
+ <path d="M424 168Q424 132 460 132H568Q610 132 610 174V294H735Q786 294 786 345V450Q786 497 738 497H614V620Q614 668 566 668H459Q416 668 416 624V500H292Q245 500 245 454V347Q245 294 295 294H424Z" fill="url(#rim)" stroke="#fff" stroke-width="15" stroke-linejoin="round"/>
+ <path d="M444 177Q444 155 465 155H562Q587 155 587 181V315H730Q761 315 761 345V445Q761 474 731 474H589V616Q589 643 562 643H462Q441 643 441 619V476H300Q269 476 269 447V352Q269 318 303 318H444Z" fill="none" stroke="url(#teal)" stroke-width="18" stroke-linejoin="round"/>
+ <path d="M455 184H558V310C558 359 530 381 491 412C447 447 425 493 423 553C407 497 421 437 461 394C499 354 557 332 565 291V184Z" fill="url(#teal)" opacity=".96"/>
+ <path d="M458 618C455 522 482 454 554 404C620 358 651 313 663 264C697 335 678 411 630 461C584 510 510 541 458 618Z" fill="url(#leaf)" stroke="#faffff" stroke-width="12" stroke-linejoin="round"/>
+ <path d="M459 615C485 532 545 475 620 428C576 469 516 529 459 615Z" fill="#eaffff" opacity=".9"/>
+ <path d="M458 183H557V310C557 357 530 380 490 412" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+</g>
+<text x="512" y="795" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="112" letter-spacing="-5" fill="#202632">D’she <tspan fill="#269f87">Farma</tspan></text>
+<path d="M215 845H318M706 845H809" stroke="#83bcb2" stroke-width="5" stroke-linecap="round"/>
+<text x="512" y="861" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="40" letter-spacing="24" fill="#626b70">APOTEK</text>
+</svg>
