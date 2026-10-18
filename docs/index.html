@@ -2335,6 +2335,150 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
     }
   }
   @media(prefers-reduced-motion:reduce){.nf-page button,.nf-glass-nav button,.nf-page input,.nf-page select,.nf-page textarea{transition:none!important}.nf-page button:active,.nf-glass-nav button:active{transform:none}}
+
+  /* Charcoal Silver consistency pass: override legacy white cards across every POS page. */
+  html[data-dshe-theme="dark"]{
+    color-scheme:dark;
+    --dshe-bg:#17191c;
+    --dshe-card:rgba(37,40,45,.97);
+    --dshe-surface:#292d33;
+    --dshe-text:#f1f2f4;
+    --dshe-muted:#c0c5cd;
+    --dshe-line:#50555f;
+    --dshe-input:#202329;
+    --dshe-accent:#c6ccd5;
+    --dshe-accent-strong:#e1e5eb;
+    --dshe-soft:#343941;
+    --dshe-shadow:0 10px 28px rgba(0,0,0,.24);
+    --dshe-glass-highlight:rgba(255,255,255,.10);
+    --dshe-glass-tint:rgba(35,38,43,.88);
+  }
+  @media(prefers-color-scheme:dark){
+    html[data-dshe-theme="system"]{
+      color-scheme:dark;
+      --dshe-bg:#17191c;--dshe-card:rgba(37,40,45,.97);
+      --dshe-surface:#292d33;--dshe-text:#f1f2f4;
+      --dshe-muted:#c0c5cd;--dshe-line:#50555f;
+      --dshe-input:#202329;--dshe-accent:#c6ccd5;
+      --dshe-accent-strong:#e1e5eb;--dshe-soft:#343941;
+      --dshe-shadow:0 10px 28px rgba(0,0,0,.24);
+      --dshe-glass-highlight:rgba(255,255,255,.10);
+      --dshe-glass-tint:rgba(35,38,43,.88);
+    }
+  }
+  html[data-dshe-theme="dark"] body,
+  html[data-dshe-theme="dark"] .wrap,
+  html[data-dshe-theme="dark"] .nf-page,
+  html[data-dshe-theme="dark"] .nf-page-intro,
+  html[data-dshe-theme="dark"] .nf-price-lookup,
+  html[data-dshe-theme="dark"] .nf-price-search,
+  html[data-dshe-theme="dark"] .nf-price-result,
+  html[data-dshe-theme="dark"] .nf-price-empty,
+  html[data-dshe-theme="dark"] #nfTransaction .search,
+  html[data-dshe-theme="dark"] #nfTransaction .cart,
+  html[data-dshe-theme="dark"] #nfTransaction .nf-tx-summary>div,
+  html[data-dshe-theme="dark"] .nf-more-grid button,
+  html[data-dshe-theme="dark"] .nf-payment-note,
+  html[data-dshe-theme="dark"] .nf-page .nf-operational-hero,
+  html[data-dshe-theme="dark"] .nf-page .nf-card,
+  html[data-dshe-theme="dark"] .card,
+  html[data-dshe-theme="dark"] .welcome-card,
+  html[data-dshe-theme="dark"] .stat-card,
+  html[data-dshe-theme="dark"] .quick-card,
+  html[data-dshe-theme="dark"] .nf-page section,
+  html[data-dshe-theme="dark"] .nf-page article{
+    background-color:var(--dshe-surface)!important;
+    color:var(--dshe-text)!important;
+    border-color:var(--dshe-line)!important;
+  }
+  html[data-dshe-theme="dark"] .nf-page-intro,
+  html[data-dshe-theme="dark"] .nf-price-lookup,
+  html[data-dshe-theme="dark"] .nf-price-search,
+  html[data-dshe-theme="dark"] .nf-price-result,
+  html[data-dshe-theme="dark"] .nf-price-empty,
+  html[data-dshe-theme="dark"] #nfTransaction .search,
+  html[data-dshe-theme="dark"] #nfTransaction .cart,
+  html[data-dshe-theme="dark"] #nfTransaction .nf-tx-summary>div,
+  html[data-dshe-theme="dark"] .nf-more-grid button,
+  html[data-dshe-theme="dark"] .nf-payment-note,
+  html[data-dshe-theme="dark"] .nf-page .nf-operational-hero,
+  html[data-dshe-theme="dark"] .nf-page .nf-card,
+  html[data-dshe-theme="dark"] .card,
+  html[data-dshe-theme="dark"] .welcome-card,
+  html[data-dshe-theme="dark"] .stat-card,
+  html[data-dshe-theme="dark"] .quick-card{
+    background-image:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.008))!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 8px 24px rgba(0,0,0,.16)!important;
+    -webkit-backdrop-filter:blur(var(--dshe-blur-card)) saturate(1.08);
+    backdrop-filter:blur(var(--dshe-blur-card)) saturate(1.08);
+  }
+  html[data-dshe-theme="dark"] .nf-page input,
+  html[data-dshe-theme="dark"] .nf-page select,
+  html[data-dshe-theme="dark"] .nf-page textarea,
+  html[data-dshe-theme="dark"] #nfTransaction input,
+  html[data-dshe-theme="dark"] #nfTransaction select{
+    background:var(--dshe-input)!important;color:var(--dshe-text)!important;
+    border-color:var(--dshe-line)!important;
+  }
+  html[data-dshe-theme="dark"] .nf-page input::placeholder,
+  html[data-dshe-theme="dark"] #nfTransaction input::placeholder{
+    color:var(--dshe-muted)!important;opacity:1!important;
+  }
+  html[data-dshe-theme="dark"] .nf-page h1,
+  html[data-dshe-theme="dark"] .nf-page h2,
+  html[data-dshe-theme="dark"] .nf-page h3,
+  html[data-dshe-theme="dark"] .nf-page b,
+  html[data-dshe-theme="dark"] .nf-page strong,
+  html[data-dshe-theme="dark"] .nf-page label,
+  html[data-dshe-theme="dark"] .nf-page p,
+  html[data-dshe-theme="dark"] .nf-page span,
+  html[data-dshe-theme="dark"] .nf-page small,
+  html[data-dshe-theme="dark"] .nf-page li,
+  html[data-dshe-theme="dark"] .nf-page td,
+  html[data-dshe-theme="dark"] .nf-page th{
+    color:var(--dshe-text);
+  }
+  html[data-dshe-theme="dark"] .nf-page .muted,
+  html[data-dshe-theme="dark"] .nf-page .meta,
+  html[data-dshe-theme="dark"] .nf-page .small,
+  html[data-dshe-theme="dark"] .nf-page .nf-page-head p{
+    color:var(--dshe-muted)!important;
+  }
+  html[data-dshe-theme="dark"] .nf-page button,
+  html[data-dshe-theme="dark"] .nf-more-grid button{
+    border-color:var(--dshe-line)!important;
+  }
+  @media(prefers-color-scheme:dark){
+    html[data-dshe-theme="system"] .nf-page input,
+    html[data-dshe-theme="system"] .nf-page select,
+    html[data-dshe-theme="system"] .nf-page textarea,
+    html[data-dshe-theme="system"] #nfTransaction input,
+    html[data-dshe-theme="system"] #nfTransaction select{
+      background:var(--dshe-input)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important;
+    }
+    html[data-dshe-theme="system"] .nf-page-intro,
+    html[data-dshe-theme="system"] .nf-price-lookup,
+    html[data-dshe-theme="system"] .nf-price-search,
+    html[data-dshe-theme="system"] .nf-price-result,
+    html[data-dshe-theme="system"] .nf-price-empty,
+    html[data-dshe-theme="system"] #nfTransaction .search,
+    html[data-dshe-theme="system"] #nfTransaction .cart,
+    html[data-dshe-theme="system"] #nfTransaction .nf-tx-summary>div,
+    html[data-dshe-theme="system"] .nf-more-grid button,
+    html[data-dshe-theme="system"] .nf-payment-note,
+    html[data-dshe-theme="system"] .nf-page .nf-operational-hero,
+    html[data-dshe-theme="system"] .nf-page .nf-card,
+    html[data-dshe-theme="system"] .card,
+    html[data-dshe-theme="system"] .welcome-card,
+    html[data-dshe-theme="system"] .stat-card,
+    html[data-dshe-theme="system"] .quick-card{
+      background-color:var(--dshe-surface)!important;color:var(--dshe-text)!important;
+      border-color:var(--dshe-line)!important;
+      background-image:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.008))!important;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 8px 24px rgba(0,0,0,.16)!important;
+    }
+  }
+
   `;
   document.head.appendChild(css);
   const key='dshe-farma-theme';
