@@ -2097,27 +2097,51 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
 })();
 })();
 
-/* D'she Farma Smart Theme: system / light / dark */
+/* D'she Farma Smart Theme: Pearl Light + Charcoal Silver Pearl Dark */
 (function(){
   if(document.getElementById('dsheThemeStyle'))return;
   const css=document.createElement('style');css.id='dsheThemeStyle';
   css.textContent=`
-  :root{color-scheme:light;--dshe-bg:#f3faf8;--dshe-card:rgba(255,255,255,.88);--dshe-text:#17211f;--dshe-muted:#667873;--dshe-line:#d7e9e3;--dshe-input:#fff;--dshe-accent:#087b65;--dshe-soft:#e8f8f2}
-  html[data-dshe-theme="dark"]{color-scheme:dark;--dshe-bg:#101a19;--dshe-card:rgba(29,43,41,.96);--dshe-text:#edf7f4;--dshe-muted:#b1c4be;--dshe-line:#354d47;--dshe-input:#172522;--dshe-accent:#73dfc3;--dshe-soft:#203c34}
-  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"]{color-scheme:dark;--dshe-bg:#101a19;--dshe-card:rgba(29,43,41,.96);--dshe-text:#edf7f4;--dshe-muted:#b1c4be;--dshe-line:#354d47;--dshe-input:#172522;--dshe-accent:#73dfc3;--dshe-soft:#203c34}}
+  :root,html[data-dshe-theme="light"]{
+    color-scheme:light;--dshe-bg:#f4f8f7;--dshe-card:rgba(255,255,255,.91);--dshe-surface:#ffffff;
+    --dshe-text:#202b29;--dshe-muted:#687873;--dshe-line:#dce7e3;--dshe-input:#ffffff;
+    --dshe-accent:#087b65;--dshe-accent-strong:#08634f;--dshe-soft:#e8f6f1;--dshe-shadow:0 8px 24px rgba(34,65,57,.08);
+  }
+  html[data-dshe-theme="dark"]{
+    color-scheme:dark;--dshe-bg:#17191c;--dshe-card:rgba(37,40,45,.96);--dshe-surface:#292d33;
+    --dshe-text:#f1f2f4;--dshe-muted:#b9bec6;--dshe-line:#50555f;--dshe-input:#202329;
+    --dshe-accent:#c6ccd5;--dshe-accent-strong:#e1e5eb;--dshe-soft:#343941;--dshe-shadow:0 10px 28px rgba(0,0,0,.22);
+  }
+  @media(prefers-color-scheme:dark){html[data-dshe-theme="system"]{
+    color-scheme:dark;--dshe-bg:#17191c;--dshe-card:rgba(37,40,45,.96);--dshe-surface:#292d33;
+    --dshe-text:#f1f2f4;--dshe-muted:#b9bec6;--dshe-line:#50555f;--dshe-input:#202329;
+    --dshe-accent:#c6ccd5;--dshe-accent-strong:#e1e5eb;--dshe-soft:#343941;--dshe-shadow:0 10px 28px rgba(0,0,0,.22);
+  }}
   body{background:var(--dshe-bg)!important;color:var(--dshe-text)!important}
-  header{background:linear-gradient(120deg,#075f50,#168d76)!important;color:#fff!important}
-  .card,.nf-page,.nf-page-head,.nf-operational-hero,.nf-input-table-head,.nf-page .card{background-color:var(--dshe-card)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
-  .nf-page h2,.nf-page h3,.nf-page p,.nf-page label,.nf-page .name,.nf-page .total,.nf-page .small,.nf-page span{color:inherit}
-  input,select,textarea{background:var(--dshe-input)!important;color:var(--dshe-text)!important;border-color:var(--dshe-line)!important}
+  header{background:linear-gradient(125deg,#30343b,#202329)!important;color:#f5f6f8!important;border-bottom:1px solid #565b65}
+  .card,.nf-page,.nf-page-head,.nf-operational-hero,.nf-input-table-head,.nf-page .card,#dsheThemeControl{
+    background:var(--dshe-card)!important;color:var(--dshe-text)!important;border:1px solid var(--dshe-line)!important;box-shadow:var(--dshe-shadow)!important
+  }
+  .nf-page h2,.nf-page h3,.nf-page p,.nf-page label,.nf-page .name,.nf-page .total,.nf-page .small,.nf-page span{color:var(--dshe-text)}
+  .nf-page .small,.nf-page .nf-hero-eyebrow,.nf-page .nf-page-head p{color:var(--dshe-muted)!important}
+  input,select,textarea{background:var(--dshe-input)!important;color:var(--dshe-text)!important;border:1px solid var(--dshe-line)!important}
   input::placeholder,textarea::placeholder{color:var(--dshe-muted)!important}
-  .nf-page .nf-table-price{color:var(--dshe-text)!important}.nf-page .nf-table-subtotal{color:var(--dshe-accent)!important}
+  button{border-color:var(--dshe-line)}
+  .nf-page button,.nf-hero-actions button{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  .nf-page .nf-table-price{color:var(--dshe-text)!important}.nf-page .nf-table-subtotal{color:var(--dshe-accent-strong)!important}
   .nf-page .nf-input-table-head{color:var(--dshe-muted)!important;border-color:var(--dshe-line)!important}
   .nf-page .nf-back{color:var(--dshe-text)!important;background:var(--dshe-soft)!important}
-  #dsheThemeControl{display:flex;align-items:center;gap:6px;margin:8px 0 12px;padding:8px 10px;border:1px solid var(--dshe-line);border-radius:14px;background:var(--dshe-card);color:var(--dshe-text);font-size:12px}
-  #dsheThemeControl label{font-weight:700;white-space:nowrap}#dsheThemeControl select{padding:8px 10px;border-radius:10px;min-width:0;flex:1;font-size:12px}
   .nf-page .nf-operational-hero p{color:var(--dshe-muted)!important}
-  .nf-page .nf-table-price,.nf-page .nf-table-subtotal{overflow-wrap:anywhere}
+  #dsheThemeControl{display:flex;align-items:center;gap:8px;margin:8px 0 12px;padding:9px 11px;border-radius:14px;font-size:12px}
+  #dsheThemeControl label{font-weight:800;white-space:nowrap;color:var(--dshe-text)}
+  #dsheThemeControl select{padding:8px 10px;border-radius:10px;min-width:0;flex:1;font-size:12px}
+  #bottomNavV15,.nf-glass-nav{background:var(--dshe-card)!important;border-color:var(--dshe-line)!important;color:var(--dshe-text)!important;backdrop-filter:blur(22px)}
+  #bottomNavV15 button,.nf-glass-nav button{color:var(--dshe-muted)!important}
+  #bottomNavV15 button.active,.nf-glass-nav button.active{color:var(--dshe-text)!important;background:var(--dshe-soft)!important}
+  .nf-page .nf-hero-primary{background:linear-gradient(135deg,#d9dde3,#aeb5c0)!important;color:#202329!important}
+  .nf-page .nf-hero-scan{background:var(--dshe-soft)!important;color:var(--dshe-text)!important;border:1px solid var(--dshe-line)!important}
+  .nf-page .nf-input-table-head span{color:var(--dshe-muted)!important}
+  .nf-page .nf-table-subtotal{font-weight:800!important}
   `;
   document.head.appendChild(css);
   const key='dshe-farma-theme';
@@ -2131,15 +2155,12 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   apply(mode);
   const mount=()=>{
     if(document.getElementById('dsheThemeControl'))return;
-    const home=document.getElementById('nfHome')||document.querySelector('.wrap');
-    if(!home)return;
+    const home=document.getElementById('nfHome')||document.querySelector('.wrap');if(!home)return;
     const control=document.createElement('div');control.id='dsheThemeControl';
-    control.innerHTML='<label for="dsheThemeSelect">Tema</label><select id="dsheThemeSelect" aria-label="Tema aplikasi"><option value="system">Ikuti sistem HP</option><option value="light">Selalu terang</option><option value="dark">Selalu gelap</option></select>';
+    control.innerHTML='<label for="dsheThemeSelect">Tampilan</label><select id="dsheThemeSelect" aria-label="Tema aplikasi"><option value="system">Ikuti sistem HP</option><option value="light">Pearl Light</option><option value="dark">Pearl Dark · Charcoal Silver</option></select>';
     const hero=home.querySelector('.nf-operational-hero');
-    if(hero&&hero.parentElement)hero.parentElement.insertBefore(control,hero.nextSibling);
-    else home.insertBefore(control,home.firstChild);
-    control.querySelector('select').addEventListener('change',e=>apply(e.target.value));
-    control.querySelector('select').value=mode;
+    if(hero&&hero.parentElement)hero.parentElement.insertBefore(control,hero.nextSibling);else home.insertBefore(control,home.firstChild);
+    control.querySelector('select').addEventListener('change',e=>apply(e.target.value));control.querySelector('select').value=mode;
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
   new MutationObserver(mount).observe(document.documentElement,{childList:true,subtree:true});
