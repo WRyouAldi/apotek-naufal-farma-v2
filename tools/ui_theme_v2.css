@@ -433,3 +433,36 @@ body:has(#bottomNavV15.nf-glass-nav) .wrap{padding-bottom:calc(126px + env(safe-
 @media(prefers-reduced-motion:reduce){
  #bottomNavV15.nf-glass-nav>button{transition:none!important}
 }
+
+
+/* Compact Operational Hero — pearl crystal, operational first */
+.nf-operational-hero{
+  min-height:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:12px!important;padding:17px 16px!important;margin:0 0 12px!important;
+  border-radius:24px!important;background:linear-gradient(122deg,rgba(255,255,255,.97),rgba(236,244,241,.91) 58%,rgba(226,239,235,.82))!important;
+  border:1px solid rgba(255,255,255,.98)!important;box-shadow:0 12px 28px rgba(39,53,63,.075),inset 0 1px 0 #fff!important;
+}
+.nf-operational-hero:before{width:150px!important;height:150px!important;right:-70px!important;top:-80px!important;opacity:.72}
+.nf-operational-hero:after{display:none!important}
+.nf-hero-copy{position:relative;z-index:2;min-width:0;flex:1}
+.nf-hero-eyebrow{display:flex;align-items:center;gap:7px;color:#17836a;font-size:9px;font-weight:850;letter-spacing:.12em;margin-bottom:7px}
+.nf-hero-eyebrow i{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#25a987;box-shadow:0 0 0 4px rgba(37,169,135,.11)}
+.nf-operational-hero .nf-hero-copy h2{font-size:clamp(18px,4.8vw,23px)!important;line-height:1.12!important;letter-spacing:-.6px!important;margin:0 0 5px!important}
+.nf-operational-hero .nf-hero-copy p{max-width:34ch;font-size:10px!important;line-height:1.45!important;margin:0!important;color:#77858a!important}
+.nf-hero-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.nf-hero-actions button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:37px;padding:0 11px;border-radius:12px;font-size:11px;font-weight:800;white-space:nowrap}
+.nf-hero-primary{color:#fff;border:1px solid rgba(255,255,255,.35);background:linear-gradient(125deg,#126e59,#188b70 65%,#36aa8a);box-shadow:0 5px 12px rgba(24,139,112,.17)}
+.nf-hero-scan{color:#176d58;border:1px solid rgba(24,139,112,.16);background:rgba(255,255,255,.82)}
+.nf-hero-actions button span{font-size:14px;line-height:1}
+.nf-hero-orb{position:relative;z-index:1;display:grid;place-items:center;flex:0 0 54px;width:54px;height:54px;border-radius:19px;border:1px solid rgba(255,255,255,.96);background:linear-gradient(145deg,#fff,#dcefe8);box-shadow:0 8px 18px rgba(38,70,60,.09),inset 0 1px 0 #fff}
+.nf-hero-orb span{font-size:15px;letter-spacing:-.8px;font-weight:900;color:#18775f}
+.nf-operational-hero .welcome-logo{display:none!important}
+.nf-operational-hero .nf-hero-actions button:active{transform:scale(.97)}
+@media(max-width:380px){
+ .nf-operational-hero{padding:15px 12px!important;gap:8px!important;border-radius:21px!important}
+ .nf-hero-orb{flex-basis:42px;width:42px;height:42px;border-radius:15px}
+ .nf-hero-orb span{font-size:12px}
+ .nf-hero-actions{gap:6px;margin-top:11px}
+ .nf-hero-actions button{min-height:35px;padding:0 9px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.nf-hero-actions button{transition:none!important}}
