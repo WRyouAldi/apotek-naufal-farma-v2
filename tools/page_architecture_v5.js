@@ -54,9 +54,11 @@
   price.appendChild(lookup);
 
   const tx=make('nfTransaction','Kasir','Keranjang penjualan, kuantitas, dan pembayaran.');
-  const txIntro=document.createElement('div');txIntro.className='nf-page-intro';
-  txIntro.textContent='Pilih produk dari pencarian kasir untuk memasukkannya ke keranjang. Cek Harga tetap terpisah dan tidak mengubah transaksi.';
-  tx.appendChild(txIntro);
+  // Mobile checkout header modeled after the reference POS screen.
+  const txMeta=document.createElement('section');
+  txMeta.className='nf-tx-meta';
+  txMeta.innerHTML='<div class="nf-tx-meta-main"><span class="nf-tx-live-dot"></span><div><b>TRANSAKSI BARU</b><small>Nomor transaksi dibuat saat checkout</small></div></div><label class="nf-tx-customer"><span>Pelanggan</span><select id="nfTxCustomer" aria-label="Pelanggan"><option value="UMUM">UMUM</option></select></label>';
+  tx.appendChild(txMeta);
 
   // Transaction workspace: clear flow, scanner entry point, cart summary, checkout.
   if(!document.getElementById('nfVisualPolishV6')){
@@ -133,7 +135,11 @@
   txSummary.innerHTML='<div><small>Status transaksi</small><b id="nfTxState">Siap menerima item</b></div><div><small>Item di keranjang</small><b id="nfTxCount">0 item</b></div>';
   tx.appendChild(txSummary);
   if(nodes.search)tx.appendChild(nodes.search);
+  const txSearchLabel=document.createElement('div');txSearchLabel.className='nf-tx-section-label';txSearchLabel.innerHTML='<b>Tambah produk</b><small>Cari nama, kode, atau scan barcode</small>';
+  if(nodes.search)tx.insertBefore(txSearchLabel,nodes.search);
   if(nodes.results)tx.appendChild(nodes.results);
+  const txCartLabel=document.createElement('div');txCartLabel.className='nf-tx-section-label nf-tx-cart-label';txCartLabel.innerHTML='<b>Rincian belanja</b><small>Periksa jumlah dan harga sebelum membayar</small>';
+  if(nodes.cart)tx.insertBefore(txCartLabel,nodes.cart);
   if(nodes.cartAnchor)tx.appendChild(nodes.cartAnchor);
   if(nodes.cart)tx.appendChild(nodes.cart);
 
