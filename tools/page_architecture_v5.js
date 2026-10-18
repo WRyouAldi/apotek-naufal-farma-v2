@@ -564,15 +564,16 @@
       #nfTransaction .cart{margin:10px 0 12px!important;padding:12px!important}
       #nfTransaction .cart>.row{display:flex!important;align-items:center!important;justify-content:space-between!important}
       #nfTransaction .cart>.row b{font-size:15px!important}
-      #nfTransaction .cart .nf-input-table-head{display:grid;grid-template-columns:minmax(0,1fr) 76px 78px 82px;gap:6px;padding:8px 0;border-bottom:1px solid #dce8e2;color:#73837b;font-size:10px;font-weight:800}
+      #nfTransaction .cart .nf-input-table-head{display:grid;grid-template-columns:minmax(0,1fr) 38px minmax(60px,76px) minmax(66px,82px);gap:5px;padding:8px 0;border-bottom:1px solid #dce8e2;color:#73837b;font-size:10px;font-weight:800}
       #nfTransaction .cart .nf-input-table-head span:not(:first-child){text-align:right}
-      #nfTransaction .cart .itemline.nf-table-row{display:grid!important;grid-template-columns:minmax(0,1fr) 76px 78px 82px!important;align-items:center!important;gap:6px!important;padding:10px 0!important;border-bottom:1px solid #e7eeea!important}
+      #nfTransaction .cart .itemline.nf-table-row{display:grid!important;grid-template-columns:minmax(0,1fr) 38px minmax(60px,76px) minmax(66px,82px)!important;align-items:center!important;gap:5px!important;padding:10px 0!important;border-bottom:1px solid #e7eeea!important}
       #nfTransaction .cart .nf-table-product{min-width:0;grid-column:1;grid-row:1/3}
       #nfTransaction .cart .nf-table-product .name{font-size:11px!important;line-height:1.35!important;overflow-wrap:anywhere}
       #nfTransaction .cart .nf-table-product .small{display:none!important}
-      #nfTransaction .cart .nf-table-qty{grid-column:2;grid-row:1/3;display:flex!important;align-items:center;justify-content:flex-end;gap:3px!important}
-      #nfTransaction .cart .nf-table-qty button{min-width:24px!important;width:24px;height:28px;min-height:28px!important;padding:0!important;font-size:14px!important;border-radius:7px!important}
-      #nfTransaction .cart .nf-table-qty span{min-width:14px!important;text-align:center;font-size:11px}
+      #nfTransaction .cart .nf-table-qty{grid-column:2;grid-row:1/3;display:flex!important;align-items:center;justify-content:center!important;gap:0!important;min-width:0}
+      #nfTransaction .cart .nf-table-qty button{display:none!important}
+      #nfTransaction .cart .nf-table-qty span{display:inline-block;min-width:0!important;width:100%;text-align:center;font-size:12px;font-weight:800;color:#24483c}
+      #nfTransaction .cart .nf-table-price,#nfTransaction .cart .nf-table-subtotal{min-width:0;overflow-wrap:anywhere}
       #nfTransaction .cart .nf-table-price,#nfTransaction .cart .nf-table-subtotal{font-size:10px;font-weight:700;text-align:right;white-space:nowrap;color:#42675a}
       #nfTransaction .cart .nf-table-price{grid-column:3;grid-row:1/3}
       #nfTransaction .cart .nf-table-subtotal{grid-column:4;grid-row:1/3;color:#087b5d}
@@ -580,10 +581,10 @@
       #nfTransaction #results>.card{padding:8px 9px!important}
       #nfTransaction #results .name{font-size:12px!important}
       @media(max-width:390px){
-        #nfTransaction .cart .nf-input-table-head,#nfTransaction .cart .itemline.nf-table-row{grid-template-columns:minmax(0,1fr) 68px 62px 70px!important;gap:4px!important}
+        #nfTransaction .cart .nf-input-table-head,#nfTransaction .cart .itemline.nf-table-row{grid-template-columns:minmax(0,1fr) 32px minmax(52px,1fr) minmax(58px,1fr)!important;gap:4px!important}
         #nfTransaction .cart .nf-table-product .name{font-size:10px!important}
-        #nfTransaction .cart .nf-table-price,#nfTransaction .cart .nf-table-subtotal{font-size:9px}
-        #nfTransaction .cart .nf-table-qty button{min-width:21px!important;width:21px}
+        #nfTransaction .cart .nf-table-price,#nfTransaction .cart .nf-table-subtotal{font-size:9px!important;white-space:normal!important}
+        #nfTransaction .cart .nf-input-table-head{font-size:9px!important}
       }
     `;
     document.head.appendChild(tableStyle);
