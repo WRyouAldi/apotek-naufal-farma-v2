@@ -638,3 +638,16 @@ button:disabled{opacity:.55!important;cursor:not-allowed!important;transform:non
  #nfTransaction .cart .total{align-items:flex-start!important;flex-direction:column!important}
 }
 
+/* Reference POS: prominent live grand total at the top of mobile checkout */
+#nfTransaction .nf-tx-total-panel{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;
+ min-height:104px!important;margin:0 0 13px!important;padding:17px 18px!important;
+ border-radius:22px!important;border:1px solid rgba(255,255,255,.98)!important;
+ background:linear-gradient(120deg,rgba(255,255,255,.98),rgba(218,244,234,.92))!important;
+ box-shadow:0 10px 28px rgba(20,74,55,.09),inset 0 1px 0 #fff!important;
+}
+#nfTransaction .nf-tx-total-panel small{display:block!important;margin-bottom:8px!important;color:#71857b!important;font-size:10px!important;font-weight:850!important;letter-spacing:1.1px!important}
+#nfTransaction .nf-tx-total-panel b{display:block!important;color:#102f25!important;font-size:clamp(32px,9vw,43px)!important;line-height:1!important;font-weight:900!important;letter-spacing:-1.4px!important;font-variant-numeric:tabular-nums!important;overflow-wrap:anywhere!important}
+#nfTransaction .nf-tx-total-badge{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:43px!important;height:31px!important;padding:0 9px!important;border-radius:10px!important;background:rgba(24,139,112,.1)!important;color:#13775d!important;font-size:10px!important;font-weight:900!important;letter-spacing:.6px!important}
+@media(max-width:360px){#nfTransaction .nf-tx-total-panel{min-height:92px!important;padding:14px!important}#nfTransaction .nf-tx-total-panel b{font-size:30px!important}}
+
