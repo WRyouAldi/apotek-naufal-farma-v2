@@ -32,7 +32,13 @@
   };
 
   const home=document.createElement('section'); home.id='nfHome'; home.className='nf-page';
+  // Compact Operational Hero: useful actions first, without consuming cashier workspace.
+  welcome.classList.add('nf-operational-hero');
+  welcome.setAttribute('aria-label','Ringkasan operasional Apotek Naufal Farma');
+  welcome.innerHTML='<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> OPERATIONAL OVERVIEW</span><h2>Apotek Naufal Farma</h2><p>Kelola penjualan, cek produk, dan mulai pemindaian dengan cepat.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div></div><div class="nf-hero-orb" aria-hidden="true"><span>NF</span></div>';
   home.append(welcome,stats,quick);
+  welcome.querySelector('[data-hero-cashier]').addEventListener('click',()=>window.nfGo('transaction'));
+  welcome.querySelector('[data-hero-scan]').addEventListener('click',()=>window.focusSearch(true));
   if(legacyStatus) home.appendChild(legacyStatus);
 
   const more=document.createElement('div'); more.className='nf-more-link';
