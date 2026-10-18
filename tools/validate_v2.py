@@ -14,6 +14,7 @@ main = (ROOT / "app/src/main/java/com/naufalfarma/apotek/MainActivity.kt").read_
 report = (ROOT / "tools/report_ui_v2.js").read_text(encoding="utf-8")
 tx = (ROOT / "tools/transaction_print_v1.js").read_text(encoding="utf-8")
 checkout = (ROOT / "app/src/main/assets/index.html").read_text(encoding="utf-8")
+check("Pearl Crystal Liquid Glass theme is locked", "--nf-pearl:#f4f5f7" in (ROOT / "tools/ui_theme_v2.css").read_text(encoding="utf-8") and "--nf-green:#188b70" in (ROOT / "tools/ui_theme_v2.css").read_text(encoding="utf-8") and "DESIGN LOCK" in (ROOT / "tools/ui_theme_v2.css").read_text(encoding="utf-8"), "primary theme palette and lock declaration must remain in place")
 check("Independent read-only Cek Harga", "Independent read-only price lookup" in arch and "nfPriceQuery" in arch and "nfPriceResults" in arch, "separate query and results are present")
 check("Mobile POS active page is visible", ".nf-page.nf-active,.nf-page.active" in (ROOT / "tools/ui_theme_v2.css").read_text(encoding="utf-8") and "el.classList.toggle('nf-active',key===page)" in arch, "navigation class and CSS visibility selector must match")
 check("Mobile POS opens on cashier", "window.nfGo('transaction')" in arch and arch.find('data-page="transaction"') < arch.find('data-page="price"'), "launch route and first navigation item prioritize cashier operations")
