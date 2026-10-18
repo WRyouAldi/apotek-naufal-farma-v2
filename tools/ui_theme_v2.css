@@ -1,5 +1,11 @@
-/* APOTEK NAUFAL FARMA — PRO MAX PEARL CRYSTAL UI
-   Visual-only stylesheet. Keep application logic, data, navigation and print routines untouched. */
+/* APOTEK NAUFAL FARMA — PEARL CRYSTAL LIQUID GLASS (LOCKED PRIMARY THEME)
+   DESIGN LOCK: Do not replace the theme, palette, visual foundation, or component language.
+   Allowed: spacing/alignment fixes, accessibility, responsive polish, subtle motion, and usability improvements
+   that remain visually consistent with Pearl White, Crystal Silver, Mint Green, glass surfaces, and soft shadows.
+   Preserve application logic, database/data, POS flows, navigation semantics, QRIS, scanner, and print routines.
+   Theme tokens: --nf-pearl #f4f5f7; --nf-green #188b70; --nf-green-dark #126a57; --nf-ink #202632.
+   Keep the theme locked unless the user explicitly requests a new theme.
+*/
 :root{
  --nf-ink:#202632;--nf-muted:#7e8794;--nf-soft:#a6adb7;
  --nf-pearl:#f4f5f7;--nf-white:#fff;--nf-glass:rgba(255,255,255,.72);
