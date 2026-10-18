@@ -126,7 +126,7 @@
   }
   const txTools=document.createElement('div');
   txTools.className='nf-tx-tools';
-  txTools.innerHTML='<button type="button" id="nfTxScan" class="nf-tx-primary"><span>▦</span><b>Scan Barcode</b><small>Pindai produk untuk transaksi</small></button><button type="button" id="nfTxShowQris" class="nf-tx-secondary"><span>▧</span><b>Tampilkan QRIS</b><small>Pembayaran merchant terpisah</small></button>';
+  txTools.innerHTML='<button type="button" id="nfTxShowQris" class="nf-tx-secondary"><span>▧</span><b>Tampilkan QRIS</b><small>Pembayaran merchant terpisah — verifikasi melalui DANA Bisnis</small></button>';
   tx.appendChild(txTools);
   const txSummary=document.createElement('div');
   txSummary.className='nf-tx-summary';
@@ -327,7 +327,6 @@
     cashierSearch.appendChild(scanButton);
     scanButton.addEventListener('click',launchNativeScan);
   }
-  document.getElementById('nfTxScan')?.addEventListener('click',launchNativeScan);
   // Add a scan action beside every searchable product input.
   attachScanButton(priceQuery,'nfPriceScanBarcode','Scan barcode untuk cek harga');
   // CRUD and stock-out search fields are rendered dynamically, so attach on entry and mutations.
