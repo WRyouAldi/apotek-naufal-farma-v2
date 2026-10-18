@@ -583,7 +583,75 @@ renderResults(ITEMS.slice(0,30));renderCart();
       '.r{text-align:right;mso-number-format:"#,##0"}.total{width:300px;margin-top:12px}.total th{text-align:left}.total td{text-align:right;font-weight:bold}'+
       '</style></head><body><h1>APOTEK D'SHE FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
-      '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table></body></html>';
+      '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table>
+<style id="darkPearlConsistencyFix">
+/* Dark Pearl Charcoal Silver — shared surface and contrast tokens */
+:root{
+ --dp-bg:#17191d;--dp-panel:#202329;--dp-card:#292d33;--dp-raised:#30353d;
+ --dp-edge:#535963;--dp-text:#f2f4f7;--dp-muted:#c1c7d0;--dp-silver:#cbd1d9;
+ --dp-field:#1c1f24;--dp-focus:#aeb8c5;--dp-success:#79d6ae;--dp-warning:#f2c879;--dp-danger:#ff9292;
+}
+@media(prefers-color-scheme:dark){
+ body:not(.light-mode):not([data-theme="light"]){background:var(--dp-bg)!important;color:var(--dp-text)!important}
+ body:not(.light-mode):not([data-theme="light"]) header{background:linear-gradient(135deg,#292d33,#1d2025)!important;color:var(--dp-text)!important;border-bottom:1px solid var(--dp-edge)!important}
+ body:not(.light-mode):not([data-theme="light"]) .card,
+ body:not(.light-mode):not([data-theme="light"]) .nf-card,
+ body:not(.light-mode):not([data-theme="light"]) .nf-panel,
+ body:not(.light-mode):not([data-theme="light"]) .stat-card,
+ body:not(.light-mode):not([data-theme="light"]) .dashboard-card,
+ body:not(.light-mode):not([data-theme="light"]) .modal-content,
+ body:not(.light-mode):not([data-theme="light"]) .dialog,
+ body:not(.light-mode):not([data-theme="light"]) .history-item,
+ body:not(.light-mode):not([data-theme="light"]) .itemline{background-color:var(--dp-card)!important;color:var(--dp-text)!important;border-color:var(--dp-edge)!important;box-shadow:0 5px 18px #0003!important}
+ body:not(.light-mode):not([data-theme="light"]) input,
+ body:not(.light-mode):not([data-theme="light"]) select,
+ body:not(.light-mode):not([data-theme="light"]) textarea{background:var(--dp-field)!important;color:var(--dp-text)!important;border-color:var(--dp-edge)!important;color-scheme:dark}
+ body:not(.light-mode):not([data-theme="light"]) input::placeholder,
+ body:not(.light-mode):not([data-theme="light"]) textarea::placeholder{color:#9ca5b1!important;opacity:1}
+ body:not(.light-mode):not([data-theme="light"]) input:focus,
+ body:not(.light-mode):not([data-theme="light"]) select:focus,
+ body:not(.light-mode):not([data-theme="light"]) textarea:focus{border-color:var(--dp-focus)!important;box-shadow:0 0 0 3px #aeb8c533!important;outline:none}
+ body:not(.light-mode):not([data-theme="light"]) .code,
+ body:not(.light-mode):not([data-theme="light"]) .meta,
+ body:not(.light-mode):not([data-theme="light"]) .small,
+ body:not(.light-mode):not([data-theme="light"]) .change{color:var(--dp-muted)!important}
+ body:not(.light-mode):not([data-theme="light"]) .price,
+ body:not(.light-mode):not([data-theme="light"]) .total{color:var(--dp-silver)!important}
+ body:not(.light-mode):not([data-theme="light"]) .status-ok{color:var(--dp-success)!important}
+ body:not(.light-mode):not([data-theme="light"]) .status-err,
+ body:not(.light-mode):not([data-theme="light"]) .danger{color:var(--dp-danger)!important}
+ body:not(.light-mode):not([data-theme="light"]) .badge{background:#303a36!important;color:#a9e8cc!important}
+ body:not(.light-mode):not([data-theme="light"]) .bottom-nav{background:#202329!important;border-color:var(--dp-edge)!important;box-shadow:0 -5px 20px #0005!important}
+ body:not(.light-mode):not([data-theme="light"]) .bottom-nav button{color:var(--dp-muted)!important}
+ body:not(.light-mode):not([data-theme="light"]) .bottom-nav button:first-child,
+ body:not(.light-mode):not([data-theme="light"]) .bottom-nav button span{color:var(--dp-silver)!important}
+ body:not(.light-mode):not([data-theme="light"]) hr{border-color:var(--dp-edge)!important}
+ body:not(.light-mode):not([data-theme="light"]) #qrisImage,
+ body:not(.light-mode):not([data-theme="light"]) #qrisCanvas,
+ body:not(.light-mode):not([data-theme="light"]) .qris-image,
+ body:not(.light-mode):not([data-theme="light"]) [data-qris-canvas]{background:#fff!important;color:#111!important}
+}
+/* Also honor an explicit dark theme class/state regardless of OS setting. */
+body.dark-mode,body.dark,body.theme-dark,body[data-theme="dark"],html[data-theme="dark"] body{background:var(--dp-bg)!important;color:var(--dp-text)!important;color-scheme:dark}
+body.dark-mode header,body.dark header,body.theme-dark header,body[data-theme="dark"] header,html[data-theme="dark"] body header{background:linear-gradient(135deg,#292d33,#1d2025)!important;color:var(--dp-text)!important;border-bottom:1px solid var(--dp-edge)!important}
+body.dark-mode .card,body.dark .card,body.theme-dark .card,body[data-theme="dark"] .card,
+body.dark-mode .nf-card,body.dark .nf-card,body.theme-dark .nf-card,body[data-theme="dark"] .nf-card,
+body.dark-mode .nf-panel,body.dark .nf-panel,body.theme-dark .nf-panel,body[data-theme="dark"] .nf-panel,
+body.dark-mode .stat-card,body.dark .stat-card,body.theme-dark .stat-card,body[data-theme="dark"] .stat-card,
+body.dark-mode .dashboard-card,body.dark .dashboard-card,body.theme-dark .dashboard-card,body[data-theme="dark"] .dashboard-card,
+body.dark-mode .modal-content,body.dark .modal-content,body.theme-dark .modal-content,body[data-theme="dark"] .modal-content,
+body.dark-mode .dialog,body.dark .dialog,body.theme-dark .dialog,body[data-theme="dark"] .dialog,
+body.dark-mode .history-item,body.dark .history-item,body.theme-dark .history-item,body[data-theme="dark"] .history-item,
+body.dark-mode .itemline,body.dark .itemline,body.theme-dark .itemline,body[data-theme="dark"] .itemline{background:var(--dp-card)!important;color:var(--dp-text)!important;border-color:var(--dp-edge)!important}
+body.dark-mode input,body.dark-mode select,body.dark-mode textarea,body.dark input,body.dark select,body.dark textarea,body.theme-dark input,body.theme-dark select,body.theme-dark textarea,body[data-theme="dark"] input,body[data-theme="dark"] select,body[data-theme="dark"] textarea{background:var(--dp-field)!important;color:var(--dp-text)!important;border-color:var(--dp-edge)!important;color-scheme:dark}
+body.dark-mode input::placeholder,body.dark-mode textarea::placeholder,body.dark input::placeholder,body.dark textarea::placeholder,body.theme-dark input::placeholder,body.theme-dark textarea::placeholder,body[data-theme="dark"] input::placeholder,body[data-theme="dark"] textarea::placeholder{color:#9ca5b1!important;opacity:1}
+body.dark-mode .code,body.dark-mode .meta,body.dark-mode .small,body.dark-mode .change,body.dark .code,body.dark .meta,body.dark .small,body.dark .change,body.theme-dark .code,body.theme-dark .meta,body.theme-dark .small,body.theme-dark .change,body[data-theme="dark"] .code,body[data-theme="dark"] .meta,body[data-theme="dark"] .small,body[data-theme="dark"] .change{color:var(--dp-muted)!important}
+body.dark-mode .bottom-nav,body.dark .bottom-nav,body.theme-dark .bottom-nav,body[data-theme="dark"] .bottom-nav{background:#202329!important;border-color:var(--dp-edge)!important}
+body.dark-mode .bottom-nav button,body.dark .bottom-nav button,body.theme-dark .bottom-nav button,body[data-theme="dark"] .bottom-nav button{color:var(--dp-muted)!important}
+body.dark-mode #qrisImage,body.dark-mode #qrisCanvas,body.dark-mode .qris-image,body.dark #qrisImage,body.dark #qrisCanvas,body.dark .qris-image,body[data-theme="dark"] #qrisImage,body[data-theme="dark"] #qrisCanvas,body[data-theme="dark"] .qris-image{background:#fff!important;color:#111!important}
+</style>
+
+</body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     a.href=url;a.download="Laporan-"+date+".xls";a.style.display="none";document.body.appendChild(a);a.click();
