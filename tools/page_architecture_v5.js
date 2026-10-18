@@ -398,6 +398,34 @@
     }
   };
   // POS mobile opens directly on the cashier screen; the dashboard remains available in the last nav slot.
+  // POS input-list workflow: Enter adds an exact code/barcode match to the open list.
+  // Search suggestions remain available for names/partial queries.
+  const cashierInput=document.getElementById('q');
+  if(cashierInput && !cashierInput.dataset.nfListInputBound){
+    cashierInput.dataset.nfListInputBound='1';
+    cashierInput.addEventListener('keydown',function(event){
+      if(event.key!=='Enter')return;
+      const term=String(cashierInput.value||'').trim().toLocaleLowerCase('id-ID');
+      if(!term)return;
+      const exact=currentResults.findIndex(p=>
+        [p.code,p.barcode].some(v=>String(v||'').trim().toLocaleLowerCase('id-ID')===term)
+      );
+      if(exact>=0){event.preventDefault();add(exact);cashierInput.value='';cashierInput.dispatchEvent(new Event('input',{bubbles:true}));cashierInput.focus();}
+    });
+  }
+  // Keep the entered-items list readable as rows on mobile, without replacing existing cart logic.
+  if(!document.getElementById('nfInputListStyle')){
+    const listStyle=document.createElement('style');listStyle.id='nfInputListStyle';
+    listStyle.textContent=`
+      #nfTransaction .cart .itemline{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;padding:12px 0;border-bottom:1px solid #e7eeea}
+      #nfTransaction .cart .itemline .name{font-size:13px;line-height:1.4}
+      #nfTransaction .cart .itemline .small{font-size:12px;line-height:1.5}
+      #nfTransaction .cart .itemline .qty{display:flex;align-items:center;gap:8px;margin-top:5px}
+      #nfTransaction .cart .itemline .qty button{min-width:38px;min-height:36px;border-radius:10px}
+      #nfTransaction .cart #cart{max-height:none;overflow:visible}
+    `;
+    document.head.appendChild(listStyle);
+  }
   window.nfGo('transaction');
 })();
 })();
