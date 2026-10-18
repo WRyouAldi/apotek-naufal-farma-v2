@@ -2263,6 +2263,77 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   .nf-page button:active,.nf-glass-nav button:active{transform:scale(.98)}
   .nf-page input,.nf-page select,.nf-page textarea{transition:border-color .16s ease,box-shadow .16s ease}
   .nf-page input:focus-visible,.nf-page select:focus-visible,.nf-page textarea:focus-visible,.nf-page button:focus-visible{outline:2px solid var(--dshe-accent,#c6ccd5);outline-offset:2px}
+  /* Progressive Blur UI — Pearl Crystal / Dark Pearl. Blur increases with surface depth. */
+  :root{
+    --dshe-blur-soft:8px;
+    --dshe-blur-card:14px;
+    --dshe-blur-float:24px;
+    --dshe-glass-highlight:rgba(255,255,255,.42);
+    --dshe-glass-tint:rgba(255,255,255,.68);
+  }
+  html[data-dshe-theme="dark"]{
+    --dshe-glass-highlight:rgba(255,255,255,.09);
+    --dshe-glass-tint:rgba(31,34,39,.78);
+  }
+  @media(prefers-color-scheme:dark){
+    html[data-dshe-theme="system"]{
+      --dshe-glass-highlight:rgba(255,255,255,.09);
+      --dshe-glass-tint:rgba(31,34,39,.78);
+    }
+  }
+  /* Level 1: subtle frosted surfaces — retain legibility and avoid blurring text itself. */
+  .nf-page-intro,#dsheThemeControl,.nf-price-lookup,.nf-price-search,
+  #nfTransaction .search,#nfTransaction .cart,.nf-payment-note,
+  .nf-page .nf-tx-summary>div{
+    -webkit-backdrop-filter:blur(var(--dshe-blur-soft)) saturate(1.12);
+    backdrop-filter:blur(var(--dshe-blur-soft)) saturate(1.12);
+    border:1px solid color-mix(in srgb,var(--dshe-line,#d9dee4) 76%,transparent);
+  }
+  /* Level 2: cards have a more visible glass edge, but remain nearly opaque for readability. */
+  .nf-price-result,.nf-price-empty,.nf-more-grid button,
+  .nf-page .nf-operational-hero,.nf-page .nf-card,
+  #nfTransaction .nf-tx-summary{
+    -webkit-backdrop-filter:blur(var(--dshe-blur-card)) saturate(1.16);
+    backdrop-filter:blur(var(--dshe-blur-card)) saturate(1.16);
+    box-shadow:inset 0 1px 0 var(--dshe-glass-highlight),var(--dshe-shadow,0 8px 24px rgba(22,28,35,.06));
+  }
+  /* Level 3: floating navigation and theme control sit above the content plane. */
+  #bottomNavV15,.nf-glass-nav{
+    -webkit-backdrop-filter:blur(var(--dshe-blur-float)) saturate(1.28);
+    backdrop-filter:blur(var(--dshe-blur-float)) saturate(1.28);
+    background:var(--dshe-glass-tint)!important;
+    border:1px solid var(--dshe-glass-highlight)!important;
+    box-shadow:0 10px 32px rgba(15,22,30,.12),inset 0 1px 0 var(--dshe-glass-highlight);
+  }
+  #dsheThemeControl{
+    background:var(--dshe-glass-tint);
+    box-shadow:inset 0 1px 0 var(--dshe-glass-highlight),0 5px 18px rgba(15,22,30,.05);
+  }
+  .nf-page button,.nf-glass-nav button{
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* Keep controls and product text crisp; blur applies to the surface behind them only. */
+  .nf-page input,.nf-page select,.nf-page textarea,
+  .nf-page button,.nf-price-result *,.nf-price-empty *{
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+  /* Graceful fallback on browsers without backdrop-filter support. */
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    .nf-page-intro,#dsheThemeControl,.nf-price-lookup,.nf-price-search,
+    #nfTransaction .search,#nfTransaction .cart,.nf-payment-note,
+    .nf-price-result,.nf-price-empty,.nf-more-grid button,
+    #bottomNavV15,.nf-glass-nav{background:var(--dshe-surface,var(--dshe-card,#fff))!important}
+  }
+  @media(prefers-reduced-transparency:reduce){
+    .nf-page-intro,#dsheThemeControl,.nf-price-lookup,.nf-price-search,
+    #nfTransaction .search,#nfTransaction .cart,.nf-payment-note,
+    .nf-price-result,.nf-price-empty,.nf-more-grid button,
+    #bottomNavV15,.nf-glass-nav{
+      -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+      background:var(--dshe-surface,var(--dshe-card,#fff))!important;
+    }
+  }
   @media(prefers-reduced-motion:reduce){.nf-page button,.nf-glass-nav button,.nf-page input,.nf-page select,.nf-page textarea{transition:none!important}.nf-page button:active,.nf-glass-nav button:active{transform:none}}
   `;
   document.head.appendChild(css);
