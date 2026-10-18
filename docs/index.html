@@ -1205,6 +1205,115 @@ html[data-dshe-theme="dark"] .qr-code-canvas{background:#fff!important;color:#11
 }
 </style>
 
+
+<style id="dsheLightModePanelNavbarFix">
+/* P1 correction: Pearl Crystal LIGHT surfaces + deterministic floating nav layout. */
+html[data-dshe-theme="light"]{
+ --lm-bg:#f3f5f7;--lm-card:#ffffff;--lm-soft:#f5f7f9;--lm-line:#d8dee6;
+ --lm-text:#26313d;--lm-muted:#667383;--lm-mint:#e0f4ec;--lm-accent:#167b61;
+}
+html[data-dshe-theme="light"] .nf-page-intro,
+html[data-dshe-theme="light"] .nf-price-lookup,
+html[data-dshe-theme="light"] .nf-price-result,
+html[data-dshe-theme="light"] .nf-crud-host,
+html[data-dshe-theme="light"] .nf-crud-card,
+html[data-dshe-theme="light"] .nf-crud-item,
+html[data-dshe-theme="light"] .nf-crud-box,
+html[data-dshe-theme="light"] .nf-crud-import,
+html[data-dshe-theme="light"] .nf-sync-host,
+html[data-dshe-theme="light"] #nfCloudCard,
+html[data-dshe-theme="light"] #barangKeluarSection,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-result,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-row,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-summary,
+html[data-dshe-theme="light"] .bk-history-card,
+html[data-dshe-theme="light"] #laporanSection,
+html[data-dshe-theme="light"] #reportPreview,
+html[data-dshe-theme="light"] .nf-more-link,
+html[data-dshe-theme="light"] .nf-more-grid button{
+ background:var(--lm-card)!important;color:var(--lm-text)!important;
+ border-color:var(--lm-line)!important;box-shadow:0 6px 20px rgba(35,49,63,.055)!important;
+}
+html[data-dshe-theme="light"] .nf-page-intro{background:#f2f7f5!important;color:var(--lm-muted)!important}
+html[data-dshe-theme="light"] .nf-price-search,
+html[data-dshe-theme="light"] #barangKeluarSection input,
+html[data-dshe-theme="light"] #barangKeluarSection select,
+html[data-dshe-theme="light"] #barangKeluarSection textarea,
+html[data-dshe-theme="light"] .nf-crud-host input,
+html[data-dshe-theme="light"] .nf-crud-host select,
+html[data-dshe-theme="light"] .nf-crud-box input,
+html[data-dshe-theme="light"] .nf-crud-box select,
+html[data-dshe-theme="light"] .nf-sync-host input,
+html[data-dshe-theme="light"] .nf-sync-host select,
+html[data-dshe-theme="light"] .nf-price-search input,
+html[data-dshe-theme="light"] #laporanSection input{
+ background:#f7f9fb!important;color:var(--lm-text)!important;
+ -webkit-text-fill-color:var(--lm-text)!important;border-color:#cbd4df!important;
+}
+html[data-dshe-theme="light"] .nf-page-intro *,
+html[data-dshe-theme="light"] .nf-crud-host small,
+html[data-dshe-theme="light"] .nf-crud-host label,
+html[data-dshe-theme="light"] .nf-sync-host small,
+html[data-dshe-theme="light"] .nf-sync-host p,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-hint,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-result-meta,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-row-bottom{
+ color:var(--lm-muted)!important;-webkit-text-fill-color:var(--lm-muted)!important;
+}
+html[data-dshe-theme="light"] .nf-page-head h2,
+html[data-dshe-theme="light"] .nf-crud-name,
+html[data-dshe-theme="light"] .nf-crud-box h3,
+html[data-dshe-theme="light"] .nf-price-product b,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-name,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-head h3{
+ color:var(--lm-text)!important;-webkit-text-fill-color:var(--lm-text)!important;
+}
+html[data-dshe-theme="light"] .nf-glass-nav,
+html[data-dshe-theme="light"] #bottomNavV15{
+ position:fixed!important;z-index:100!important;left:50%!important;right:auto!important;
+ bottom:calc(8px + env(safe-area-inset-bottom))!important;top:auto!important;
+ transform:translateX(-50%)!important;width:min(520px,calc(100% - 20px))!important;
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+ gap:4px!important;padding:7px!important;margin:0!important;
+ border:1px solid rgba(202,213,224,.92)!important;border-radius:22px!important;
+ background:rgba(255,255,255,.94)!important;color:#526071!important;
+ box-shadow:0 8px 28px rgba(37,53,70,.16)!important;
+ -webkit-backdrop-filter:blur(22px)!important;backdrop-filter:blur(22px)!important;
+}
+html[data-dshe-theme="light"] .nf-glass-nav button,
+html[data-dshe-theme="light"] #bottomNavV15 button{
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:center!important;gap:3px!important;min-width:0!important;width:100%!important;
+ min-height:49px!important;padding:5px 2px!important;margin:0!important;
+ border:1px solid transparent!important;border-radius:15px!important;
+ background:transparent!important;color:#647183!important;box-shadow:none!important;
+ font-size:10px!important;line-height:1.1!important;white-space:nowrap!important;
+}
+html[data-dshe-theme="light"] .nf-glass-nav button span,
+html[data-dshe-theme="light"] #bottomNavV15 button span{display:block!important;font-size:18px!important;line-height:1!important;color:inherit!important}
+html[data-dshe-theme="light"] .nf-glass-nav button b,
+html[data-dshe-theme="light"] #bottomNavV15 button b{display:block!important;font-size:9px!important;font-weight:750!important;line-height:1.1!important;color:inherit!important;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+html[data-dshe-theme="light"] .nf-glass-nav button.active,
+html[data-dshe-theme="light"] #bottomNavV15 button.active{
+ background:#e3f4ec!important;border-color:#c4e8d9!important;color:#126c54!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.85)!important;
+}
+html[data-dshe-theme="light"] .nf-glass-nav button.active span,
+html[data-dshe-theme="light"] .nf-glass-nav button.active b,
+html[data-dshe-theme="light"] #bottomNavV15 button.active span,
+html[data-dshe-theme="light"] #bottomNavV15 button.active b{color:#126c54!important}
+@media(max-width:360px){
+ html[data-dshe-theme="light"] .nf-glass-nav,html[data-dshe-theme="light"] #bottomNavV15{width:calc(100% - 14px)!important;gap:2px!important;padding:5px!important}
+ html[data-dshe-theme="light"] .nf-glass-nav button,html[data-dshe-theme="light"] #bottomNavV15 button{min-height:46px!important}
+ html[data-dshe-theme="light"] .nf-glass-nav button b,html[data-dshe-theme="light"] #bottomNavV15 button b{font-size:8px!important}
+}
+/* QRIS artwork is intentionally white for scan reliability in light mode too. */
+html[data-dshe-theme="light"] .payment-qris-frame img,
+html[data-dshe-theme="light"] .payment-qris-frame canvas,
+html[data-dshe-theme="light"] .nf-qris-image-wrap,
+html[data-dshe-theme="light"] .pos-qris-art{background:#fff!important;filter:none!important;opacity:1!important}
+</style>
+
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
