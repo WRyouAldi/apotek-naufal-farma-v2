@@ -50,3 +50,17 @@ QRIS yang tampil tidak membuktikan pembayaran diterima. Notifikasi otomatis meme
 
 ## Status
 Dokumen ini merupakan analisis dan rencana pengujian. Checklist belum dianggap lulus sebelum pengujian aktual dicatat.
+
+## Analisis tambahan — Dark Pearl v3
+Perbaikan source terbaru menambah cakupan untuk:
+- Token charcoal berlapis untuk latar, kartu, permukaan terangkat, dan input.
+- Input, select, textarea, placeholder, serta focus state yang lebih terbaca.
+- Mode **Ikuti sistem HP** ketika OS menggunakan dark mode.
+- Kartu transaksi dan panel cloud yang sebelumnya berpotensi mempertahankan warna terang dari inline style.
+- Pengecualian untuk QRIS agar area kode tetap memiliki latar putih untuk pemindaian.
+
+### Risiko yang masih harus diuji
+- Beberapa komponen legacy mungkin menggunakan inline style atau nama kelas yang tidak tercakup.
+- Warna status sukses/peringatan/error harus tetap punya makna dan kontras.
+- Hasil visual perlu diperiksa pada APK terbaru di perangkat nyata; perubahan CSS saja belum membuktikan semuanya tampil benar.
+
