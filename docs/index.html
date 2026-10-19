@@ -1549,6 +1549,43 @@ html[data-dshe-theme="dark"] #barangKeluarSection .bk-remove{
 }
 </style>
 
+
+<style id="dsheP2TypographyTouchTargets">
+/* P2.1 — readable type hierarchy and comfortable touch targets; preserve existing theme palette. */
+.nf-page{font-size:14px;line-height:1.5}
+.nf-page-head{gap:12px!important;margin-bottom:14px!important}
+.nf-page-head h2{font-size:clamp(22px,5.6vw,28px)!important;line-height:1.16!important;letter-spacing:-.45px!important;font-weight:850!important}
+.nf-page-head p{font-size:12px!important;line-height:1.5!important;max-width:42ch}
+.nf-page-intro{font-size:12px!important;line-height:1.6!important;padding:14px 15px!important}
+.nf-page label{font-size:12px!important;line-height:1.45!important;font-weight:700}
+.nf-page input:not([type="checkbox"]):not([type="radio"]),
+.nf-page select,.nf-page textarea{font-size:14px!important;line-height:1.4!important;min-height:44px}
+.nf-page textarea{min-height:92px!important}
+.nf-page input[type="checkbox"],.nf-page input[type="radio"]{width:18px;height:18px;accent-color:#188b70}
+.nf-page button,.nf-glass-nav>button,#bottomNavV15.nf-glass-nav>button{touch-action:manipulation}
+.nf-page button:not(.icon-btn):not(.nf-icon-btn){min-height:42px}
+.nf-page .nf-price-result,.nf-page .nf-crud-card,.nf-page .nf-crud-item,.nf-page .bk-history-card{line-height:1.45}
+.nf-page .nf-crud-name,.nf-page .nf-price-product b,.nf-page .bk-name{font-size:14px!important;line-height:1.4!important;font-weight:750!important;overflow-wrap:anywhere}
+.nf-page .nf-crud-price,.nf-page .nf-price-result-top strong,.nf-page .bk-result-price,.nf-page .bk-total b{font-size:15px!important;font-variant-numeric:tabular-nums}
+.nf-page .nf-crud-code,.nf-page .nf-crud-meta,.nf-page .nf-crud-count,.nf-page .nf-price-product small,.nf-page .nf-price-result-meta{font-size:11px!important;line-height:1.5!important}
+.nf-page .nf-empty,.nf-page .nf-crud-empty,.nf-page .nf-price-empty,.nf-page .empty{font-size:13px!important;line-height:1.6!important}
+.nf-page button:focus-visible,.nf-page a:focus-visible,.nf-page input:focus-visible,.nf-page select:focus-visible,.nf-page textarea:focus-visible{
+ outline:3px solid #4b9c84!important;outline-offset:2px!important;
+}
+.nf-page button:disabled,.nf-page input:disabled,.nf-page select:disabled{opacity:.58!important;cursor:not-allowed!important}
+html[data-dshe-theme="light"] .nf-page .nf-page-head h2{color:#202833!important}
+html[data-dshe-theme="dark"] .nf-page .nf-page-head h2{color:#f2f4f7!important}
+@media(max-width:380px){
+ .nf-page-head h2{font-size:22px!important}
+ .nf-page-head p{font-size:11px!important}
+ .nf-page-intro{padding:12px!important}
+ .nf-page button:not(.icon-btn):not(.nf-icon-btn){min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ .nf-page *, .nf-glass-nav>button,#bottomNavV15.nf-glass-nav>button{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
