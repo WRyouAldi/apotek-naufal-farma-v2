@@ -137,7 +137,7 @@
   }
   const txTools=document.createElement('div');
   txTools.className='nf-tx-tools';
-  txTools.innerHTML='<button type="button" id="nfTxShowQris" class="nf-tx-secondary"><span>▧</span><b>Tampilkan QRIS</b><small>Pembayaran merchant terpisah — verifikasi melalui DANA Bisnis</small></button>';
+  txTools.remove();
   tx.appendChild(txTools);
   const txSummary=document.createElement('div');
   txSummary.className='nf-tx-summary';
@@ -279,16 +279,16 @@
     nodes.bottom.innerHTML=
       '<button type="button" data-page="home" aria-label="Dashboard"><span>⌂</span><b>Home</b></button>'+
       '<button type="button" data-page="transaction" aria-label="Kasir"><span>▣</span><b>Kasir</b></button>'+
-      '<button type="button" data-page="payment" aria-label="QRIS merchant"><span>▦</span><b>QRIS</b></button>'+
+
       '<button type="button" data-page="price" aria-label="Cek harga dan stok"><span>⌕</span><b>Cek Harga</b></button>'+
       '<button type="button" data-page="more" aria-label="Menu lainnya"><span>☷</span><b>Lainnya</b></button>';
-    nodes.bottom.style.gridTemplateColumns='repeat(5,minmax(0,1fr))';
+    nodes.bottom.style.gridTemplateColumns='repeat(4,minmax(0,1fr))';
     nodes.bottom.classList.add('nf-glass-nav');
     nodes.bottom.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>window.nfGo(b.dataset.page)));
   }
 
   wrap.innerHTML='';
-  wrap.append(home,price,tx,paymentPage,morePage,out,report,items,sync);
+  wrap.append(home,price,tx,morePage,out,report,items,sync);
 
   // Keep dynamically created Barang Keluar inside its own page.
   const relocate=()=>{
@@ -301,7 +301,7 @@
   setTimeout(relocate,100);
   setTimeout(relocate,500);
 
-  const map={home:'nfHome',price:'nfPrice',transaction:'nfTransaction',payment:'nfPayment',more:'nfMore',out:'nfOut',report:'nfReport',items:'nfItems',sync:'nfSync'};
+  const map={home:'nfHome',price:'nfPrice',transaction:'nfTransaction',more:'nfMore',out:'nfOut',report:'nfReport',items:'nfItems',sync:'nfSync'};
   window.nfGo=function(page){
     if(!map[page])page='home';
     Object.entries(map).forEach(([key,id])=>{
@@ -319,7 +319,6 @@
     if(page==='items')window.nfCrudRefresh?.();
     if(page==='sync')window.nfCloudSyncInit?.();
     if(page==='report')window.nfReportRefresh?.();
-    if(page==='payment')window.nfPaymentOpen?.();
   };
 
   const cashierSearch=nodes.search?.querySelector('.search');
@@ -349,7 +348,6 @@
   scanAttachObserver.observe(wrap,{childList:true,subtree:true});
   items.addEventListener('click',()=>setTimeout(attachAllSearchScanners,80));
   out.addEventListener('click',()=>setTimeout(attachAllSearchScanners,80));
-  document.getElementById('nfTxShowQris')?.addEventListener('click',()=>window.nfGo('payment'));
   const txCount=document.getElementById('nfTxCount');
   const txState=document.getElementById('nfTxState');
   const txCart=document.querySelector('.cart');
@@ -363,7 +361,7 @@
     syncTxSummary();
   }
   window.nfPaymentOpen=function(){if(legacyPayment)legacyPayment.style.display='block';};
-  window.focusPayment=function(){window.nfGo('payment')};
+  window.focusPayment=function(){window.nfGo('transaction')};
   window.focusSearch=function(scan){
     window.nfGo(scan?'transaction':'price');
     setTimeout(()=>{
@@ -372,7 +370,7 @@
     },140);
   };
   window.focusCart=function(){window.nfGo('transaction')};
-  window.focusPayment=function(){window.nfGo('payment')};
+  window.focusPayment=function(){window.nfGo('transaction')};
   window.focusReport=function(){window.nfGo('report')};
   window.focusOut=function(){window.nfGo('out')};
   window.focusItems=function(){window.nfGo('items')};
@@ -553,7 +551,7 @@
       #nfTransaction #results .meta{font-size:10px!important;margin-top:2px!important}
       #nfTransaction #results .price{font-size:12px!important}
       #nfTransaction #results button{font-size:11px!important;padding:7px 9px!important;min-height:32px!important;border-radius:9px!important;margin-top:4px!important;white-space:nowrap}
-      /* Remove the large QRIS promotional card from the item-input workflow. QRIS remains in its own tab. */
+      /* Keep the cashier entry flow compact; payment selection stays in checkout. */
       #nfTransaction .nf-tx-tools{display:none!important}
       #nfTransaction .nf-tx-summary{margin:0 0 8px!important}
       #nfTransaction .nf-tx-summary>div{padding:8px 10px!important;border-radius:12px!important}
