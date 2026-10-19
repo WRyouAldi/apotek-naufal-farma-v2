@@ -158,7 +158,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 <header>
   <div class="topbar">
     <div class="brand-mark"><img src="branding/logo-mark.svg" alt="Apotek D&#39;she Farma"></div>
-    <div class="brand-text"><h1>D'she Farma</h1><div>Apotek • POS Mobile</div></div>
+    <div class="brand-text"><h1>Apotek D'she Farma</h1><div>Pearl Crystal • POS Mobile</div></div>
     <button type="button" class="top-notify" onclick="focusReport()" aria-label="Laporan">♧</button>
   </div>
 </header>
@@ -194,7 +194,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 
 <section id="pembayaranMandiri" class="card payment-hub" style="display:none">
 <div class="payment-hub-head"><div><span class="eyebrow">PEMBAYARAN</span><h2>Pembayaran QRIS</h2><p>Menu terpisah untuk pembayaran di luar transaksi kasir.</p></div><span class="payment-hub-icon">▦</span></div>
-<div class="payment-merchant"><small>Merchant QRIS</small><h3>Apotek Naufal</h3><div>NMID: <b>ID1026613777956</b></div><div>Terminal: <b>A01</b></div></div>
+<div class="payment-merchant"><small>Merchant QRIS</small><h3>Apotek D'she Farma</h3><div>NMID: <b>ID1026613777956</b></div><div>Terminal: <b>A01</b></div></div>
 <div class="payment-qris-frame"><div class="payment-qris-placeholder"><span>QRIS</span><b>QRIS statis resmi</b><p>Gambar QRIS asli harus dipasang di aplikasi sebelum pelanggan memindai.</p></div></div>
 <div class="payment-hub-note"><b>Langkah pembayaran</b><ol><li>Minta pelanggan memindai QRIS resmi.</li><li>Masukkan nominal di aplikasi pembayaran pelanggan jika diminta.</li><li>Periksa transaksi masuk di DANA Bisnis.</li><li>Konfirmasi hanya setelah dana benar-benar diterima.</li></ol></div>
 <button type="button" class="payment-check-btn" onclick="openDanaInstructions()">✓ Panduan verifikasi pembayaran</button>
@@ -207,7 +207,7 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
 <div id="results"></div>
 <div id="cartAnchor"></div>
 <div class="card cart"><div class="row"><b>Keranjang</b><span id="count" class="small">0 item</span></div>
-<div id="cart"></div><label class="pos-field-label" for="paymentMethod">Metode pembayaran</label><select id="paymentMethod" style="width:100%;padding:13px;border:1px solid #cfd6d3;border-radius:12px;font-size:15px;background:#fff;margin-top:5px"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option><option value="Kartu Debit">Kartu Debit</option><option value="Transfer">Transfer</option></select><div id="paymentGuide" class="payment-guide" style="display:none;margin-top:9px;padding:12px;border:1px solid #cde6dd;background:#f0faf6;border-radius:12px;font-size:13px;line-height:1.45"><b id="paymentGuideTitle">Konfirmasi pembayaran</b><p id="paymentGuideText" style="margin:6px 0 10px">Periksa pembayaran pada aplikasi merchant sebelum menyelesaikan transaksi.</p><label style="display:flex;gap:8px;align-items:flex-start;font-weight:600"><input id="paymentVerified" type="checkbox" style="width:18px;height:18px;flex:none;margin:1px 0 0"> <span id="paymentVerifiedText">Saya sudah memastikan pembayaran benar-benar masuk.</span></label></div><label class="pos-field-label" for="customerName">Pelanggan (opsional)</label><input id="customerName" type="text" maxlength="80" autocomplete="off" placeholder="Nama pelanggan" style="margin-top:5px"><label class="pos-field-label" for="cash">Uang diterima</label><input id="cash" type="number" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal pembayaran" style="margin-top:5px">
+<div id="cart"></div><label class="pos-field-label" for="paymentMethod">Metode pembayaran</label><select id="paymentMethod" style="width:100%;padding:13px;border:1px solid #cfd6d3;border-radius:12px;font-size:15px;background:#fff;margin-top:5px"><option value="Tunai">Tunai</option><option value="QRIS">QRIS</option><option value="Kartu Debit">Kartu Debit</option><option value="Transfer">Transfer</option></select><div id="paymentGuide" class="payment-guide" style="display:none;margin-top:9px;padding:12px;border:1px solid #cde6dd;background:#f0faf6;border-radius:12px;font-size:13px;line-height:1.45"><b id="paymentGuideTitle">Konfirmasi pembayaran</b><p id="paymentGuideText" style="margin:6px 0 10px">Periksa pembayaran pada aplikasi DANA Bisnis milik Apotek D'she Farma sebelum menyelesaikan transaksi.</p><label style="display:flex;gap:8px;align-items:flex-start;font-weight:600"><input id="paymentVerified" type="checkbox" style="width:18px;height:18px;flex:none;margin:1px 0 0"> <span id="paymentVerifiedText">Saya sudah memastikan pembayaran benar-benar masuk.</span></label></div><label class="pos-field-label" for="customerName">Pelanggan (opsional)</label><input id="customerName" type="text" maxlength="80" autocomplete="off" placeholder="Nama pelanggan" style="margin-top:5px"><label class="pos-field-label" for="cash">Uang diterima</label><input id="cash" type="number" min="0" step="1" inputmode="numeric" placeholder="Masukkan nominal pembayaran" style="margin-top:5px">
 <div class="total">Total: <span id="total">Rp 0</span></div><div class="change">Kembalian: <span id="change">Rp 0</span></div>
 <div class="actions">
 <button type="button" id="saveBtn">💾 Simpan Transaksi</button>
@@ -337,7 +337,7 @@ function updatePaymentGuide(){
   guide.style.display=nonCash?"block":"none";
   if(method==="QRIS"){
     title.textContent="Pembayaran QRIS — DANA Bisnis";
-    body.textContent="Minta pelanggan memindai QRIS cetak resmi Apotek Naufal. Buka aplikasi DANA Bisnis dan periksa notifikasi/riwayat transaksi; cocokkan nominal dengan total belanja. QRIS cetak tidak mengirim status pembayaran otomatis ke aplikasi kasir.";
+    body.textContent="Minta pelanggan memindai QRIS cetak resmi Apotek D'she Farma. Buka aplikasi DANA Bisnis dan periksa notifikasi/riwayat transaksi; cocokkan nominal dengan total belanja. QRIS cetak tidak mengirim status pembayaran otomatis ke aplikasi kasir.";
     label.textContent="Saya sudah melihat pembayaran berhasil di DANA Bisnis dan nominalnya sesuai total transaksi.";
   }else{
     title.textContent="Konfirmasi pembayaran "+method;
@@ -391,7 +391,7 @@ function backupData(){
     const text=JSON.stringify(payload,null,2);
     const a=document.createElement("a");
     a.href="data:application/json;charset=utf-8,"+encodeURIComponent(text);
-    a.download="backup-apotek-naufal-farma-"+new Date().toISOString().slice(0,10)+".json";
+    a.download="backup-apotek-dshe-farma-"+new Date().toISOString().slice(0,10)+".json";
     document.body.appendChild(a);a.click();a.remove();
     document.getElementById("saveStatus").className="small status-ok";
     document.getElementById("saveStatus").textContent="✓ Backup dibuat, termasuk arsip transaksi localStorage lama jika ada.";
@@ -674,7 +674,7 @@ body.pos-modal-open{overflow:hidden}
     if(!cart||!method||!save||document.getElementById('posCheckoutModal'))return;
     const modal=document.createElement('div');
     modal.id='posCheckoutModal';
-    modal.innerHTML='<section class="pos-sheet" role="dialog" aria-modal="true" aria-labelledby="posCheckoutTitle"><div class="pos-sheet-head"><div><h2 id="posCheckoutTitle">Checkout Pembayaran</h2><p>Periksa total dan pastikan pembayaran sudah diterima.</p></div><button type="button" class="pos-close" id="posCloseCheckout" aria-label="Tutup">×</button></div><div class="pos-summary"><small>Total yang harus dibayar</small><strong id="posModalTotal">Rp 0</strong><div class="pos-summary-row"><span id="posModalItemCount">0 item</span><span id="posModalChange">Kembalian Rp 0</span></div></div><div class="pos-pay-card" id="posPaymentFields"></div><div class="pos-qris-placeholder" id="posQrisPlaceholder"><div class="pos-qris-icon">▦</div><b>QRIS Apotek Naufal</b><div class="pos-qris-art" role="img" aria-label="QRIS resmi merchant belum tertanam pada versi ini"><strong>QRIS</strong><span>NMID ID1026613777956</span><small>A01 · Apotek Naufal</small></div><p class="pos-qris-warning">QRIS resmi belum tertanam sebagai aset APK ini. Jangan gunakan panel ini untuk menerima pembayaran sampai QRIS asli ditampilkan.</p><span class="pos-nmid">NMID: ID1026613777956</span><p>Terminal: A01 · Merchant: Apotek Naufal</p></div><div class="pos-payment-note">Untuk QRIS, debit, dan transfer, kasir wajib memeriksa transaksi masuk melalui aplikasi merchant/bank terlebih dahulu. Checkbox bukan bukti pembayaran otomatis.</div><div class="pos-checkout-actions"><button type="button" id="posCancelCheckout">Kembali</button></div></section>';
+    modal.innerHTML='<section class="pos-sheet" role="dialog" aria-modal="true" aria-labelledby="posCheckoutTitle"><div class="pos-sheet-head"><div><h2 id="posCheckoutTitle">Checkout Pembayaran</h2><p>Periksa total dan pastikan pembayaran sudah diterima.</p></div><button type="button" class="pos-close" id="posCloseCheckout" aria-label="Tutup">×</button></div><div class="pos-summary"><small>Total yang harus dibayar</small><strong id="posModalTotal">Rp 0</strong><div class="pos-summary-row"><span id="posModalItemCount">0 item</span><span id="posModalChange">Kembalian Rp 0</span></div></div><div class="pos-pay-card" id="posPaymentFields"></div><div class="pos-qris-placeholder" id="posQrisPlaceholder"><div class="pos-qris-icon">▦</div><b>QRIS Apotek D'she Farma</b><div class="pos-qris-art" role="img" aria-label="QRIS resmi merchant belum tertanam pada versi ini"><strong>QRIS</strong><span>NMID ID1026613777956</span><small>A01 · Apotek D'she Farma</small></div><p class="pos-qris-warning">QRIS resmi belum tertanam sebagai aset APK ini. Jangan gunakan panel ini untuk menerima pembayaran sampai QRIS asli ditampilkan.</p><span class="pos-nmid">NMID: ID1026613777956</span><p>Terminal: A01 · Merchant: Apotek D'she Farma</p></div><div class="pos-payment-note">Untuk QRIS, debit, dan transfer, kasir wajib memeriksa transaksi masuk melalui aplikasi merchant/bank terlebih dahulu. Checkbox bukan bukti pembayaran otomatis.</div><div class="pos-checkout-actions"><button type="button" id="posCancelCheckout">Kembali</button></div></section>';
     document.body.appendChild(modal);
     const fields=modal.querySelector('#posPaymentFields');
     const labels=[...cart.querySelectorAll('.pos-field-label')];
