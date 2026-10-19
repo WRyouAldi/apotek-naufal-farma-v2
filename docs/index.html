@@ -1369,6 +1369,186 @@ html[data-dshe-theme="light"] .pos-qris-art{background:#fff!important;filter:non
 }
 </style>
 
+
+<style id="dsheP1GlobalContrastAudit">
+/* P1 contrast audit: use explicit readable foregrounds on every operational surface. */
+:root{
+ --dshe-text:#202833;--dshe-muted:#596575;--dshe-line:#cbd3dd;--dshe-card:#fff;
+ --dshe-input:#fff;--dshe-accent:#086b53;--dshe-on-accent:#fff;
+}
+html[data-dshe-theme="light"] body{color:#202833!important}
+html[data-dshe-theme="light"] .nf-page,
+html[data-dshe-theme="light"] .nf-page *{text-shadow:none}
+html[data-dshe-theme="light"] .nf-page-head h1,
+html[data-dshe-theme="light"] .nf-page-head h2,
+html[data-dshe-theme="light"] .nf-page-head h3,
+html[data-dshe-theme="light"] .nf-page h1,
+html[data-dshe-theme="light"] .nf-page h2,
+html[data-dshe-theme="light"] .nf-page h3,
+html[data-dshe-theme="light"] .nf-page b,
+html[data-dshe-theme="light"] .nf-page strong{color:#202833}
+html[data-dshe-theme="light"] .nf-page p,
+html[data-dshe-theme="light"] .nf-page small,
+html[data-dshe-theme="light"] .nf-page label,
+html[data-dshe-theme="light"] .nf-page .small,
+html[data-dshe-theme="light"] .nf-page .meta,
+html[data-dshe-theme="light"] .nf-page .nf-page-intro,
+html[data-dshe-theme="light"] .nf-page .nf-price-result-meta,
+html[data-dshe-theme="light"] .nf-page .nf-price-product small,
+html[data-dshe-theme="light"] .nf-page .nf-price-empty,
+html[data-dshe-theme="light"] .nf-page .nf-crud-meta,
+html[data-dshe-theme="light"] .nf-page .nf-crud-code,
+html[data-dshe-theme="light"] .nf-page .nf-crud-count,
+html[data-dshe-theme="light"] .nf-page .nf-crud-import-sub,
+html[data-dshe-theme="light"] .nf-page .nf-crud-field label,
+html[data-dshe-theme="light"] .nf-page .nf-sync-host p,
+html[data-dshe-theme="light"] .nf-page .nf-sync-host small,
+html[data-dshe-theme="light"] .nf-page .bk-hint,
+html[data-dshe-theme="light"] .nf-page .bk-result-meta,
+html[data-dshe-theme="light"] .nf-page .bk-row-bottom{color:#596575!important;-webkit-text-fill-color:#596575!important}
+html[data-dshe-theme="light"] .nf-page-intro{background:#f2f5f8!important;border-color:#cbd3dd!important;color:#465363!important}
+html[data-dshe-theme="light"] .nf-page input:not([type="checkbox"]):not([type="radio"]),
+html[data-dshe-theme="light"] .nf-page select,
+html[data-dshe-theme="light"] .nf-page textarea,
+html[data-dshe-theme="light"] #nfTransaction #q,
+html[data-dshe-theme="light"] #nfInputQty,
+html[data-dshe-theme="light"] #nfAutocomplete,
+html[data-dshe-theme="light"] #nfAutocomplete button,
+html[data-dshe-theme="light"] #nfTransaction #results>.card{
+ background-color:#fff!important;color:#202833!important;-webkit-text-fill-color:#202833!important;
+ border-color:#c4ced9!important;
+}
+html[data-dshe-theme="light"] .nf-page input::placeholder,
+html[data-dshe-theme="light"] .nf-page textarea::placeholder,
+html[data-dshe-theme="light"] #nfTransaction #q::placeholder{color:#687586!important;opacity:1!important}
+html[data-dshe-theme="light"] .nf-page button{color:#263342}
+html[data-dshe-theme="light"] .nf-page button.nf-crud-add,
+html[data-dshe-theme="light"] .nf-page button.nf-crud-import-btn,
+html[data-dshe-theme="light"] .nf-page button.nf-scan-button,
+html[data-dshe-theme="light"] .nf-page button.nf-primary,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-actions .primary,
+html[data-dshe-theme="light"] #nfCloudSync{
+ background:#086b53!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#086b53!important;
+}
+html[data-dshe-theme="light"] .nf-page button.nf-del,
+html[data-dshe-theme="light"] #barangKeluarSection .bk-remove{
+ background:#fff0f0!important;color:#922f38!important;-webkit-text-fill-color:#922f38!important;border-color:#dba9ae!important;
+}
+html[data-dshe-theme="light"] .nf-page .nf-crud-card,
+html[data-dshe-theme="light"] .nf-page .nf-crud-item,
+html[data-dshe-theme="light"] .nf-page .nf-crud-box,
+html[data-dshe-theme="light"] .nf-page .nf-crud-import,
+html[data-dshe-theme="light"] .nf-page .nf-price-result,
+html[data-dshe-theme="light"] .nf-page .nf-price-lookup,
+html[data-dshe-theme="light"] .nf-page #nfCloudCard,
+html[data-dshe-theme="light"] .nf-page #barangKeluarSection,
+html[data-dshe-theme="light"] .nf-page .bk-history-card{
+ background:#fff!important;color:#202833!important;border-color:#cbd3dd!important;
+}
+html[data-dshe-theme="light"] .nf-page .nf-crud-price,
+html[data-dshe-theme="light"] .nf-page .nf-price-result-top strong,
+html[data-dshe-theme="light"] .nf-page .bk-result-price,
+html[data-dshe-theme="light"] .nf-page .bk-total b,
+html[data-dshe-theme="light"] .nf-page .nf-table-subtotal{color:#086b53!important;-webkit-text-fill-color:#086b53!important}
+html[data-dshe-theme="dark"]{
+ --dshe-text:#f2f4f7;--dshe-muted:#c1c7d0;--dshe-line:#535963;--dshe-card:#292d33;
+ --dshe-input:#1d2025;--dshe-accent:#9bdcc8;--dshe-on-accent:#17211e;
+}
+html[data-dshe-theme="dark"] .nf-page,
+html[data-dshe-theme="dark"] .nf-page *{text-shadow:none}
+html[data-dshe-theme="dark"] .nf-page,
+html[data-dshe-theme="dark"] .nf-page h1,
+html[data-dshe-theme="dark"] .nf-page h2,
+html[data-dshe-theme="dark"] .nf-page h3,
+html[data-dshe-theme="dark"] .nf-page b,
+html[data-dshe-theme="dark"] .nf-page strong,
+html[data-dshe-theme="dark"] .nf-page label{color:#f2f4f7}
+html[data-dshe-theme="dark"] .nf-page p,
+html[data-dshe-theme="dark"] .nf-page small,
+html[data-dshe-theme="dark"] .nf-page .small,
+html[data-dshe-theme="dark"] .nf-page .meta,
+html[data-dshe-theme="dark"] .nf-page .nf-page-intro,
+html[data-dshe-theme="dark"] .nf-page .nf-price-result-meta,
+html[data-dshe-theme="dark"] .nf-page .nf-price-product small,
+html[data-dshe-theme="dark"] .nf-page .nf-price-empty,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-meta,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-code,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-count,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-import-sub,
+html[data-dshe-theme="dark"] .nf-page .nf-sync-host p,
+html[data-dshe-theme="dark"] .nf-page .nf-sync-host small,
+html[data-dshe-theme="dark"] .nf-page .bk-hint,
+html[data-dshe-theme="dark"] .nf-page .bk-result-meta,
+html[data-dshe-theme="dark"] .nf-page .bk-row-bottom{color:#c1c7d0!important;-webkit-text-fill-color:#c1c7d0!important}
+html[data-dshe-theme="dark"] .nf-page-intro{background:#292d33!important;border-color:#535963!important;color:#c1c7d0!important}
+html[data-dshe-theme="dark"] .nf-page input:not([type="checkbox"]):not([type="radio"]),
+html[data-dshe-theme="dark"] .nf-page select,
+html[data-dshe-theme="dark"] .nf-page textarea,
+html[data-dshe-theme="dark"] #nfTransaction #q,
+html[data-dshe-theme="dark"] #nfInputQty,
+html[data-dshe-theme="dark"] #nfAutocomplete,
+html[data-dshe-theme="dark"] #nfAutocomplete button,
+html[data-dshe-theme="dark"] #nfTransaction #results>.card{
+ background-color:#1d2025!important;color:#f2f4f7!important;-webkit-text-fill-color:#f2f4f7!important;border-color:#535963!important;
+}
+html[data-dshe-theme="dark"] .nf-page input::placeholder,
+html[data-dshe-theme="dark"] .nf-page textarea::placeholder,
+html[data-dshe-theme="dark"] #nfTransaction #q::placeholder{color:#aeb6c1!important;opacity:1!important}
+html[data-dshe-theme="dark"] .nf-page .nf-crud-card,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-item,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-box,
+html[data-dshe-theme="dark"] .nf-page .nf-crud-import,
+html[data-dshe-theme="dark"] .nf-page .nf-price-result,
+html[data-dshe-theme="dark"] .nf-page .nf-price-lookup,
+html[data-dshe-theme="dark"] .nf-page #nfCloudCard,
+html[data-dshe-theme="dark"] .nf-page #barangKeluarSection,
+html[data-dshe-theme="dark"] .nf-page .bk-history-card{
+ background:#292d33!important;color:#f2f4f7!important;border-color:#535963!important;
+}
+html[data-dshe-theme="dark"] .nf-page .nf-crud-price,
+html[data-dshe-theme="dark"] .nf-page .nf-price-result-top strong,
+html[data-dshe-theme="dark"] .nf-page .bk-result-price,
+html[data-dshe-theme="dark"] .nf-page .bk-total b,
+html[data-dshe-theme="dark"] .nf-page .nf-table-subtotal{color:#9bdcc8!important;-webkit-text-fill-color:#9bdcc8!important}
+html[data-dshe-theme="dark"] .nf-page button.nf-crud-add,
+html[data-dshe-theme="dark"] .nf-page button.nf-crud-import-btn,
+html[data-dshe-theme="dark"] .nf-page button.nf-scan-button,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-actions .primary,
+html[data-dshe-theme="dark"] #nfCloudSync{
+ background:#477f70!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#6aa08f!important;
+}
+html[data-dshe-theme="dark"] .nf-page button.nf-del,
+html[data-dshe-theme="dark"] #barangKeluarSection .bk-remove{
+ background:#482d32!important;color:#ffd9dd!important;-webkit-text-fill-color:#ffd9dd!important;border-color:#82545b!important;
+}
+/* System theme follows OS dark setting only when app theme is set to system. */
+@media(prefers-color-scheme:dark){
+ html[data-dshe-theme="system"] .nf-page,
+ html[data-dshe-theme="system"] .nf-page h1,
+ html[data-dshe-theme="system"] .nf-page h2,
+ html[data-dshe-theme="system"] .nf-page h3,
+ html[data-dshe-theme="system"] .nf-page b,
+ html[data-dshe-theme="system"] .nf-page strong,
+ html[data-dshe-theme="system"] .nf-page label{color:#f2f4f7}
+ html[data-dshe-theme="system"] .nf-page p,
+ html[data-dshe-theme="system"] .nf-page small,
+ html[data-dshe-theme="system"] .nf-page .small,
+ html[data-dshe-theme="system"] .nf-page .meta,
+ html[data-dshe-theme="system"] .nf-page .nf-page-intro{color:#c1c7d0!important}
+ html[data-dshe-theme="system"] .nf-page-intro,
+ html[data-dshe-theme="system"] .nf-page .nf-crud-card,
+ html[data-dshe-theme="system"] .nf-page .nf-crud-item,
+ html[data-dshe-theme="system"] .nf-page .nf-crud-box,
+ html[data-dshe-theme="system"] .nf-page .nf-price-result,
+ html[data-dshe-theme="system"] .nf-page .nf-price-lookup,
+ html[data-dshe-theme="system"] .nf-page #nfCloudCard,
+ html[data-dshe-theme="system"] .nf-page #barangKeluarSection{background:#292d33!important;border-color:#535963!important}
+ html[data-dshe-theme="system"] .nf-page input,
+ html[data-dshe-theme="system"] .nf-page select,
+ html[data-dshe-theme="system"] .nf-page textarea{background:#1d2025!important;color:#f2f4f7!important;-webkit-text-fill-color:#f2f4f7!important;border-color:#535963!important}
+}
+</style>
+
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
