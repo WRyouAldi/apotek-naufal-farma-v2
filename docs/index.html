@@ -1586,6 +1586,55 @@ html[data-dshe-theme="dark"] .nf-page .nf-page-head h2{color:#f2f4f7!important}
 }
 </style>
 
+
+<style id="dsheP2ButtonHierarchy">
+/* P2.2 — consistent action hierarchy, spacing, and mobile-safe controls. */
+.nf-page .nf-page-actions,.nf-page .nf-crud-tools,.nf-page .nf-crud-top,.nf-page .nf-crud-modal-actions{gap:9px!important}
+.nf-page button,.nf-page a[role="button"]{
+ min-width:0;max-width:100%;font-weight:750;line-height:1.25;
+ border-radius:13px;overflow-wrap:anywhere;
+}
+.nf-page .nf-crud-add,.nf-page .nf-crud-import-btn,.nf-page .nf-crud-save,
+.nf-page .nf-scan-button,.nf-page .nf-tx-primary,.nf-page .nf-primary,
+.nf-page #nfCloudSync,.nf-page #barangKeluarSection .bk-actions .primary{
+ min-height:46px!important;padding:10px 14px!important;
+}
+.nf-page .nf-crud-cancel,.nf-page .nf-tx-secondary,.nf-page .nf-secondary,
+.nf-page #barangKeluarSection .bk-actions .pdf,.nf-page #barangKeluarSection .bk-actions .print{
+ min-height:44px!important;padding:9px 12px!important;
+}
+.nf-page .nf-del,.nf-page .bk-remove,.nf-page .nf-crud-delete{
+ min-height:40px!important;padding:8px 11px!important;
+}
+.nf-page .nf-crud-top input,.nf-page .nf-crud-top select{min-width:0;width:100%}
+.nf-page .nf-crud-modal-actions{display:flex;align-items:stretch}
+.nf-page .nf-crud-modal-actions button{flex:1 1 0;min-width:0}
+.nf-page #barangKeluarSection .bk-actions{gap:8px!important}
+.nf-page #barangKeluarSection .bk-actions button{min-width:0;overflow-wrap:anywhere}
+.nf-page #barangKeluarSection .bk-thermal{gap:8px!important}
+.nf-page #barangKeluarSection .bk-thermal select{min-width:0;width:100%}
+.nf-page #barangKeluarSection .bk-thermal button{min-height:44px!important;padding:8px 12px!important}
+.nf-page button:focus-visible,.nf-page a:focus-visible{
+ outline:3px solid #4b9c84!important;outline-offset:2px!important;position:relative;z-index:1
+}
+.nf-page button:active:not(:disabled){filter:brightness(.96)}
+html[data-dshe-theme="light"] .nf-page .nf-crud-cancel,
+html[data-dshe-theme="light"] .nf-page .nf-tx-secondary,
+html[data-dshe-theme="light"] .nf-page .nf-secondary{background:#f0f3f6!important;color:#344152!important;border:1px solid #cbd3dd!important}
+html[data-dshe-theme="dark"] .nf-page .nf-crud-cancel,
+html[data-dshe-theme="dark"] .nf-page .nf-tx-secondary,
+html[data-dshe-theme="dark"] .nf-page .nf-secondary{background:#343a42!important;color:#f2f4f7!important;border:1px solid #535963!important}
+@media(max-width:380px){
+ .nf-page .nf-crud-modal-actions{gap:7px!important}
+ .nf-page .nf-crud-modal-actions button{padding:9px 8px!important;font-size:12px!important}
+ .nf-page #barangKeluarSection .bk-actions{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+ .nf-page #barangKeluarSection .bk-actions .primary{grid-column:1/-1}
+ .nf-page #barangKeluarSection .bk-thermal{flex-wrap:wrap}
+ .nf-page #barangKeluarSection .bk-thermal select{flex:1 1 140px}
+ .nf-page #barangKeluarSection .bk-thermal button{flex:1 1 auto}
+}
+</style>
+
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
