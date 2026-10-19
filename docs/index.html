@@ -1842,78 +1842,7 @@ html[data-dshe-theme="dark"] .nf-page .nf-crud-item{background:#292d33!important
 })();
 </script>
 
-<!-- P2.3-FEEDBACK-RESILIENCE-V2 -->
-<style id="dsheP23FeedbackStates">
-/* Feedback states: preserve existing POS layout and locked Pearl/Charcoal palettes. */
-.dshe-feedback-state{display:block;max-width:100%;margin:8px 0;padding:10px 12px;border:1px solid var(--nf-border,#dfe3e9);border-radius:13px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
-.dshe-feedback-state[data-state="success"]{background:#eaf7f1;border-color:#b8e2d2;color:#155f4b}
-.dshe-feedback-state[data-state="error"]{background:#fff0f1;border-color:#edc0c4;color:#8e2934}
-.dshe-feedback-state[data-state="warning"]{background:#fff7e8;border-color:#ead3a4;color:#76511b}
-.dshe-feedback-state[data-state="info"]{background:#edf4fb;border-color:#c7d9ee;color:#294f78}
-.dshe-empty-state{display:block;text-align:center;padding:22px 12px;border:1px dashed var(--nf-border,#dfe3e9);border-radius:16px;color:var(--nf-muted,#7e8794);font-size:12px;line-height:1.55}
-.dshe-action-busy{pointer-events:none!important;opacity:.72!important;cursor:progress!important}
-.dshe-action-busy:before{content:"";display:inline-block;width:11px;height:11px;margin-right:7px;vertical-align:-1px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:dsheSpin .7s linear infinite}
-@keyframes dsheSpin{to{transform:rotate(360deg)}}
-html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="success"]{background:#203a33;border-color:#426b5d;color:#b7f0dc}
-html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="error"]{background:#422a30;border-color:#74434b;color:#ffc2c7}
-html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="warning"]{background:#403727;border-color:#6d5937;color:#f5d99c}
-html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="info"]{background:#263443;border-color:#455e77;color:#c7def8}
-@media(prefers-reduced-motion:reduce){.dshe-action-busy:before{animation:none}}
-</style>
-<script id="dsheP23FeedbackStatesJS">
-(function(){
-  'use strict';
-  const statusSelector='#nfCrudStatus,#nfCloudStatus,#nfInputHint,#bkStatus,#barcodeStatus,[role="status"],[role="alert"]';
-  const errorWords=/gagal|error|invalid|tidak berhasil|belum berhasil|failed|kesalahan|tidak ditemukan|stok tidak cukup/i;
-  const warningWords=/perhatian|menunggu|belum diatur|perlu|warning|kosong/i;
-  const successWords=/berhasil|tersimpan|diperbarui|dihapus|lunas|sukses|success|selesai/i;
-  function stateFor(text,el){
-    if(el&&el.getAttribute('role')==='alert'||errorWords.test(text))return 'error';
-    if(warningWords.test(text))return 'warning';
-    if(successWords.test(text))return 'success';
-    return 'info';
-  }
-  function enhance(el){
-    if(!el||el.nodeType!==1)return;
-    if(el.matches&&el.matches(statusSelector)){
-      if(!el.hasAttribute('aria-live'))el.setAttribute('aria-live',el.getAttribute('role')==='alert'?'assertive':'polite');
-      if(!el.hasAttribute('aria-atomic'))el.setAttribute('aria-atomic','true');
-      const text=(el.textContent||'').trim();
-      if(text){
-        const state=stateFor(text,el);
-        if(el.id==='nfCloudStatus'||el.id==='nfCrudStatus'||el.id==='bkStatus'){
-          el.dataset.state=state;
-          el.classList.add('dshe-feedback-state');
-        }
-      }
-    }
-    if(el.querySelectorAll)el.querySelectorAll(statusSelector).forEach(enhance);
-  }
-  function emptyState(host,message){
-    if(!host||host.children.length||host.textContent.trim())return;
-    const node=document.createElement('div');
-    node.className='dshe-empty-state';
-    node.textContent=message;
-    host.appendChild(node);
-  }
-  function init(){
-    enhance(document.body);
-    const results=document.getElementById('results');
-    if(results&&!results.children.length)emptyState(results,'Cari nama, kode, atau barcode untuk mulai mencari barang.');
-    const list=document.getElementById('nfCrudList');
-    if(list&&!list.children.length)emptyState(list,'Belum ada barang untuk ditampilkan. Coba ubah kata kunci pencarian.');
-    if(!window.MutationObserver||!document.body)return;
-    const observer=new MutationObserver(function(records){
-      records.forEach(function(record){
-        if(record.type==='characterData'&&record.target.parentElement)enhance(record.target.parentElement);
-        record.addedNodes.forEach(function(node){if(node.nodeType===1)enhance(node)});
-      });
-    });
-    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-</script>
+
 
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
@@ -5136,4 +5065,76 @@ html[data-dshe-theme="light"] .nf-crud-status.status-error,html[data-dshe-theme=
 })();
 </script>
 
+<!-- P2.3-FEEDBACK-RESILIENCE-V2 -->
+<style id="dsheP23FeedbackStates">
+/* Feedback states: preserve existing POS layout and locked Pearl/Charcoal palettes. */
+.dshe-feedback-state{display:block;max-width:100%;margin:8px 0;padding:10px 12px;border:1px solid var(--nf-border,#dfe3e9);border-radius:13px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.dshe-feedback-state[data-state="success"]{background:#eaf7f1;border-color:#b8e2d2;color:#155f4b}
+.dshe-feedback-state[data-state="error"]{background:#fff0f1;border-color:#edc0c4;color:#8e2934}
+.dshe-feedback-state[data-state="warning"]{background:#fff7e8;border-color:#ead3a4;color:#76511b}
+.dshe-feedback-state[data-state="info"]{background:#edf4fb;border-color:#c7d9ee;color:#294f78}
+.dshe-empty-state{display:block;text-align:center;padding:22px 12px;border:1px dashed var(--nf-border,#dfe3e9);border-radius:16px;color:var(--nf-muted,#7e8794);font-size:12px;line-height:1.55}
+.dshe-action-busy{pointer-events:none!important;opacity:.72!important;cursor:progress!important}
+.dshe-action-busy:before{content:"";display:inline-block;width:11px;height:11px;margin-right:7px;vertical-align:-1px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:dsheSpin .7s linear infinite}
+@keyframes dsheSpin{to{transform:rotate(360deg)}}
+html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="success"]{background:#203a33;border-color:#426b5d;color:#b7f0dc}
+html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="error"]{background:#422a30;border-color:#74434b;color:#ffc2c7}
+html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="warning"]{background:#403727;border-color:#6d5937;color:#f5d99c}
+html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="info"]{background:#263443;border-color:#455e77;color:#c7def8}
+@media(prefers-reduced-motion:reduce){.dshe-action-busy:before{animation:none}}
+</style>
+<script id="dsheP23FeedbackStatesJS">
+(function(){
+  'use strict';
+  const statusSelector='#nfCrudStatus,#nfCloudStatus,#nfInputHint,#bkStatus,#barcodeStatus,[role="status"],[role="alert"]';
+  const errorWords=/gagal|error|invalid|tidak berhasil|belum berhasil|failed|kesalahan|tidak ditemukan|stok tidak cukup/i;
+  const warningWords=/perhatian|menunggu|belum diatur|perlu|warning|kosong/i;
+  const successWords=/berhasil|tersimpan|diperbarui|dihapus|lunas|sukses|success|selesai/i;
+  function stateFor(text,el){
+    if(el&&el.getAttribute('role')==='alert'||errorWords.test(text))return 'error';
+    if(warningWords.test(text))return 'warning';
+    if(successWords.test(text))return 'success';
+    return 'info';
+  }
+  function enhance(el){
+    if(!el||el.nodeType!==1)return;
+    if(el.matches&&el.matches(statusSelector)){
+      if(!el.hasAttribute('aria-live'))el.setAttribute('aria-live',el.getAttribute('role')==='alert'?'assertive':'polite');
+      if(!el.hasAttribute('aria-atomic'))el.setAttribute('aria-atomic','true');
+      const text=(el.textContent||'').trim();
+      if(text){
+        const state=stateFor(text,el);
+        if(el.id==='nfCloudStatus'||el.id==='nfCrudStatus'||el.id==='bkStatus'){
+          el.dataset.state=state;
+          el.classList.add('dshe-feedback-state');
+        }
+      }
+    }
+    if(el.querySelectorAll)el.querySelectorAll(statusSelector).forEach(enhance);
+  }
+  function emptyState(host,message){
+    if(!host||host.children.length||host.textContent.trim())return;
+    const node=document.createElement('div');
+    node.className='dshe-empty-state';
+    node.textContent=message;
+    host.appendChild(node);
+  }
+  function init(){
+    enhance(document.body);
+    const results=document.getElementById('results');
+    if(results&&!results.children.length)emptyState(results,'Cari nama, kode, atau barcode untuk mulai mencari barang.');
+    const list=document.getElementById('nfCrudList');
+    if(list&&!list.children.length)emptyState(list,'Belum ada barang untuk ditampilkan. Coba ubah kata kunci pencarian.');
+    if(!window.MutationObserver||!document.body)return;
+    const observer=new MutationObserver(function(records){
+      records.forEach(function(record){
+        if(record.type==='characterData'&&record.target.parentElement)enhance(record.target.parentElement);
+        record.addedNodes.forEach(function(node){if(node.nodeType===1)enhance(node)});
+      });
+    });
+    observer.observe(document.body,{childList:true,subtree:true,characterData:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body></html>
