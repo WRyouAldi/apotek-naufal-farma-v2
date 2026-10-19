@@ -677,6 +677,30 @@ button:disabled{opacity:.55!important;cursor:not-allowed!important;transform:non
 }
 
 
+
+/* D'SHE FARMA BRAND VISIBILITY — global app stylesheet, not the PDF template */
+header .topbar{position:relative!important;display:flex!important;align-items:center!important;gap:12px!important}
+header .brand-mark{display:grid!important;place-items:center!important;flex:0 0 48px!important;width:48px!important;height:48px!important;overflow:hidden!important}
+header .brand-mark img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important}
+header .brand-text{display:block!important;position:relative!important;z-index:3!important;flex:1 1 auto!important;min-width:0!important;visibility:visible!important;opacity:1!important}
+header .brand-text h1{display:block!important;margin:0!important;font-size:clamp(18px,5vw,22px)!important;line-height:1.2!important;font-weight:850!important;letter-spacing:-.35px!important;white-space:normal!important;overflow-wrap:anywhere!important;visibility:visible!important;opacity:1!important}
+header .brand-text div{display:block!important;margin-top:4px!important;font-size:11px!important;line-height:1.4!important;font-weight:650!important;letter-spacing:.06em!important;white-space:normal!important;visibility:visible!important;opacity:1!important}
+html[data-dshe-theme="light"] header{background:linear-gradient(132deg,#fff,#edf1f5 58%,#fff)!important}
+html[data-dshe-theme="light"] header .brand-text h1{color:#202833!important;-webkit-text-fill-color:#202833!important;text-shadow:none!important}
+html[data-dshe-theme="light"] header .brand-text div{color:#53616d!important;-webkit-text-fill-color:#53616d!important;text-shadow:none!important}
+html[data-dshe-theme="dark"] header{background:linear-gradient(132deg,#20242a,#292e35 58%,#20242a)!important;border-bottom:1px solid #454c56!important}
+html[data-dshe-theme="dark"] header .brand-text h1{color:#f5f7fa!important;-webkit-text-fill-color:#f5f7fa!important;text-shadow:0 1px 8px rgba(0,0,0,.28)!important}
+html[data-dshe-theme="dark"] header .brand-text div{color:#c7ced7!important;-webkit-text-fill-color:#c7ced7!important;text-shadow:none!important}
+@media(prefers-color-scheme:light){
+html[data-dshe-theme="system"] header .brand-text h1{color:#202833!important;-webkit-text-fill-color:#202833!important;text-shadow:none!important}
+html[data-dshe-theme="system"] header .brand-text div{color:#53616d!important;-webkit-text-fill-color:#53616d!important;text-shadow:none!important}
+}
+@media(prefers-color-scheme:dark){
+html[data-dshe-theme="system"] header{background:linear-gradient(132deg,#20242a,#292e35 58%,#20242a)!important}
+html[data-dshe-theme="system"] header .brand-text h1{color:#f5f7fa!important;-webkit-text-fill-color:#f5f7fa!important;text-shadow:none!important}
+html[data-dshe-theme="system"] header .brand-text div{color:#c7ced7!important;-webkit-text-fill-color:#c7ced7!important;text-shadow:none!important}
+}
+
 </style>
 </head>
 <body>
