@@ -509,7 +509,13 @@
     cashierInput.addEventListener('input',()=>{pendingProduct=null;updateAutocomplete();});
 
     cashierInput.addEventListener('keydown',event=>{
-      if(event.key!=='Enter')return;event.preventDefault();
+      if(event.key!=='Enter')return;
+      event.preventDefault();
+      // Enter accepts the top live suggestion; exact code/barcode/name still resolves directly.
+      const exact=findProduct(cashierInput.value,false);
+      if(exact){addProduct(exact);return;}
+      const firstSuggestion=autoBox.querySelector('button[data-auto="0"]');
+      if(autoBox.style.display!=='none'&&firstSuggestion){firstSuggestion.click();return;}
       const product=pendingProduct||findProduct(cashierInput.value);
       if(product)addProduct(product);
     });
