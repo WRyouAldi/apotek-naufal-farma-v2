@@ -5016,6 +5016,50 @@ html[data-dshe-theme="system"] body>header>.topbar>.brand-text div{color:#d3d8df
 body>header>.topbar>.top-notify{flex:0 0 42px!important;width:42px!important}
 @media(max-width:380px){body>header{padding-left:12px!important;padding-right:12px!important}body>header>.topbar{gap:8px!important}body>header>.topbar>.brand-mark{width:42px!important;height:42px!important;flex-basis:42px!important}body>header>.topbar>.brand-text h1{font-size:18px!important}body>header>.topbar>.brand-text div{font-size:10px!important;letter-spacing:.02em!important}}
 
+
+/* P2.3 — operational feedback, interaction states, and small-screen resilience */
+.nf-crud-status,#nfCloudStatus,#nfInputHint,#barangKeluarSection .bk-hint,[role="status"],[role="alert"]{
+  display:block;max-width:100%;overflow-wrap:anywhere;word-break:normal;
+  border-radius:12px;line-height:1.55;scroll-margin-bottom:110px
+}
+.nf-crud-status{padding:9px 11px!important;margin-top:9px!important;font-size:12px!important;font-weight:650!important}
+.nf-crud-status.status-ok{background:rgba(24,139,112,.10)!important;border:1px solid rgba(24,139,112,.28)!important;color:#126a57!important}
+.nf-crud-status.status-error,.nf-crud-status.status-fail{background:rgba(190,62,72,.09)!important;border:1px solid rgba(190,62,72,.28)!important;color:#a62e3a!important}
+#nfCloudStatus{padding:9px 11px!important;font-size:12px!important;font-weight:650!important}
+#nfInputHint{font-size:12px!important;line-height:1.55!important}
+html[data-dshe-theme="dark"] .nf-crud-status.status-ok{background:rgba(63,174,143,.14)!important;border-color:rgba(98,201,173,.42)!important;color:#a8ead8!important}
+html[data-dshe-theme="dark"] .nf-crud-status.status-error,html[data-dshe-theme="dark"] .nf-crud-status.status-fail{background:rgba(220,110,116,.13)!important;border-color:rgba(220,110,116,.4)!important;color:#ffb8bd!important}
+html[data-dshe-theme="dark"] #nfCloudStatus{background:#24272c!important;border:1px solid #535963!important}
+html[data-dshe-theme="light"] .nf-crud-status.status-ok{color:#126a57!important}
+html[data-dshe-theme="light"] .nf-crud-status.status-error,html[data-dshe-theme="light"] .nf-crud-status.status-fail{color:#a62e3a!important}
+.nf-page button:active,.nf-page a:active,.nf-glass-nav button:active{filter:brightness(.96)}
+.nf-page button:disabled,.nf-page input:disabled,.nf-page select:disabled{filter:saturate(.55);opacity:.72!important}
+.nf-page button:focus-visible,.nf-page a:focus-visible,.nf-page input:focus-visible,.nf-page select:focus-visible,.nf-page textarea:focus-visible,#bottomNavV15 button:focus-visible{outline:3px solid #4b9c84!important;outline-offset:3px!important}
+@media(max-width:380px){
+  .nf-crud-status,#nfCloudStatus,#nfInputHint{font-size:12px!important;padding:8px 9px!important}
+  .nf-page .nf-page-intro{overflow-wrap:anywhere}
+  .nf-page .nf-crud-card,.nf-page .nf-price-result,.nf-page .bk-history-card{min-width:0!important;max-width:100%!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html:focus-within{scroll-behavior:auto!important}
+  body *,body *::before,body *::after,#bottomNavV15 button,.nf-glass-nav button{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important
+  }
+}
+
 </style>
+<script id="dsheP23AccessibleFeedback">
+(function(){
+  const selector='#nfCrudStatus,#nfCloudStatus,#nfInputHint,#bkStatus,.nf-crud-status,[role="status"],[role="alert"]';
+  function prepare(root){
+    if(!root||root.nodeType!==1)return;
+    if(root.matches&&root.matches(selector)&&!root.hasAttribute('aria-live'))root.setAttribute('aria-live',root.getAttribute('role')==='alert'?'assertive':'polite');
+    if(root.querySelectorAll)root.querySelectorAll(selector).forEach(function(el){if(!el.hasAttribute('aria-live'))el.setAttribute('aria-live',el.getAttribute('role')==='alert'?'assertive':'polite')});
+  }
+  function init(){prepare(document.body);if(!window.MutationObserver||!document.body)return;const observer=new MutationObserver(function(records){records.forEach(function(record){record.addedNodes.forEach(function(node){prepare(node)})})});observer.observe(document.body,{childList:true,subtree:true});}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 
 </body></html>
