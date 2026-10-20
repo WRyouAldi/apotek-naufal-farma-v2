@@ -26,6 +26,7 @@ jobs:
         with:
           channel: stable
           cache: true
+      - run: flutter create --platforms=android --project-name dshe_farma_pos --org id.dshefarma --no-pub .
       - run: flutter pub get
       - run: dart format lib test
       - run: flutter analyze
