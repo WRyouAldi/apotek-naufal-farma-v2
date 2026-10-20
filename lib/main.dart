@@ -70,27 +70,162 @@ class _PosShellState extends State<PosShell> {
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key,required this.db,required this.openCashier});
-  final PosDatabase db; final VoidCallback openCashier;
-  @override Widget build(BuildContext context)=>RefreshIndicator(onRefresh:()=>Future<void>.delayed(const Duration(milliseconds:200)),child:ListView(padding:const EdgeInsets.all(16),children:[
-    Card(child:Padding(padding:const EdgeInsets.all(22),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      const Text('APOTEK • POS MOBILE',style:TextStyle(color:Color(0xFF65B99F),fontWeight:FontWeight.w800,letterSpacing:1.5,fontSize:10)),
-      const SizedBox(height:10),Text('Selamat datang 👋',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),
-      const SizedBox(height:6),const Text('Kelola penjualan dan persediaan dari satu tempat.'),
-      const SizedBox(height:18),FilledButton.icon(onPressed:openCashier,icon:const Icon(Icons.point_of_sale_rounded),label:const Text('Buka kasir'))
-    ]))),
-    const SizedBox(height:12),FutureBuilder<List<int>>(future:Future.wait([db.transactionCountToday(),db.productCount()]),builder:(context,s)=>Row(children:[
-      Expanded(child:MetricCard(label:'Transaksi hari ini',value:s.hasData?' ${s.data![0]}':'—',icon:Icons.receipt_long_rounded)),
-      const SizedBox(width:10),Expanded(child:MetricCard(label:'Jumlah barang',value:s.hasData?' ${s.data![1]}':'—',icon:Icons.inventory_2_outlined))
-    ])),
-    const SizedBox(height:12),const Card(child:Padding(padding:EdgeInsets.all(14),child:Row(children:[Icon(Icons.info_outline_rounded,color:Color(0xFF65B99F)),SizedBox(width:10),Expanded(child:Text('Data produk lama belum otomatis diimpor. Impor/migrasi dataset perlu diverifikasi sebelum dipakai untuk transaksi nyata.'))])))
-  ]));
+class GlassPanel extends StatelessWidget {
+  const GlassPanel({super.key, required this.child, this.padding = const EdgeInsets.all(16), this.blur = 16, this.radius = 24});
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+  final double blur;
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: BackdropFilter(
+        filter: ui.ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+        child: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: dark
+                  ? [const Color(0xFF343A43).withValues(alpha: 0.76), const Color(0xFF202329).withValues(alpha: 0.84)]
+                  : [Colors.white.withValues(alpha: 0.82), const Color(0xFFE8F0F1).withValues(alpha: 0.72)],
+            ),
+            borderRadius: BorderRadius.circular(radius),
+            border: Border.all(color: dark ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.88), width: 1),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: dark ? 0.16 : 0.045), blurRadius: 22, offset: const Offset(0, 8))],
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
 }
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, required this.db, required this.openCashier});
+  final PosDatabase db;
+  final VoidCallback openCashier;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final muted = dark ? const Color(0xFFC1C7D0) : const Color(0xFF66717D);
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: dark
+              ? [const Color(0xFF20242A), const Color(0xFF17191D)]
+              : [const Color(0xFFF7FAFB), const Color(0xFFE9EFF1)],
+        ),
+      ),
+      child: RefreshIndicator(
+        onRefresh: () async { await db.productCount(); await db.transactionCountToday(); },
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
+          children: [
+            GlassPanel(
+              blur: 20,
+              radius: 28,
+              padding: const EdgeInsets.all(22),
+              child: Stack(
+                children: [
+                  Positioned(right: -16, top: -24, child: Container(
+                    width: 132, height: 132,
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF6DC8AE).withValues(alpha: dark ? 0.13 : 0.20)),
+                  )),
+                  Positioned(right: 18, top: 12, child: Icon(Icons.spa_rounded, size: 58, color: const Color(0xFF77CDB5).withValues(alpha: 0.65))),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(color: const Color(0xFF6DC8AE).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(30)),
+                        child: const Text('APOTEK • POS MOBILE', style: TextStyle(color: Color(0xFF65B99F), fontWeight: FontWeight.w800, letterSpacing: 1.3, fontSize: 10)),
+                      ),
+                      const SizedBox(height: 18),
+                      Text('Halo, selamat datang.', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: muted)),
+                      const SizedBox(height: 5),
+                      Text("Apotek D'she Farma", style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.5)),
+                      const SizedBox(height: 8),
+                      Text('Semua kebutuhan kasir dan persediaan dalam satu tempat.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: muted, height: 1.4)),
+                      const SizedBox(height: 22),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: openCashier,
+                          icon: const Icon(Icons.point_of_sale_rounded),
+                          label: const Padding(padding: EdgeInsets.symmetric(vertical: 4), child: Text('Buka kasir')),
+                          style: FilledButton.styleFrom(backgroundColor: const Color(0xFF398C76), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 22),
+            Row(children: [
+              Expanded(child: Text('Ringkasan', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800))),
+              Icon(Icons.auto_awesome_rounded, color: const Color(0xFF65B99F).withValues(alpha: 0.9), size: 20),
+            ]),
+            const SizedBox(height: 12),
+            FutureBuilder<List<int>>(
+              future: Future.wait([db.transactionCountToday(), db.productCount()]),
+              builder: (context, s) {
+                final values = s.hasData ? s.data! : const <int>[];
+                return Row(children: [
+                  Expanded(child: MetricCard(label: 'Transaksi hari ini', value: values.isNotEmpty ? values[0].toString() : (s.hasError ? '!' : '—'), icon: Icons.receipt_long_rounded)),
+                  const SizedBox(width: 12),
+                  Expanded(child: MetricCard(label: 'Jumlah barang', value: values.length > 1 ? values[1].toString() : (s.hasError ? '!' : '—'), icon: Icons.inventory_2_outlined)),
+                ]);
+              },
+            ),
+            const SizedBox(height: 18),
+            GlassPanel(
+              blur: 12,
+              radius: 22,
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.shield_outlined, color: Color(0xFF65B99F))),
+                const SizedBox(width: 12),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('Pemeriksaan data', style: TextStyle(fontWeight: FontWeight.w800)),
+                  const SizedBox(height: 5),
+                  Text('Data produk lama belum otomatis diimpor. Verifikasi katalog dan stok sebelum digunakan untuk transaksi nyata.', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted, height: 1.4)),
+                ])),
+              ]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class MetricCard extends StatelessWidget {
-  const MetricCard({super.key,required this.label,required this.value,required this.icon});
-  final String label,value; final IconData icon;
-  @override Widget build(BuildContext context)=>Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(icon,color:const Color(0xFF65B99F)),const SizedBox(height:10),Text(value,style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),Text(label,style:Theme.of(context).textTheme.bodySmall)])));
+  const MetricCard({super.key, required this.label, required this.value, required this.icon});
+  final String label, value;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) => GlassPanel(
+    blur: 14,
+    radius: 22,
+    padding: const EdgeInsets.all(15),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Container(width: 38, height: 38, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(13)), child: Icon(icon, color: const Color(0xFF65B99F), size: 21)),
+      const SizedBox(height: 14),
+      AnimatedSwitcher(duration: const Duration(milliseconds: 280), transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: SlideTransition(position: Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero).animate(animation), child: child)), child: Text(value, key: ValueKey(value), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.5))),
+      const SizedBox(height: 4),
+      Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFFC1C7D0) : const Color(0xFF66717D))),
+    ]),
+  );
 }
 
 class CashierPage extends StatefulWidget {
