@@ -82,7 +82,7 @@ class CloudCatalogSync {
     }
   }
 
-  static String _norm(String value) => value.replaceAll('\uFEFF', '').trim().toLowerCase().replaceAll(RegExp(r'\\s+'), ' ');
+  static String _norm(String value) => value.replaceAll('\uFEFF', '').trim().toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
   static int? _number(String value) {
     var s = value.trim();
