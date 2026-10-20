@@ -17,7 +17,12 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
   @override Widget build(BuildContext context) => MaterialApp(
     title: "Apotek D'she Farma", debugShowCheckedModeBanner: false, themeMode: mode,
     theme: _theme(false), darkTheme: _theme(true),
-    home: PosShell(isDark: mode == ThemeMode.dark, toggleTheme: () => setState(() => mode = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark),
+    home: PosShell(
+      isDark: mode == ThemeMode.dark,
+      toggleTheme: () => setState(() {
+        mode = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+      }),
+    ),
   );
   ThemeData _theme(bool dark) {
     const green = Color(0xFF398C76);
