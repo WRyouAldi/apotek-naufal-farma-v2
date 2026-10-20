@@ -46,3 +46,13 @@ Replace the legacy WebView POS gradually, without losing existing pharmacy opera
 - A static QRIS image is not proof of payment.
 - A successful compile alone does not establish operational readiness.
 - Never delete or replace the legacy app/database during migration until backups and reconciliation are confirmed.
+
+
+## Cloud catalog sync implementation (2026-10-20)
+- Flutter now has a manual **Lainnya → Sinkronisasi database cloud** action.
+- Source is the legacy public CSV endpoint: `https://raw.githubusercontent.com/WRyouAldi/apotek-naufal-farma/main/cloud/xReport2.csv`.
+- Import validates HTTP status, non-empty response, expected headers, required columns, valid rows, and a minimum 1,000 valid products before opening a write transaction.
+- CSV is applied transactionally by product code; records absent from the CSV are not deleted. Failed downloads/validation leave the local database unchanged.
+- Negative or missing source stock is stored as zero with `stock_known=0` so it is not represented as verified inventory. The count of negative source rows is surfaced to the operator.
+- This is **one-way cloud-to-device catalog sync**. It does not yet upload local changes, synchronize transactions across devices, or automatically run in the background. The schema currently maps code/barcode/name/selling price/stock; cost, category, unit, minimum stock, rack, supplier and notes still need schema/UI migration.
+- CI must validate this commit before treating the new sync flow as build-verified. Real-device network and offline tests remain required.
