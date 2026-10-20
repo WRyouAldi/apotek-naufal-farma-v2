@@ -53,7 +53,7 @@ class _PosShellState extends State<PosShell> {
       CashierPage(db: db),
       const QrisInfoPage(),
       PriceCheckPage(db: db),
-      MorePage(db: db),
+      const MorePage(),
     ];
     return Scaffold(
       appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.62)))), title: Row(children: [
