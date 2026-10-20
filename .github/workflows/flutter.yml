@@ -17,6 +17,8 @@ jobs:
           cache: true
       - name: Generate Android platform scaffold
         run: flutter create --platforms=android --project-name=dshe_farma_pos .
+      - name: Remove generated placeholder test
+        run: rm -f test/widget_test.dart
       - name: Resolve dependencies
         run: flutter pub get
       - name: Analyze Dart
