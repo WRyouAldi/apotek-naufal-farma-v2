@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:sqflite/sqflite.dart';
 import 'pos_database.dart';
 
 class CloudSyncReport {
