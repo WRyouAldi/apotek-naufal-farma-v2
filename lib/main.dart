@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -29,7 +30,7 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
     final scheme = ColorScheme.fromSeed(seedColor: green, brightness: dark ? Brightness.dark : Brightness.light, surface: dark ? const Color(0xFF24282E) : const Color(0xFFFCFCFD));
     return ThemeData(useMaterial3: true, colorScheme: scheme,
       scaffoldBackgroundColor: dark ? const Color(0xFF17191D) : const Color(0xFFF2F4F7),
-      appBarTheme: AppBarTheme(backgroundColor: dark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB), foregroundColor: dark ? const Color(0xFFF2F4F7) : const Color(0xFF202833), elevation: 0),
+      appBarTheme: AppBarTheme(backgroundColor: (dark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.72), foregroundColor: dark ? const Color(0xFFF2F4F7) : const Color(0xFF202833), elevation: 0),
       cardTheme: CardThemeData(color: dark ? const Color(0xFF292D33) : Colors.white, elevation: 0, margin: EdgeInsets.zero, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: dark ? const Color(0xFF484F59) : const Color(0xFFE2E6EC)))),
       inputDecorationTheme: InputDecorationTheme(filled: true, fillColor: dark ? const Color(0xFF1D2025) : Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)), contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13)),
     );
@@ -56,7 +57,7 @@ class _PosShellState extends State<PosShell> {
       const ReportsPage(),
     ];
     return Scaffold(
-      appBar: AppBar(titleSpacing: 16, title: Row(children: [
+      appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.62)))), title: Row(children: [
         Container(width: 42,height: 42,decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),gradient: const LinearGradient(colors:[Color(0xFFBFE9DC),Color(0xFFE7EDF3)])),child: const Icon(Icons.local_pharmacy_rounded,color:Color(0xFF246B5B))),
         const SizedBox(width:10), const Expanded(child: Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text("Apotek D'she Farma",maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(fontWeight:FontWeight.w800,fontSize:17)),Text('POINT OF SALE',style:TextStyle(fontSize:10,letterSpacing:1.4))]))
       ]), actions:[IconButton(tooltip:'Ganti tema',onPressed:widget.toggleTheme,icon:Icon(widget.isDark?Icons.light_mode_rounded:Icons.dark_mode_rounded))]),
@@ -64,7 +65,7 @@ class _PosShellState extends State<PosShell> {
         if(wide) NavigationRail(selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelType:NavigationRailLabelType.all,destinations:List.generate(labels.length,(i)=>NavigationRailDestination(icon:Icon(icons[i]),label:Text(labels[i])))),
         Expanded(child:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:1000),child:IndexedStack(index:selected,children:pages))))
       ]),
-      bottomNavigationBar:wide?null:NavigationBar(selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,destinations:List.generate(labels.length,(i)=>NavigationDestination(icon:Icon(icons[i]),label:labels[i]))),
+      bottomNavigationBar:wide?null:ClipRect(child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:24,sigmaY:24),child:Container(decoration:BoxDecoration(color:(widget.isDark?const Color(0xFF17191D):const Color(0xFFF8FAFC)).withValues(alpha:0.70),border:Border(top:BorderSide(color:widget.isDark?const Color(0xFF484F59):const Color(0xFFDDE4E9)))),child:NavigationBar(backgroundColor:Colors.transparent,elevation:0,selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,destinations:List.generate(labels.length,(i)=>NavigationDestination(icon:Icon(icons[i]),label:labels[i])))))),
     );
   }
 }
@@ -115,7 +116,7 @@ class _CashierPageState extends State<CashierPage> {
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
     Text('Kasir',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),
     const SizedBox(height:4),Text('Input barang → daftar item → periksa total → checkout.',style:Theme.of(context).textTheme.bodySmall),
-    const SizedBox(height:12),Row(children:[Expanded(child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Ketik nama, kode, atau barcode'))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
+    const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
     const SizedBox(height:8),if(loading)const LinearProgressIndicator(),
     if(search.text.isNotEmpty||results.isNotEmpty)Card(child:ConstrainedBox(constraints:const BoxConstraints(maxHeight:220),child:results.isEmpty?const Padding(padding:EdgeInsets.all(14),child:Text('Barang tidak ditemukan. Tambahkan data di menu Barang.')):ListView.separated(shrinkWrap:true,itemCount:results.length,itemBuilder:(ctx,i){final p=results[i];return ListTile(dense:true,title:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis),subtitle:Text('${p.code} • Stok ${p.stock}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.add_circle_outline,size:18)]),onTap:()=>_add(p));},separatorBuilder:(_,__)=>const Divider(height:1)))),
     const SizedBox(height:12),Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
