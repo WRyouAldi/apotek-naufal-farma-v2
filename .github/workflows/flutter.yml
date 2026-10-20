@@ -1,0 +1,32 @@
+name: Flutter POS validation
+
+on:
+  push:
+    branches: [p2.3.2-flutter-migration]
+  pull_request:
+    branches: [main]
+
+jobs:
+  android-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android platform scaffold
+        run: flutter create --platforms=android --project-name=dshe_farma_pos .
+      - name: Resolve dependencies
+        run: flutter pub get
+      - name: Analyze Dart
+        run: flutter analyze
+      - name: Run tests
+        run: flutter test
+      - name: Build debug APK
+        run: flutter build apk --debug
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dshe-farma-pos-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
