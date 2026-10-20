@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 import 'models.dart';
@@ -9,18 +11,48 @@ class PosDatabase {
   Future<Database> get db async {
     if (_db != null) return _db!;
     final path = p.join(await getDatabasesPath(), 'dshe_farma_pos.db');
-    _db = await openDatabase(path, version: 1,
+    _db = await openDatabase(path, version: 2,
       onConfigure: (d) async => d.execute('PRAGMA foreign_keys = ON'),
       onCreate: (d, version) async {
-        await d.execute('CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, code TEXT NOT NULL DEFAULT "", barcode TEXT NOT NULL DEFAULT "", price INTEGER NOT NULL CHECK(price >= 0), stock INTEGER NOT NULL DEFAULT 0 CHECK(stock >= 0))');
+        await d.execute('CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, code TEXT NOT NULL DEFAULT "", barcode TEXT NOT NULL DEFAULT "", price INTEGER NOT NULL CHECK(price >= 0), stock INTEGER NOT NULL DEFAULT 0 CHECK(stock >= 0), stock_known INTEGER NOT NULL DEFAULT 1)');
         await d.execute('CREATE INDEX idx_products_name ON products(name)');
         await d.execute('CREATE INDEX idx_products_code ON products(code)');
         await d.execute('CREATE INDEX idx_products_barcode ON products(barcode)');
         await d.execute('CREATE TABLE transactions(id INTEGER PRIMARY KEY AUTOINCREMENT, created_at TEXT NOT NULL, total INTEGER NOT NULL, paid INTEGER NOT NULL, change_amount INTEGER NOT NULL, payment_method TEXT NOT NULL)');
         await d.execute('CREATE TABLE transaction_items(id INTEGER PRIMARY KEY AUTOINCREMENT, transaction_id INTEGER NOT NULL, product_id INTEGER NOT NULL, product_name TEXT NOT NULL, quantity INTEGER NOT NULL CHECK(quantity > 0), unit_price INTEGER NOT NULL, subtotal INTEGER NOT NULL, FOREIGN KEY(transaction_id) REFERENCES transactions(id), FOREIGN KEY(product_id) REFERENCES products(id))');
+      },
+      onUpgrade: (d, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await d.execute('ALTER TABLE products ADD COLUMN stock_known INTEGER NOT NULL DEFAULT 1');
+        }
       });
+    await _seedLegacyCatalog(_db!);
     return _db!;
   }
+  Future<void> _seedLegacyCatalog(Database database) async {
+    final count = Sqflite.firstIntValue(await database.rawQuery('SELECT COUNT(*) FROM products')) ?? 0;
+    if (count > 0) return;
+    final raw = await rootBundle.loadString('assets/products.json');
+    final decoded = jsonDecode(raw) as List<dynamic>;
+    await database.transaction((txn) async {
+      final batch = txn.batch();
+      for (final row in decoded) {
+        final item = row as Map<String, dynamic>;
+        final name = (item['name'] ?? '').toString().trim();
+        if (name.isEmpty) continue;
+        batch.insert('products', {
+          'name': name,
+          'code': (item['code'] ?? '').toString(),
+          'barcode': (item['barcode'] ?? '').toString(),
+          'price': (item['price'] as num?)?.toInt() ?? 0,
+          'stock': 0,
+          'stock_known': 0,
+        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+      await batch.commit(noResult: true);
+    });
+  }
+
   Future<List<Product>> searchProducts(String query) async {
     final database = await db; final q = query.trim();
     final rows = q.isEmpty ? await database.query('products', orderBy: 'name COLLATE NOCASE', limit: 100) : await database.query('products', where: 'name LIKE ? OR code LIKE ? OR barcode LIKE ?', whereArgs: ['%$q%', '%$q%', '%$q%'], orderBy: 'name COLLATE NOCASE', limit: 100);
