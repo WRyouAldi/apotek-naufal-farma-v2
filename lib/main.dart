@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'cloud_catalog_sync.dart';
 import 'models.dart';
 import 'pos_database.dart';
 
@@ -456,11 +457,33 @@ class QrisInfoPage extends StatelessWidget {
   ]);
 }
 
-class MorePage extends StatelessWidget {
+class MorePage extends StatefulWidget {
   const MorePage({super.key});
+  @override State<MorePage> createState() => _MorePageState();
+}
+class _MorePageState extends State<MorePage> {
+  bool syncing = false;
+  String? syncStatus;
+  Future<void> _sync() async {
+    setState(() { syncing = true; syncStatus = null; });
+    try {
+      final report = await CloudCatalogSync.sync();
+      if (!mounted) return;
+      setState(() => syncStatus = 'Sinkronisasi selesai: ${report.rowsRead} produk diproses, ${report.inserted} baru, ${report.updated} diperbarui, ${report.skipped} dilewati. ${report.negativeStock} produk memiliki stok negatif dari sumber dan ditandai belum terverifikasi.');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Katalog cloud berhasil disinkronkan.')));
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => syncStatus = 'Sinkronisasi gagal. Data lokal tidak diganti: $e');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sinkronisasi gagal. Data lokal dipertahankan.')));
+    } finally {
+      if (mounted) setState(() => syncing = false);
+    }
+  }
   @override Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(16), children: [
     Text('Lainnya', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
     const SizedBox(height: 12),
+    Card(child: ListTile(leading: const Icon(Icons.cloud_sync_rounded), title: const Text('Sinkronisasi database cloud'), subtitle: const Text('Ambil katalog terbaru dari CSV GitHub'), trailing: syncing ? const SizedBox(width: 22,height: 22,child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.sync_rounded), onTap: syncing ? null : _sync)),
+    if (syncStatus != null) Padding(padding: const EdgeInsets.only(top: 8,bottom: 8), child: Card(child: Padding(padding: const EdgeInsets.all(12), child: Text(syncStatus!)))),
     Card(child: ListTile(leading: const Icon(Icons.grid_view_rounded), title: const Text('Beranda'), subtitle: const Text('Ringkasan aktivitas apotek'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage(db: PosDatabase.instance, openCashier: () => Navigator.of(context).pop()))))),
     Card(child: ListTile(leading: const Icon(Icons.inventory_2_outlined), title: const Text('Manajemen barang'), subtitle: const Text('Cari, tambah, dan edit katalog'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductsPage(db: PosDatabase.instance))))),
     Card(child: ListTile(leading: const Icon(Icons.receipt_long_rounded), title: const Text('Riwayat transaksi'), subtitle: const Text('Lihat transaksi yang tersimpan'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HistoryPage(db: PosDatabase.instance))))),
