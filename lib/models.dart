@@ -1,10 +1,24 @@
 class Product {
-  const Product({required this.id, required this.name, required this.code, required this.price, required this.stock, this.barcode = ''});
+  const Product({required this.id, required this.name, required this.code, required this.price, required this.stock, this.barcode = '', this.stockKnown = true});
   final int? id;
   final String name, code, barcode;
   final int price, stock;
-  factory Product.fromMap(Map<String, Object?> map) => Product(id: map['id'] as int?, name: map['name'] as String, code: map['code'] as String? ?? '', barcode: map['barcode'] as String? ?? '', price: (map['price'] as num).toInt(), stock: (map['stock'] as num).toInt());
-  Map<String, Object?> toMap() => {'id': id, 'name': name.trim(), 'code': code.trim(), 'barcode': barcode.trim(), 'price': price, 'stock': stock};
+  final bool stockKnown;
+
+  factory Product.fromMap(Map<String, Object?> map) => Product(
+    id: map['id'] as int?,
+    name: map['name'] as String,
+    code: map['code'] as String? ?? '',
+    barcode: map['barcode'] as String? ?? '',
+    price: (map['price'] as num).toInt(),
+    stock: (map['stock'] as num?)?.toInt() ?? 0,
+    stockKnown: (map['stock_known'] as num?)?.toInt() != 0,
+  );
+
+  Map<String, Object?> toMap() => {
+    'id': id, 'name': name.trim(), 'code': code.trim(), 'barcode': barcode.trim(),
+    'price': price, 'stock': stock, 'stock_known': stockKnown ? 1 : 0,
+  };
 }
 class CartLine {
   const CartLine({required this.product, required this.quantity});
