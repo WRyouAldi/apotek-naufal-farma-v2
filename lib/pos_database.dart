@@ -11,10 +11,19 @@ class PosDatabase {
   Future<Database> get db async {
     if (_db != null) return _db!;
     final path = p.join(await getDatabasesPath(), 'dshe_farma_pos.db');
-    _db = await openDatabase(path, version: 2,
+    _db = await openDatabase(path, version: 3,
       onConfigure: (d) async => d.execute('PRAGMA foreign_keys = ON'),
       onCreate: (d, version) async {
         await d.execute('CREATE TABLE products(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, code TEXT NOT NULL DEFAULT "", barcode TEXT NOT NULL DEFAULT "", price INTEGER NOT NULL CHECK(price >= 0), stock INTEGER NOT NULL DEFAULT 0 CHECK(stock >= 0), stock_known INTEGER NOT NULL DEFAULT 1)');
+
+        await d.execute('ALTER TABLE products ADD COLUMN category TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN brand TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN unit TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN cost_price INTEGER NOT NULL DEFAULT 0');
+        await d.execute('ALTER TABLE products ADD COLUMN min_stock INTEGER NOT NULL DEFAULT 0');
+        await d.execute('ALTER TABLE products ADD COLUMN rack TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN supplier TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN notes TEXT NOT NULL DEFAULT ""');
         await d.execute('CREATE INDEX idx_products_name ON products(name)');
         await d.execute('CREATE INDEX idx_products_code ON products(code)');
         await d.execute('CREATE INDEX idx_products_barcode ON products(barcode)');
@@ -24,6 +33,16 @@ class PosDatabase {
       onUpgrade: (d, oldVersion, newVersion) async {
         if (oldVersion < 2) {
           await d.execute('ALTER TABLE products ADD COLUMN stock_known INTEGER NOT NULL DEFAULT 1');
+        }
+        if (oldVersion < 3) {
+        await d.execute('ALTER TABLE products ADD COLUMN category TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN brand TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN unit TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN cost_price INTEGER NOT NULL DEFAULT 0');
+        await d.execute('ALTER TABLE products ADD COLUMN min_stock INTEGER NOT NULL DEFAULT 0');
+        await d.execute('ALTER TABLE products ADD COLUMN rack TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN supplier TEXT NOT NULL DEFAULT ""');
+        await d.execute('ALTER TABLE products ADD COLUMN notes TEXT NOT NULL DEFAULT ""');
         }
       });
     await _seedLegacyCatalog(_db!);
