@@ -45,16 +45,17 @@ class PosShell extends StatefulWidget {
 class _PosShellState extends State<PosShell> {
   int selected = 0;
   final db = PosDatabase.instance;
-  static const labels = ['Beranda','Kasir','Barang','Riwayat','Laporan'];
-  static const icons = [Icons.grid_view_rounded,Icons.point_of_sale_rounded,Icons.inventory_2_outlined,Icons.receipt_long_rounded,Icons.bar_chart_rounded];
+  static const labels = ['Beranda','Kasir','Cek Harga','Barang','Riwayat','Lainnya'];
+  static const icons = [Icons.grid_view_rounded,Icons.point_of_sale_rounded,Icons.price_check_rounded,Icons.inventory_2_outlined,Icons.receipt_long_rounded,Icons.more_horiz_rounded];
   @override Widget build(BuildContext context) {
     final wide = MediaQuery.sizeOf(context).width >= 720;
     final pages = [
       HomePage(db: db, openCashier: () => setState(() => selected = 1)),
       CashierPage(db: db),
+      PriceCheckPage(db: db),
       ProductsPage(db: db),
       HistoryPage(db: db),
-      const ReportsPage(),
+      MorePage(db: db),
     ];
     return Scaffold(
       appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.62)))), title: Row(children: [
@@ -288,6 +289,144 @@ class _BarcodePageState extends State<BarcodePage>{bool done=false;@override Wid
   const Padding(padding:EdgeInsets.all(14),child:Text('Arahkan kamera ke barcode barang. Pastikan izin kamera diberikan.')),
   Expanded(child:MobileScanner(onDetect:(capture){if(done)return;final code=capture.barcodes.firstOrNull?.rawValue;if(code!=null&&code.isNotEmpty){done=true;Navigator.pop(context,code);}},errorBuilder:(context,error)=>Center(child:Padding(padding:const EdgeInsets.all(20),child:Text('Kamera tidak tersedia: ${error.errorCode.name}. Periksa izin kamera perangkat.')))))
 ]));}
+
+class PriceCheckPage extends StatefulWidget {
+  const PriceCheckPage({super.key, required this.db});
+  final PosDatabase db;
+  @override State<PriceCheckPage> createState() => _PriceCheckPageState();
+}
+
+class _PriceCheckPageState extends State<PriceCheckPage> {
+  final controller = TextEditingController();
+  List<Product> results = [];
+  bool loading = false;
+  String? error;
+  int requestVersion = 0;
+
+  @override void dispose() { controller.dispose(); super.dispose(); }
+
+  Future<void> _search(String query) async {
+    final q = query.trim();
+    final version = ++requestVersion;
+    if (q.isEmpty) {
+      setState(() { results = []; loading = false; error = null; });
+      return;
+    }
+    setState(() { loading = true; error = null; });
+    try {
+      final found = await widget.db.searchProducts(q);
+      if (!mounted || version != requestVersion) return;
+      setState(() { results = found; loading = false; });
+    } catch (e) {
+      if (!mounted || version != requestVersion) return;
+      setState(() { error = 'Data harga gagal dibaca. Coba lagi.'; results = []; loading = false; });
+    }
+  }
+
+  Future<void> _scan() async {
+    final code = await Navigator.of(context).push<String>(MaterialPageRoute(builder: (_) => const BarcodePage()));
+    if (!mounted || code == null || code.trim().isEmpty) return;
+    controller.text = code.trim();
+    await _search(code.trim());
+  }
+
+  @override Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final muted = dark ? const Color(0xFFC1C7D0) : const Color(0xFF66717D);
+    return Container(
+      decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: dark ? [const Color(0xFF20242A), const Color(0xFF17191D)] : [const Color(0xFFF7FAFB), const Color(0xFFE9EFF1)])),
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
+        children: [
+          Text('Cek Harga', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+          const SizedBox(height: 5),
+          Text('Cari nama, kode, atau scan barcode untuk melihat harga dan stok.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: muted)),
+          const SizedBox(height: 18),
+          GlassPanel(blur: 18, radius: 24, child: Row(children: [
+            Expanded(child: TextField(
+              controller: controller,
+              textInputAction: TextInputAction.search,
+              onChanged: _search,
+              onSubmitted: _search,
+              decoration: const InputDecoration(prefixIcon: Icon(Icons.search_rounded), hintText: 'Nama barang / kode / barcode', border: InputBorder.none, filled: false),
+            )),
+            const SizedBox(width: 6),
+            IconButton.filledTonal(tooltip: 'Scan barcode', onPressed: _scan, icon: const Icon(Icons.qr_code_scanner_rounded)),
+          ])),
+          const SizedBox(height: 12),
+          if (loading) const LinearProgressIndicator(minHeight: 2),
+          if (error != null) GlassPanel(child: Row(children: [const Icon(Icons.error_outline_rounded, color: Colors.redAccent), const SizedBox(width: 10), Expanded(child: Text(error!)), TextButton(onPressed: () => _search(controller.text), child: const Text('Coba lagi'))])),
+          if (controller.text.trim().isEmpty && !loading)
+            GlassPanel(blur: 12, child: Column(children: [
+              Container(width: 64, height: 64, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(22)), child: const Icon(Icons.price_check_rounded, size: 32, color: Color(0xFF65B99F))),
+              const SizedBox(height: 12),
+              const Text('Harga barang, langsung terlihat', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+              const SizedBox(height: 6),
+              Text('Mulai ketik nama atau scan barcode. Daftar barang tidak ditampilkan sebelum pencarian.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted, height: 1.4)),
+            ])),
+          if (controller.text.trim().isNotEmpty && !loading && error == null && results.isEmpty)
+            GlassPanel(child: Column(children: [
+              const Icon(Icons.search_off_rounded, size: 36),
+              const SizedBox(height: 8),
+              const Text('Barang tidak ditemukan', style: TextStyle(fontWeight: FontWeight.w800)),
+              const SizedBox(height: 4),
+              Text('Periksa ejaan atau coba kode/barcode lain.', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted)),
+            ])),
+          if (results.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Row(children: [Expanded(child: Text('Hasil pencarian', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800))), Text('${results.length} hasil', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted))]),
+            const SizedBox(height: 10),
+            ...results.map((p) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: GlassPanel(blur: 12, radius: 20, padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.medication_outlined, color: Color(0xFF65B99F))),
+                  const SizedBox(width: 12),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(p.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                    const SizedBox(height: 4),
+                    Text('Kode: ${p.code.isEmpty ? '—' : p.code}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted)),
+                    if (p.barcode.isNotEmpty) Text('Barcode: ${p.barcode}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted)),
+                  ])),
+                ]),
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: dark ? 0.13 : 0.11), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF65B99F).withValues(alpha: 0.28))),
+                  child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                    Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      Text('HARGA JUAL', style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 1.2, color: muted, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 4),
+                      FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(rupiah(p.price), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, color: dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)))),
+                    ])),
+                    const SizedBox(width: 8),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: p.stock > 0 ? const Color(0xFF65B99F).withValues(alpha: 0.16) : Colors.red.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                      Text(p.stock > 0 ? 'TERSEDIA' : 'HABIS', style: TextStyle(fontSize: 10, letterSpacing: 0.6, fontWeight: FontWeight.w900, color: p.stock > 0 ? (dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)) : Colors.redAccent)),
+                      Text('Stok ${p.stock}', style: TextStyle(fontWeight: FontWeight.w800, color: p.stock > 0 ? null : Colors.redAccent)),
+                    ])),
+                  ]),
+                ),
+              ])),
+            )),
+            if (results.length >= 100) Padding(padding: const EdgeInsets.all(8), child: Text('Menampilkan 100 hasil pertama. Tambahkan kata kunci yang lebih spesifik.', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted))),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class MorePage extends StatelessWidget {
+  const MorePage({super.key, required this.db});
+  final PosDatabase db;
+  @override Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(16), children: [
+    Text('Lainnya', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+    const SizedBox(height: 12),
+    Card(child: ListTile(leading: const Icon(Icons.receipt_long_rounded), title: const Text('Riwayat transaksi'), subtitle: const Text('Lihat transaksi yang tersimpan'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HistoryPage(db: db))))),
+    Card(child: ListTile(leading: const Icon(Icons.bar_chart_rounded), title: const Text('Laporan'), subtitle: const Text('Ringkasan transaksi'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReportsPage())))),
+    Card(child: ListTile(leading: const Icon(Icons.qr_code_2_rounded), title: const Text('QRIS'), subtitle: const Text('Informasi pembayaran QRIS'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => showDialog<void>(context: context, builder: (ctx) => AlertDialog(title: const Text('QRIS'), content: const Text('Pembayaran QRIS belum terhubung ke konfirmasi otomatis. Pastikan pembayaran berhasil pada aplikasi merchant sebelum menyelesaikan transaksi.'), actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Mengerti'))])))),
+  ]);
+}
 
 class ProductsPage extends StatefulWidget {const ProductsPage({super.key,required this.db});final PosDatabase db;@override State<ProductsPage> createState()=>_ProductsPageState();}
 class _ProductsPageState extends State<ProductsPage>{
