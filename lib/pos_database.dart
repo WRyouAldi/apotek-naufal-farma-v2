@@ -55,7 +55,7 @@ class PosDatabase {
         final id = item.product.id;
         if (id == null) throw StateError('Barang belum tersimpan di database.');
         final changed = await txn.rawUpdate('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?', [item.quantity, id, item.quantity]);
-        if (changed != 1) throw StateError('Stok barang tidak mencukupi: ' + item.product.name);
+        if (changed != 1) throw StateError('Stok barang tidak mencukupi: ${item.product.name}');
       }
       final txId = await txn.insert('transactions', {'created_at': DateTime.now().toIso8601String(), 'total': total, 'paid': paid, 'change_amount': paid - total, 'payment_method': paymentMethod});
       for (final item in lines) {
