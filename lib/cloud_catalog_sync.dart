@@ -34,6 +34,14 @@ class CloudCatalogSync {
       final nameCol = col(['Nama Item', 'Nama', 'Name']);
       final stockCol = col(['Stok', 'Stock']);
       final priceCol = col(['Harga Jual', 'Harga', 'Price']);
+      final categoryCol = col(['Jenis', 'Kategori', 'Category', 'Type']);
+      final brandCol = col(['Merek', 'Brand']);
+      final unitCol = col(['Satuan', 'Unit']);
+      final costCol = col(['Harga Beli', 'Cost Price', 'Purchase Price']);
+      final minStockCol = col(['Stok Min', 'Minimum Stock', 'Min Stock']);
+      final rackCol = col(['Rak', 'Rack', 'Shelf']);
+      final supplierCol = col(['Supplier', 'Pemasok']);
+      final notesCol = col(['Keterangan', 'Catatan', 'Notes']);
       if (nameCol < 0 || priceCol < 0 || codeCol < 0) {
         throw const FormatException('Kolom kode, nama, atau harga jual tidak lengkap. Data lokal tidak diubah.');
       }
@@ -55,6 +63,14 @@ class CloudCatalogSync {
           'name': name, 'code': code, 'barcode': value(barcodeCol),
           'price': price, 'stock': stockKnown ? rawStock : 0,
           'stock_known': stockKnown ? 1 : 0,
+          'category': value(categoryCol),
+          'brand': value(brandCol),
+          'unit': value(unitCol),
+          'cost_price': _number(value(costCol)) ?? 0,
+          'min_stock': _number(value(minStockCol)) ?? 0,
+          'rack': value(rackCol),
+          'supplier': value(supplierCol),
+          'notes': value(notesCol),
         });
       }
       if (parsed.isEmpty) throw const FormatException('Tidak ada baris produk valid. Data lokal tidak diubah.');
