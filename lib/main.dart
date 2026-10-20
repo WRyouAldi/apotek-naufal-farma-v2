@@ -419,9 +419,9 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
                       FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(rupiah(p.price), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, color: dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)))),
                     ])),
                     const SizedBox(width: 8),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: p.stock > 0 ? const Color(0xFF65B99F).withValues(alpha: 0.16) : Colors.red.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      Text(p.stock > 0 ? 'TERSEDIA' : 'HABIS', style: TextStyle(fontSize: 10, letterSpacing: 0.6, fontWeight: FontWeight.w900, color: p.stock > 0 ? (dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)) : Colors.redAccent)),
-                      Text('Stok ${p.stock}', style: TextStyle(fontWeight: FontWeight.w800, color: p.stock > 0 ? null : Colors.redAccent)),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: !p.stockKnown ? const Color(0xFF87909B).withValues(alpha: 0.13) : (p.stock > 0 ? const Color(0xFF65B99F).withValues(alpha: 0.16) : Colors.red.withValues(alpha: 0.12)), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                      Text(!p.stockKnown ? 'STOK BELUM ADA' : (p.stock > 0 ? 'TERSEDIA' : 'HABIS'), style: TextStyle(fontSize: 10, letterSpacing: 0.4, fontWeight: FontWeight.w900, color: !p.stockKnown ? muted : (p.stock > 0 ? (dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)) : Colors.redAccent))),
+                      Text(p.stockKnown ? 'Stok ${p.stock}' : 'Stok —', style: TextStyle(fontWeight: FontWeight.w800, color: !p.stockKnown ? muted : (p.stock > 0 ? null : Colors.redAccent))),
                     ])),
                   ]),
                 ),
