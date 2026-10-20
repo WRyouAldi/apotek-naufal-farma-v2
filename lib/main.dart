@@ -38,6 +38,91 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
   }
 }
 
+
+/// Brand mark for D'she Farma: a custom D monogram with a pharmacy cross,
+/// finished in the Pearl Crystal / Charcoal Silver visual language.
+class DsheFarmaLogo extends StatelessWidget {
+  const DsheFarmaLogo({super.key, this.size = 48, required this.isDark});
+  final double size;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    final edge = isDark ? const Color(0xFF6E7782) : const Color(0xFFFFFFFF);
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(size * 0.31),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? const [Color(0xFF454B54), Color(0xFF20242A), Color(0xFF343A43)]
+              : const [Color(0xFFFFFFFF), Color(0xFFEAF5F3), Color(0xFFD5E0E9)],
+        ),
+        border: Border.all(color: edge.withValues(alpha: isDark ? 0.52 : 0.92), width: 1.1),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: isDark ? 0.18 : 0.08), blurRadius: size * 0.22, offset: Offset(0, size * 0.08)),
+          BoxShadow(color: (isDark ? const Color(0xFFB6C0CD) : const Color(0xFFFFFFFF)).withValues(alpha: 0.42), blurRadius: size * 0.12, offset: Offset(-size * 0.03, -size * 0.03)),
+        ],
+      ),
+      child: CustomPaint(painter: _DsheMarkPainter(isDark: isDark)),
+    );
+  }
+}
+
+class _DsheMarkPainter extends CustomPainter {
+  const _DsheMarkPainter({required this.isDark});
+  final bool isDark;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final scale = size.width / 42;
+    canvas.save();
+    canvas.scale(scale);
+    final ink = isDark ? const Color(0xFFE1E7EE) : const Color(0xFF376E67);
+    final accent = isDark ? const Color(0xFFB7C2CF) : const Color(0xFF78BEB0);
+
+    // Geometric D monogram, deliberately drawn rather than using a stock icon.
+    final d = Path()
+      ..moveTo(10, 9)
+      ..lineTo(17, 9)
+      ..cubicTo(25, 9, 29, 13.5, 29, 21)
+      ..cubicTo(29, 28.5, 25, 33, 17, 33)
+      ..lineTo(10, 33)
+      ..close();
+    canvas.drawPath(d, Paint()..color = ink.withValues(alpha: 0.10)..style = PaintingStyle.fill);
+    canvas.drawPath(d, Paint()
+      ..color = ink
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.2
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round);
+
+    // Small crystal facet gives the mark its pearl/glass signature.
+    final facet = Path()
+      ..moveTo(14, 12)
+      ..lineTo(17, 12)
+      ..cubicTo(23, 12, 26, 15.4, 26, 21)
+      ..cubicTo(26, 26.6, 23, 30, 17, 30)
+      ..lineTo(14, 30)
+      ..close();
+    canvas.drawPath(facet, Paint()..color = accent.withValues(alpha: 0.16)..style = PaintingStyle.fill);
+
+    // Pharmacy cross set in a compact, rounded glass badge.
+    final badge = RRect.fromRectAndRadius(const Rect.fromLTWH(24, 5, 13, 13), const Radius.circular(4));
+    canvas.drawRRect(badge, Paint()..color = accent);
+    final crossPaint = Paint()..color = isDark ? const Color(0xFF252A31) : Colors.white;
+    canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(29.2, 7.5, 2.6, 8), const Radius.circular(1.1)), crossPaint);
+    canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(26.5, 10.2, 8, 2.6), const Radius.circular(1.1)), crossPaint);
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant _DsheMarkPainter oldDelegate) => oldDelegate.isDark != isDark;
+}
+
 class PosShell extends StatefulWidget {
   const PosShell({super.key, required this.isDark, required this.toggleTheme});
   final bool isDark; final VoidCallback toggleTheme;
@@ -58,7 +143,7 @@ class _PosShellState extends State<PosShell> {
     ];
     return Scaffold(
       appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.62)))), title: Row(children: [
-        Container(width: 42,height: 42,decoration: BoxDecoration(borderRadius: BorderRadius.circular(14),gradient: const LinearGradient(colors:[Color(0xFFBFE9DC),Color(0xFFE7EDF3)])),child: const Icon(Icons.local_pharmacy_rounded,color:Color(0xFF246B5B))),
+        DsheFarmaLogo(size: 42, isDark: widget.isDark),
         const SizedBox(width:10), const Expanded(child: Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text("Apotek D'she Farma",maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(fontWeight:FontWeight.w800,fontSize:17)),Text('POINT OF SALE',style:TextStyle(fontSize:10,letterSpacing:1.4))]))
       ]), actions:[IconButton(tooltip:'Ganti tema',onPressed:widget.toggleTheme,icon:Icon(widget.isDark?Icons.light_mode_rounded:Icons.dark_mode_rounded))]),
       body: Row(children:[
