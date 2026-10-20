@@ -43,18 +43,16 @@ class PosShell extends StatefulWidget {
   @override State<PosShell> createState() => _PosShellState();
 }
 class _PosShellState extends State<PosShell> {
-  int selected = 0;
+  int selected = 2;
   final db = PosDatabase.instance;
-  static const labels = ['Beranda','Kasir','Cek Harga','Barang','Riwayat','Lainnya'];
-  static const icons = [Icons.grid_view_rounded,Icons.point_of_sale_rounded,Icons.price_check_rounded,Icons.inventory_2_outlined,Icons.receipt_long_rounded,Icons.more_horiz_rounded];
+  static const labels = ['Kasir','QRIS','Cek Harga','Lainnya'];
+  static const icons = [Icons.point_of_sale_rounded,Icons.qr_code_2_rounded,Icons.price_check_rounded,Icons.more_horiz_rounded];
   @override Widget build(BuildContext context) {
     final wide = MediaQuery.sizeOf(context).width >= 720;
     final pages = [
-      HomePage(db: db, openCashier: () => setState(() => selected = 1)),
       CashierPage(db: db),
+      const QrisInfoPage(),
       PriceCheckPage(db: db),
-      ProductsPage(db: db),
-      HistoryPage(db: db),
       MorePage(db: db),
     ];
     return Scaffold(
@@ -416,15 +414,36 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
   }
 }
 
+class QrisInfoPage extends StatelessWidget {
+  const QrisInfoPage({super.key});
+  @override Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(16), children: [
+    Text('Pembayaran QRIS', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
+    const SizedBox(height: 12),
+    GlassPanel(blur: 18, child: Column(children: [
+      Container(width: 64, height: 64, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)), child: const Icon(Icons.qr_code_2_rounded, size: 34, color: Color(0xFF65B99F))),
+      const SizedBox(height: 12),
+      const Text('QRIS merchant belum dikonfigurasi', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16), textAlign: TextAlign.center),
+      const SizedBox(height: 8),
+      const Text('Sebelum menerima pembayaran, pasang QRIS resmi milik apotek dan verifikasi pembayaran melalui aplikasi merchant. Aplikasi ini belum menerima notifikasi pembayaran otomatis.', textAlign: TextAlign.center),
+    ])),
+    const SizedBox(height: 12),
+    const GlassPanel(child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Icon(Icons.verified_user_outlined, color: Color(0xFF65B99F)),
+      SizedBox(width: 10),
+      Expanded(child: Text('Jangan tandai transaksi QRIS sebagai berhasil hanya berdasarkan tangkapan layar atau bukti transfer pelanggan. Pastikan dana masuk melalui kanal merchant resmi.')),
+    ])),
+  ]);
+}
+
 class MorePage extends StatelessWidget {
-  const MorePage({super.key, required this.db});
-  final PosDatabase db;
+  const MorePage({super.key});
   @override Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(16), children: [
     Text('Lainnya', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
     const SizedBox(height: 12),
-    Card(child: ListTile(leading: const Icon(Icons.receipt_long_rounded), title: const Text('Riwayat transaksi'), subtitle: const Text('Lihat transaksi yang tersimpan'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HistoryPage(db: db))))),
+    Card(child: ListTile(leading: const Icon(Icons.grid_view_rounded), title: const Text('Beranda'), subtitle: const Text('Ringkasan aktivitas apotek'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage(db: PosDatabase.instance, openCashier: () => Navigator.of(context).pop()))))),
+    Card(child: ListTile(leading: const Icon(Icons.inventory_2_outlined), title: const Text('Manajemen barang'), subtitle: const Text('Cari, tambah, dan edit katalog'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductsPage(db: PosDatabase.instance))))),
+    Card(child: ListTile(leading: const Icon(Icons.receipt_long_rounded), title: const Text('Riwayat transaksi'), subtitle: const Text('Lihat transaksi yang tersimpan'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HistoryPage(db: PosDatabase.instance))))),
     Card(child: ListTile(leading: const Icon(Icons.bar_chart_rounded), title: const Text('Laporan'), subtitle: const Text('Ringkasan transaksi'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReportsPage())))),
-    Card(child: ListTile(leading: const Icon(Icons.qr_code_2_rounded), title: const Text('QRIS'), subtitle: const Text('Informasi pembayaran QRIS'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => showDialog<void>(context: context, builder: (ctx) => AlertDialog(title: const Text('QRIS'), content: const Text('Pembayaran QRIS belum terhubung ke konfirmasi otomatis. Pastikan pembayaran berhasil pada aplikasi merchant sebelum menyelesaikan transaksi.'), actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Mengerti'))])))),
   ]);
 }
 
