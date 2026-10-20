@@ -313,8 +313,13 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
     setState(() { loading = true; error = null; });
     try {
       final found = await widget.db.searchProducts(q);
+      final count = found.isEmpty ? await widget.db.productCount() : -1;
       if (!mounted || version != requestVersion) return;
-      setState(() { results = found; loading = false; });
+      setState(() {
+        results = found;
+        loading = false;
+        if (found.isEmpty && count == 0) error = 'Katalog produk belum diimpor ke aplikasi ini.';
+      });
     } catch (e) {
       if (!mounted || version != requestVersion) return;
       setState(() { error = 'Data harga gagal dibaca. Coba lagi.'; results = []; loading = false; });
@@ -324,8 +329,24 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
   Future<void> _scan() async {
     final code = await Navigator.of(context).push<String>(MaterialPageRoute(builder: (_) => const BarcodePage()));
     if (!mounted || code == null || code.trim().isEmpty) return;
-    controller.text = code.trim();
-    await _search(code.trim());
+    final value = code.trim();
+    controller.text = value;
+    final version = ++requestVersion;
+    setState(() { loading = true; error = null; results = []; });
+    try {
+      final exact = await widget.db.findByBarcode(value);
+      final found = exact == null ? await widget.db.searchProducts(value) : <Product>[exact];
+      final count = found.isEmpty ? await widget.db.productCount() : -1;
+      if (!mounted || version != requestVersion) return;
+      setState(() {
+        results = found;
+        loading = false;
+        if (found.isEmpty) error = count == 0 ? 'Katalog produk belum diimpor ke aplikasi ini.' : 'Barcode tidak ditemukan di katalog.';
+      });
+    } catch (_) {
+      if (!mounted || version != requestVersion) return;
+      setState(() { loading = false; error = 'Gagal membaca hasil scan. Coba pindai kembali.'; });
+    }
   }
 
   @override Widget build(BuildContext context) {
