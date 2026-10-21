@@ -183,7 +183,56 @@ class _PosShellState extends State<PosShell> {
         if(wide) NavigationRail(selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelType:NavigationRailLabelType.all,destinations:List.generate(labels.length,(i)=>NavigationRailDestination(icon:Icon(icons[i]),label:Text(labels[i])))),
         Expanded(child:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:1000),child:IndexedStack(index:selected,children:pages))))
       ]),
-      bottomNavigationBar:wide?null:SafeArea(top:false,minimum:const EdgeInsets.fromLTRB(14,0,14,10),child:Padding(padding:const EdgeInsets.only(top:8),child:ClipRRect(borderRadius:BorderRadius.circular(36),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:24,sigmaY:24),child:Container(height:68,decoration:BoxDecoration(color:(widget.isDark?const Color(0xFF2A2E35):const Color(0xFFE9EDF2)).withValues(alpha:0.82),borderRadius:BorderRadius.circular(36),border:Border.all(color:widget.isDark?const Color(0xFF69727E).withValues(alpha:0.48):Colors.white.withValues(alpha:0.95)),boxShadow:[BoxShadow(color:Colors.black.withValues(alpha:widget.isDark?0.24:0.08),blurRadius:24,offset:const Offset(0,8))]),child:NavigationBar(height:68,backgroundColor:Colors.transparent,indicatorColor:widget.isDark?const Color(0xFF59616C):const Color(0xFFFFFFFF),surfaceTintColor:Colors.transparent,elevation:0,selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,destinations:List.generate(labels.length,(i)=>NavigationDestination(icon:Icon(icons[i]),label:labels[i]))))))),
+      bottomNavigationBar: wide ? null : SafeArea(
+        top: false,
+        minimum: const EdgeInsets.fromLTRB(14, 0, 14, 10),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(36),
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: Container(
+                height: 68,
+                decoration: BoxDecoration(
+                  color: (widget.isDark
+                      ? const Color(0xFF2A2E35)
+                      : const Color(0xFFE9EDF2)).withValues(alpha: 0.82),
+                  borderRadius: BorderRadius.circular(36),
+                  border: Border.all(
+                    color: widget.isDark
+                        ? const Color(0xFF69727E).withValues(alpha: 0.48)
+                        : Colors.white.withValues(alpha: 0.95),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: widget.isDark ? 0.24 : 0.08),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: NavigationBar(
+                  height: 68,
+                  backgroundColor: Colors.transparent,
+                  indicatorColor: widget.isDark
+                      ? const Color(0xFF59616C)
+                      : const Color(0xFFFFFFFF),
+                  surfaceTintColor: Colors.transparent,
+                  elevation: 0,
+                  selectedIndex: selected,
+                  onDestinationSelected: (i) => setState(() => selected = i),
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                  destinations: List.generate(
+                    labels.length,
+                    (i) => NavigationDestination(icon: Icon(icons[i]), label: labels[i]),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
