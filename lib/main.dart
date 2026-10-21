@@ -614,7 +614,7 @@ class _CashierPageState extends State<CashierPage> {
         ),
       ],
     );
-  };
+  }
 }
 
 class _PaymentChoice {const _PaymentChoice(this.paid,this.method);final int paid;final String method;}
