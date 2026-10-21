@@ -28,8 +28,19 @@ abstract final class DsheVisualTokens {
   static const silverAccent = Color(0xFFAAB5C2);
 
   // Shared glass treatment
-  static const glassTint = Color(0xFFE8F0F1);
-  static const glassHighlight = Color(0xFFF8F9FB);
+  static const glassTint = Color(0xFFE8EDF2);
+  static const glassHighlight = Color(0xFFFFFFFF);
+  static const glassDarkTint = Color(0xFF2A3038);
+  static const glassDarkHighlight = Color(0xFF20242A);
+  static const iconLight = Color(0xFF53616D);
+  static const iconDark = Color(0xFFE1E7EE);
+  static const iconLightAccent = Color(0xFF7D9CA5);
+  static const iconDarkAccent = Color(0xFFAAB5C2);
+  static const radiusCard = 22.0;
+  static const radiusControl = 18.0;
+  static const radiusCapsule = 36.0;
+  static const blurPanel = 14.0;
+  static const blurNavigation = 18.0;
 }
 
 void main() => runApp(const DsheFarmaApp());
@@ -61,8 +72,8 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
     ).copyWith(
       primary: dark ? silverAccent : pearlAccent,
-      onPrimary: dark ? const Color(0xFF20242A) : Colors.white,
-      secondary: dark ? const Color(0xFF8995A3) : const Color(0xFF9AAAB5),
+      onPrimary: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlSurface,
+      secondary: dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText,
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
       onSurface: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlText,
       outline: dark ? DsheVisualTokens.charcoalBorder : DsheVisualTokens.pearlBorder,
@@ -70,6 +81,10 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
+      iconTheme: IconThemeData(color: dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText, size: 22),
+      listTileTheme: ListTileThemeData(iconColor: dark ? DsheVisualTokens.silverAccent : DsheVisualTokens.pearlAccent, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2)),
+      filledButtonTheme: FilledButtonThemeData(style: FilledButton.styleFrom(minimumSize: const Size(48, 48), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(DsheVisualTokens.radiusControl)))),
+      outlinedButtonTheme: OutlinedButtonThemeData(style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(DsheVisualTokens.radiusControl)))),
       scaffoldBackgroundColor: dark ? DsheVisualTokens.charcoalBackground : DsheVisualTokens.pearlBackground,
       appBarTheme: AppBarTheme(
         backgroundColor: (dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface).withValues(alpha: 0.72),
@@ -82,13 +97,13 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(DsheVisualTokens.radiusCard),
           side: BorderSide(color: dark ? DsheVisualTokens.charcoalBorder : DsheVisualTokens.pearlBorder),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: dark ? const Color(0xFF1A1D22) : const Color(0xFFFFFFFF).withValues(alpha: 0.84),
+        fillColor: dark ? DsheVisualTokens.charcoalRaised : DsheVisualTokens.pearlSurface.withValues(alpha: 0.92),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outline)),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.7))),
         focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.primary, width: 1.4)),
@@ -118,8 +133,8 @@ class DsheFarmaLogo extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: isDark
-              ? const [Color(0xFF454B54), Color(0xFF20242A), Color(0xFF343A43)]
-              : const [Color(0xFFFFFFFF), Color(0xFFEAF5F3), Color(0xFFD5E0E9)],
+              ? [DsheVisualTokens.charcoalRaised, DsheVisualTokens.charcoalSurface, DsheVisualTokens.charcoalBackground]
+              : [DsheVisualTokens.pearlSurface, DsheVisualTokens.pearlSurfaceTint, DsheVisualTokens.pearlBackground],
         ),
         border: Border.all(color: edge.withValues(alpha: isDark ? 0.52 : 0.92), width: 1.1),
         boxShadow: [
@@ -141,8 +156,8 @@ class _DsheMarkPainter extends CustomPainter {
     final scale = size.width / 42;
     canvas.save();
     canvas.scale(scale);
-    final ink = isDark ? const Color(0xFFE1E7EE) : const Color(0xFF53616D);
-    final accent = isDark ? const Color(0xFFB7C2CF) : const Color(0xFF9AAAB5);
+    final ink = isDark ? DsheVisualTokens.iconDark : DsheVisualTokens.iconLight;
+    final accent = isDark ? DsheVisualTokens.iconDarkAccent : DsheVisualTokens.iconLightAccent;
 
     // Geometric D monogram, deliberately drawn rather than using a stock icon.
     final d = Path()
@@ -173,7 +188,7 @@ class _DsheMarkPainter extends CustomPainter {
     // Pharmacy cross set in a compact, rounded glass badge.
     final badge = RRect.fromRectAndRadius(const Rect.fromLTWH(24, 5, 13, 13), const Radius.circular(4));
     canvas.drawRRect(badge, Paint()..color = accent);
-    final crossPaint = Paint()..color = isDark ? const Color(0xFF252A31) : Colors.white;
+    final crossPaint = Paint()..color = isDark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface;
     canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(29.2, 7.5, 2.6, 8), const Radius.circular(1.1)), crossPaint);
     canvas.drawRRect(RRect.fromRectAndRadius(const Rect.fromLTWH(26.5, 10.2, 8, 2.6), const Radius.circular(1.1)), crossPaint);
     canvas.restore();
@@ -217,18 +232,18 @@ class _PosShellState extends State<PosShell> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(36),
             child: BackdropFilter(
-              filter: ui.ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              filter: ui.ImageFilter.blur(sigmaX: DsheVisualTokens.blurNavigation, sigmaY: DsheVisualTokens.blurNavigation),
               child: Container(
                 height: 68,
                 decoration: BoxDecoration(
                   color: (widget.isDark
-                      ? const Color(0xFF2A2E35)
-                      : const Color(0xFFE9EDF2)).withValues(alpha: 0.82),
+                      ? DsheVisualTokens.charcoalRaised
+                      : DsheVisualTokens.pearlSurfaceTint).withValues(alpha: 0.88),
                   borderRadius: BorderRadius.circular(36),
                   border: Border.all(
                     color: widget.isDark
-                        ? const Color(0xFF69727E).withValues(alpha: 0.48)
-                        : Colors.white.withValues(alpha: 0.95),
+                        ? DsheVisualTokens.charcoalBorder.withValues(alpha: 0.9)
+                        : DsheVisualTokens.pearlSurface.withValues(alpha: 0.96),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -242,8 +257,8 @@ class _PosShellState extends State<PosShell> {
                   height: 68,
                   backgroundColor: Colors.transparent,
                   indicatorColor: widget.isDark
-                      ? const Color(0xFF59616C)
-                      : const Color(0xFFFFFFFF),
+                      ? DsheVisualTokens.charcoalBorder
+                      : DsheVisualTokens.pearlSurface,
                   surfaceTintColor: Colors.transparent,
                   elevation: 0,
                   selectedIndex: selected,
@@ -264,7 +279,7 @@ class _PosShellState extends State<PosShell> {
 }
 
 class GlassPanel extends StatelessWidget {
-  const GlassPanel({super.key, required this.child, this.padding = const EdgeInsets.all(16), this.blur = 16, this.radius = 24});
+  const GlassPanel({super.key, required this.child, this.padding = const EdgeInsets.all(16), this.blur = DsheVisualTokens.blurPanel, this.radius = DsheVisualTokens.radiusCard});
   final Widget child;
   final EdgeInsetsGeometry padding;
   final double blur;
@@ -284,12 +299,12 @@ class GlassPanel extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: dark
-                  ? [const Color(0xFF343A43).withValues(alpha: 0.76), const Color(0xFF202329).withValues(alpha: 0.84)]
-                  : [Colors.white.withValues(alpha: 0.82), DsheVisualTokens.glassTint.withValues(alpha: 0.72)],
+                  ? [DsheVisualTokens.glassDarkTint.withValues(alpha: 0.84), DsheVisualTokens.glassDarkHighlight.withValues(alpha: 0.94)]
+                  : [DsheVisualTokens.pearlSurface.withValues(alpha: 0.94), DsheVisualTokens.glassTint.withValues(alpha: 0.86)],
             ),
             borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: dark ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.88), width: 1),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: dark ? 0.16 : 0.045), blurRadius: 22, offset: const Offset(0, 8))],
+            border: Border.all(color: dark ? DsheVisualTokens.charcoalBorder.withValues(alpha: 0.95) : DsheVisualTokens.pearlBorder.withValues(alpha: 0.9), width: 1),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: dark ? 0.18 : 0.045), blurRadius: 20, offset: const Offset(0, 7))],
           ),
           child: child,
         ),
@@ -313,8 +328,8 @@ class HomePage extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: dark
-              ? [const Color(0xFF20242A), const Color(0xFF17191D)]
-              : [const Color(0xFFF7FAFB), const Color(0xFFE9EFF1)],
+              ? [DsheVisualTokens.charcoalSurface, DsheVisualTokens.charcoalBackground]
+              : [DsheVisualTokens.pearlSurface, DsheVisualTokens.pearlBackground],
         ),
       ),
       child: RefreshIndicator(
