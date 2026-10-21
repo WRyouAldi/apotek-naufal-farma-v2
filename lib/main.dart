@@ -483,26 +483,138 @@ class _CashierPageState extends State<CashierPage> {
     if(payment==null)return;
     try{final id=await widget.db.checkout(lines:cart.values.toList(),paid:payment.paid,paymentMethod:payment.method);if(!mounted)return;setState((){cart.clear();cash.clear();status='Transaksi #$id berhasil disimpan. Kembalian: ${rupiah(payment.paid-total)}';});await _search(search.text);if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(status)));}catch(e){if(mounted)setState(()=>status='Transaksi gagal: $e');}
   }
-  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
-    Text('Kasir',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),
-    const SizedBox(height:4),Text('Input barang → daftar item → periksa total → checkout.',style:Theme.of(context).textTheme.bodySmall),
-    const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
-    const SizedBox(height:8),if(loading)const LinearProgressIndicator(),
-    if(search.text.isNotEmpty||results.isNotEmpty)Card(child:ConstrainedBox(constraints:const BoxConstraints(maxHeight:220),child:results.isEmpty?const Padding(padding:EdgeInsets.all(14),child:Text('Barang tidak ditemukan. Tambahkan data di menu Barang.')):ListView.separated(shrinkWrap:true,itemCount:results.length,itemBuilder:(ctx,i){final p=results[i];return ListTile(dense:true,title:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis),subtitle:Text('${p.code} • ${p.stockKnown ? 'Stok ${p.stock}' : 'Stok belum terverifikasi'}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.add_circle_outline_rounded,size:18)]),onTap:()=>_add(p));},separatorBuilder:(_,__)=>const Divider(height:1)))),
-    const SizedBox(height:12),Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-      Row(children:[const Expanded(child:Text('Daftar input',style:TextStyle(fontWeight:FontWeight.w800,fontSize:17))),Text('${cart.length} item')]),
-      const SizedBox(height:8),if(cart.isEmpty)const Padding(padding:EdgeInsets.symmetric(vertical:18),child:Center(child:Text('Belum ada barang. Cari atau scan barcode.'))) else ...cart.values.map((l)=>Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[
-        Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(l.product.name,style:const TextStyle(fontWeight:FontWeight.w700)),Text('${rupiah(l.product.price)} × ${l.quantity}',style:Theme.of(context).textTheme.bodySmall)])),
-        IconButton(onPressed:()=>setState(()=>cart[l.product.id!]=CartLine(product:l.product,quantity:l.quantity>1?l.quantity-1:1)),icon:const Icon(Icons.remove_circle_outline_rounded)),
-        SizedBox(width:25,child:Text('${l.quantity}',textAlign:TextAlign.center)),
-        IconButton(onPressed: l.quantity >= l.product.stock ? null : () => setState(() => cart[l.product.id!] = CartLine(product: l.product, quantity: l.quantity + 1)), icon: const Icon(Icons.add_circle_outline_rounded)),
-        Text(rupiah(l.subtotal),style:const TextStyle(fontWeight:FontWeight.w800))
-      ]))),
-      const Divider(),Row(children:[const Expanded(child:Text('TOTAL',style:TextStyle(fontWeight:FontWeight.w800))),Text(rupiah(total),style:Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight:FontWeight.w900))]),
-      const SizedBox(height:12),SizedBox(width:double.infinity,child:FilledButton.icon(onPressed:cart.isEmpty?null:_checkout,icon:const Icon(Icons.check_circle_outline_rounded),label:const Text('Lanjut pembayaran'))),
-      const SizedBox(height:8),Text(status,style:Theme.of(context).textTheme.bodySmall)
-    ])))
-  ]);
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final muted = dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 24),
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text('Kasir', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.8)),
+              const SizedBox(height: 5),
+              Text('Cari barang, masukkan ke daftar, lalu selesaikan pembayaran.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: muted, height: 1.35)),
+            ])),
+            const SizedBox(width: 10),
+            DsheFarmaLogo(size: 48, isDark: dark),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(children: [
+          Expanded(child: TextField(
+            controller: search,
+            onChanged: _search,
+            onSubmitted: (v) async { final p = await widget.db.findByBarcode(v); if (p != null) _add(p); },
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.search_rounded),
+              hintText: 'Nama barang, kode, atau barcode',
+              suffixIcon: search.text.isEmpty ? null : IconButton(
+                tooltip: 'Hapus pencarian',
+                onPressed: () { search.clear(); _search(''); setState(() {}); },
+                icon: const Icon(Icons.close_rounded),
+              ),
+            ),
+          )),
+          const SizedBox(width: 10),
+          SizedBox(height: 54, width: 54, child: FilledButton.tonal(
+            onPressed: _scan,
+            style: FilledButton.styleFrom(padding: EdgeInsets.zero, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
+            child: const Icon(Icons.document_scanner_rounded),
+          )),
+        ]),
+        if (loading) const Padding(padding: EdgeInsets.only(top: 8), child: LinearProgressIndicator(minHeight: 2)),
+        if (search.text.isNotEmpty || results.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          GlassPanel(
+            padding: EdgeInsets.zero,
+            child: results.isEmpty
+                ? Padding(padding: const EdgeInsets.all(18), child: Text('Barang tidak ditemukan. Periksa kata kunci atau tambahkan barang melalui menu Barang.', style: TextStyle(color: muted)))
+                : ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: results.length,
+                    separatorBuilder: (_, __) => Divider(height: 1, color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.65)),
+                    itemBuilder: (ctx, i) {
+                      final p = results[i];
+                      return ListTile(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        title: Text(p.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
+                        subtitle: Padding(padding: const EdgeInsets.only(top: 4), child: Text('${p.code} • ${p.stockKnown ? 'Stok ${p.stock}' : 'Stok belum terverifikasi'}', style: TextStyle(color: muted, fontSize: 12))),
+                        trailing: Column(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.end, children: [
+                          Text(rupiah(p.price), style: TextStyle(fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.primary)),
+                          const SizedBox(height: 4),
+                          Icon(Icons.add_circle_outline_rounded, size: 19, color: muted),
+                        ]),
+                        onTap: () => _add(p),
+                      );
+                    },
+                  ),
+          ),
+        ],
+        const SizedBox(height: 20),
+        GlassPanel(
+          padding: const EdgeInsets.all(18),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(children: [
+              Expanded(child: Text('Daftar belanja', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.4))),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
+                child: Text('${cart.length} item', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w800, fontSize: 12)),
+              ),
+            ]),
+            const SizedBox(height: 14),
+            if (cart.isEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                decoration: BoxDecoration(color: (dark ? DsheVisualTokens.charcoalBackground : DsheVisualTokens.pearlSurfaceTint).withValues(alpha: 0.7), borderRadius: BorderRadius.circular(18)),
+                child: Column(children: [
+                  Icon(Icons.shopping_basket_outlined, size: 32, color: muted),
+                  const SizedBox(height: 8),
+                  Text('Belum ada barang', style: TextStyle(fontWeight: FontWeight.w800, color: muted)),
+                  const SizedBox(height: 4),
+                  Text('Cari atau scan barcode untuk mulai transaksi.', textAlign: TextAlign.center, style: TextStyle(color: muted, fontSize: 13)),
+                ]),
+              )
+            else
+              ...cart.values.map((l) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(children: [
+                  Container(width: 40, height: 40, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(13)), child: Icon(Icons.medication_outlined, color: Theme.of(context).colorScheme.primary)),
+                  const SizedBox(width: 10),
+                  Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(l.product.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 3),
+                    Text('${rupiah(l.product.price)} × ${l.quantity}', style: TextStyle(color: muted, fontSize: 12)),
+                  ])),
+                  IconButton(tooltip: 'Kurangi jumlah', onPressed: () => setState(() { if (l.quantity > 1) { cart[l.product.id!] = CartLine(product: l.product, quantity: l.quantity - 1); } else { cart.remove(l.product.id!); } }), icon: const Icon(Icons.remove_circle_outline_rounded)),
+                  Text('${l.quantity}', style: const TextStyle(fontWeight: FontWeight.w800)),
+                  IconButton(tooltip: 'Tambah jumlah', onPressed: l.quantity >= l.product.stock ? null : () => setState(() => cart[l.product.id!] = CartLine(product: l.product, quantity: l.quantity + 1)), icon: const Icon(Icons.add_circle_outline_rounded)),
+                ]),
+              )),
+            const SizedBox(height: 8),
+            Divider(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.65)),
+            Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+              Expanded(child: Text('TOTAL PEMBAYARAN', style: TextStyle(color: muted, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.6))),
+              Text(rupiah(total), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.6)),
+            ]),
+            const SizedBox(height: 14),
+            SizedBox(width: double.infinity, height: 54, child: FilledButton.icon(
+              onPressed: cart.isEmpty ? null : _checkout,
+              icon: const Icon(Icons.arrow_forward_rounded),
+              label: const Text('Lanjut pembayaran', style: TextStyle(fontWeight: FontWeight.w800)),
+            )),
+            const SizedBox(height: 10),
+            Text(status, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: muted, height: 1.35)),
+          ]),
+        ),
+      ],
+    );
+  };
 }
 
 class _PaymentChoice {const _PaymentChoice(this.paid,this.method);final int paid;final String method;}
