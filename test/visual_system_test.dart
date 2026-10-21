@@ -3,17 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dshe_farma_pos/main.dart';
 
 double _luminance(Color color) {
-  double channel(int value) {
-    final normalized = value / 255.0;
+  double channel(double normalized) {
     return normalized <= 0.04045
         ? normalized / 12.92
         : ((normalized + 0.055) / 1.055) * ((normalized + 0.055) / 1.055) *
             ((normalized + 0.055) / 1.055);
   }
 
-  return 0.2126 * channel(color.red) +
-      0.7152 * channel(color.green) +
-      0.0722 * channel(color.blue);
+  return 0.2126 * channel(color.r) +
+      0.7152 * channel(color.g) +
+      0.0722 * channel(color.b);
 }
 
 double _contrast(Color first, Color second) {
