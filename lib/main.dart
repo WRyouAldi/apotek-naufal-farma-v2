@@ -81,6 +81,8 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
       onSurface: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlText,
       outline: dark ? DsheVisualTokens.charcoalBorder : DsheVisualTokens.pearlBorder,
+      error: dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError,
+      onError: dark ? DsheVisualTokens.charcoalBackground : DsheVisualTokens.pearlSurface,
     );
     return ThemeData(
       useMaterial3: true,
