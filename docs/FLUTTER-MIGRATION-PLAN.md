@@ -64,20 +64,21 @@ Build Apotek D'She Farma as a Flutter-first native Android POS. WebView is not t
 ### Design lock
 - `docs/FLUTTER_UI_UX_DESIGN_LOCK_DSHE_FARMA.md` is the visual source of truth.
 - Reference direction: monochrome silver glassmorphism, Pearl Crystal light theme, Charcoal Silver dark theme, floating capsule navigation.
-- Legacy `docs/index.html` remains unchanged and is still the fallback.
+- Legacy `docs/index.html` remains unchanged as a migration reference only; it is not a runtime fallback.
 
 ### P1 — visual foundation (implementation in progress)
-- Updated Flutter theme tokens toward pearl/charcoal/silver neutrals.
+- Aligned Flutter primary accent tokens to the design lock (`#7D9CA5` Pearl Crystal and `#AAB5C2` Charcoal Silver); set cards to avoid Material surface-tint drift.
 - Reduced dependence on saturated green in the home hero and logo treatment.
 - Validation status: source updated; CI and Android rendering verification still required.
 
 ### P2 — core components (implementation in progress)
+- Checkout now rejects unverified/unknown stock atomically at the database boundary; cashier selection also blocks unknown or depleted stock and quantity beyond known stock.
 - Reworked mobile bottom navigation into a floating, rounded, blurred capsule with safe-area spacing.
 - Glass panel and theme tokens remain shared foundations.
 - Validation status: source updated; CI and device comparison still required.
 
 ### P3 — screen-wide consistency
-- Not yet accepted. Cek Harga, Kasir, QRIS, Lainnya, sheets/dialogs, empty/error/loading states and logo placements require a systematic light/dark review.
+- Not yet accepted. Cek Harga, Kasir, Lainnya, sheets/dialogs, empty/error/loading states and logo placements require a systematic light/dark review.
 
 ### P4 — motion, responsiveness and final verification
 - Not yet accepted. Requires reduced-motion review, keyboard/safe-area checks, narrow-screen checks, scanner lifecycle checks, automated tests, clean Android builds and device/emulator screenshot comparison.
