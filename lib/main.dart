@@ -380,7 +380,7 @@ class GlassPanel extends StatelessWidget {
   }
 }
 
-/** Legacy dashboard and metric-card layout removed. The locked UI uses the screen-specific POS pages below. */
+/// Legacy dashboard and metric-card layout removed. The locked UI uses the screen-specific POS pages below.
 
 class CashierPage extends StatefulWidget {
   const CashierPage({super.key,required this.db}); final PosDatabase db;
@@ -748,7 +748,6 @@ class _MorePageState extends State<MorePage> {
     const SizedBox(height: 12),
     Card(child: ListTile(leading: const Icon(Icons.cloud_sync_rounded), title: const Text('Sinkronisasi database cloud'), subtitle: const Text('Ambil katalog terbaru dari CSV GitHub'), trailing: syncing ? const SizedBox(width: 22,height: 22,child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.sync_rounded), onTap: syncing ? null : _sync)),
     if (syncStatus != null) Padding(padding: const EdgeInsets.only(top: 8,bottom: 8), child: Card(child: Padding(padding: const EdgeInsets.all(12), child: Text(syncStatus!)))),
-    Card(child: ListTile(leading: const Icon(Icons.grid_view_rounded), title: const Text('Beranda'), subtitle: const Text('Ringkasan aktivitas apotek'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage(db: PosDatabase.instance, openCashier: () => Navigator.of(context).pop()))))),
     Card(child: ListTile(leading: const Icon(Icons.inventory_2_rounded), title: const Text('Manajemen barang'), subtitle: const Text('Cari, tambah, dan edit katalog'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductsPage(db: PosDatabase.instance))))),
     Card(child: ListTile(leading: const Icon(Icons.receipt_long_rounded), title: const Text('Riwayat transaksi'), subtitle: const Text('Lihat transaksi yang tersimpan'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HistoryPage(db: PosDatabase.instance))))),
     Card(child: ListTile(leading: const Icon(Icons.bar_chart_rounded), title: const Text('Laporan'), subtitle: const Text('Ringkasan transaksi'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReportsPage())))),
