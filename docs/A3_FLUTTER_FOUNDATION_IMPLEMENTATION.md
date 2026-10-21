@@ -35,13 +35,18 @@
 ### CI trigger
 - Updated `.github/workflows/flutter.yml` so pushes to `flutter-clean-rebuild` run the existing analyzer, tests, and release APK build workflow.
 
+### Additional safeguards added after initial A3 pass
+
+- Cloud CSV sync now rejects duplicate normalized product codes and duplicate non-empty barcodes before opening a database write transaction. The error identifies the conflicting value and states that local data was not changed.
+- Product management list now renders stock as **“Stok belum diketahui”** when `stockKnown` is false instead of displaying an ambiguous zero.
+
 ## A3.2 Validation status
 
 - [x] Changes committed to `flutter-clean-rebuild`.
 - [x] Changed source files re-fetched from GitHub and key safeguards verified in source.
-- [ ] `flutter analyze` result — pending GitHub Actions run.
-- [ ] `flutter test` result — pending GitHub Actions run.
-- [ ] Release APK build — pending GitHub Actions run.
+- [x] `flutter analyze` passed on an earlier A3 commit in GitHub Actions; rerun is required for the latest commit.
+- [x] `flutter test` passed on an earlier A3 commit in GitHub Actions; rerun is required for the latest commit.
+- [ ] Release APK build — the earlier run was still in progress when checked; verify the run for the latest commit.
 - [ ] Database-level integration tests for checkout rollback, stock races, product identity conflicts and migration paths — not yet implemented.
 - [ ] Physical Android testing — not performed by this source change.
 
