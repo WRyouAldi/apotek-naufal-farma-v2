@@ -313,7 +313,7 @@ class HomePage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(30)),
-                        child: const Text('APOTEK • POS MOBILE', style: TextStyle(color: Color(0xFF65B99F), fontWeight: FontWeight.w800, letterSpacing: 1.3, fontSize: 10)),
+                        child: Text('APOTEK • POS MOBILE', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w800, letterSpacing: 1.3, fontSize: 10)),
                       ),
                       const SizedBox(height: 18),
                       Text('Halo, selamat datang.', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: muted)),
@@ -358,7 +358,7 @@ class HomePage extends StatelessWidget {
               blur: 12,
               radius: 22,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.shield_outlined, color: Color(0xFF65B99F))),
+                Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.shield_outlined, color: Theme.of(context).colorScheme.primary)),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text('Pemeriksaan data', style: TextStyle(fontWeight: FontWeight.w800)),
@@ -385,7 +385,7 @@ class MetricCard extends StatelessWidget {
     radius: 22,
     padding: const EdgeInsets.all(15),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(width: 38, height: 38, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(13)), child: Icon(icon, color: const Color(0xFF65B99F), size: 21)),
+      Container(width: 38, height: 38, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(13)), child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 21)),
       const SizedBox(height: 14),
       AnimatedSwitcher(duration: const Duration(milliseconds: 280), transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: SlideTransition(position: Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero).animate(animation), child: child)), child: Text(value, key: ValueKey(value), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.5))),
       const SizedBox(height: 4),
@@ -544,7 +544,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
           if (error != null) GlassPanel(child: Row(children: [const Icon(Icons.error_outline_rounded, color: Colors.redAccent), const SizedBox(width: 10), Expanded(child: Text(error!)), TextButton(onPressed: () => _search(controller.text), child: const Text('Coba lagi'))])),
           if (controller.text.trim().isEmpty && !loading)
             GlassPanel(blur: 12, child: Column(children: [
-              Container(width: 64, height: 64, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(22)), child: const Icon(Icons.price_check_rounded, size: 32, color: Color(0xFF65B99F))),
+              Container(width: 64, height: 64, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(22)), child: Icon(Icons.price_check_rounded, size: 32, color: Theme.of(context).colorScheme.primary)),
               const SizedBox(height: 12),
               const Text('Harga barang, langsung terlihat', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
               const SizedBox(height: 6),
@@ -566,7 +566,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
               padding: const EdgeInsets.only(bottom: 10),
               child: GlassPanel(blur: 12, radius: 20, padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.medication_outlined, color: Color(0xFF65B99F))),
+                  Container(width: 42, height: 42, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.medication_outlined, color: Theme.of(context).colorScheme.primary)),
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(p.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
@@ -578,16 +578,16 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
                 const SizedBox(height: 14),
                 Container(
                   padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: dark ? 0.13 : 0.11), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF65B99F).withValues(alpha: 0.28))),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: dark ? 0.13 : 0.11), borderRadius: BorderRadius.circular(16), border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.28))),
                   child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                     Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Text('HARGA JUAL', style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 1.2, color: muted, fontWeight: FontWeight.w800)),
                       const SizedBox(height: 4),
-                      FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(rupiah(p.price), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, color: dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)))),
+                      FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(rupiah(p.price), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.primary))),
                     ])),
                     const SizedBox(width: 8),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: !p.stockKnown ? const Color(0xFF87909B).withValues(alpha: 0.13) : (p.stock > 0 ? const Color(0xFF65B99F).withValues(alpha: 0.16) : Colors.red.withValues(alpha: 0.12)), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      Text(!p.stockKnown ? 'STOK BELUM ADA' : (p.stock > 0 ? 'TERSEDIA' : 'HABIS'), style: TextStyle(fontSize: 10, letterSpacing: 0.4, fontWeight: FontWeight.w900, color: !p.stockKnown ? muted : (p.stock > 0 ? (dark ? const Color(0xFF9BE4CC) : const Color(0xFF246B5B)) : Colors.redAccent))),
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: !p.stockKnown ? const Color(0xFF87909B).withValues(alpha: 0.13) : (p.stock > 0 ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.16) : Colors.red.withValues(alpha: 0.12)), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                      Text(!p.stockKnown ? 'STOK BELUM ADA' : (p.stock > 0 ? 'TERSEDIA' : 'HABIS'), style: TextStyle(fontSize: 10, letterSpacing: 0.4, fontWeight: FontWeight.w900, color: !p.stockKnown ? muted : (p.stock > 0 ? Theme.of(context).colorScheme.primary : Colors.redAccent))),
                       Text(p.stockKnown ? 'Stok ${p.stock}' : 'Stok —', style: TextStyle(fontWeight: FontWeight.w800, color: !p.stockKnown ? muted : (p.stock > 0 ? null : Colors.redAccent))),
                     ])),
                   ]),
