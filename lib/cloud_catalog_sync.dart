@@ -74,6 +74,19 @@ class CloudCatalogSync {
         });
       }
       if (parsed.isEmpty) throw const FormatException('Tidak ada baris produk valid. Data lokal tidak diubah.');
+      // Reject ambiguous source identity before any database write.
+      final seenCodes = <String>{};
+      final seenBarcodes = <String>{};
+      for (final item in parsed) {
+        final code = (item['code'] as String).trim().toUpperCase();
+        final barcode = (item['barcode'] as String).trim();
+        if (!seenCodes.add(code)) {
+          throw FormatException('Kode produk duplikat pada sumber cloud: $code. Data lokal tidak diubah.');
+        }
+        if (barcode.isNotEmpty && !seenBarcodes.add(barcode)) {
+          throw FormatException('Barcode duplikat pada sumber cloud: $barcode. Data lokal tidak diubah.');
+        }
+      }
       // Guard against accidentally importing a truncated CSV.
       if (parsed.length < 1000) throw FormatException('Hanya ${parsed.length} produk valid; batas aman minimal 1.000. Data lokal tidak diubah.');
 
