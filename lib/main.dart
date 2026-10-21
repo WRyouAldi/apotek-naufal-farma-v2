@@ -261,21 +261,80 @@ class _PosShellState extends State<PosShell> {
                     ),
                   ],
                 ),
-                child: NavigationBar(
-                  height: 68,
-                  backgroundColor: Colors.transparent,
-                  indicatorColor: widget.isDark
-                      ? DsheVisualTokens.charcoalBorder
-                      : DsheVisualTokens.pearlSurface,
-                  surfaceTintColor: Colors.transparent,
-                  elevation: 0,
-                  selectedIndex: selected,
-                  onDestinationSelected: (i) => setState(() => selected = i),
-                  labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                  destinations: List.generate(
-                    labels.length,
-                    (i) => NavigationDestination(icon: Icon(icons[i]), label: labels[i]),
-                  ),
+                child: Row(
+                  children: List.generate(labels.length, (i) {
+                    final active = selected == i;
+                    final foreground = widget.isDark
+                        ? DsheVisualTokens.charcoalText
+                        : DsheVisualTokens.pearlText;
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Semantics(
+                          button: true,
+                          selected: active,
+                          label: labels[i],
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(30),
+                              onTap: () => setState(() => selected = i),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 220),
+                                curve: Curves.easeOutCubic,
+                                padding: const EdgeInsets.symmetric(vertical: 7),
+                                decoration: BoxDecoration(
+                                  color: active
+                                      ? (widget.isDark
+                                          ? DsheVisualTokens.charcoalBackground
+                                          : DsheVisualTokens.pearlSurface)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(30),
+                                  border: active
+                                      ? Border.all(
+                                          color: widget.isDark
+                                              ? DsheVisualTokens.charcoalBorder
+                                              : DsheVisualTokens.pearlBorder,
+                                        )
+                                      : null,
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      icons[i],
+                                      size: 21,
+                                      color: active
+                                          ? (widget.isDark
+                                              ? DsheVisualTokens.silverAccent
+                                              : DsheVisualTokens.pearlPrimary)
+                                          : (widget.isDark
+                                              ? DsheVisualTokens.charcoalSecondaryText
+                                              : DsheVisualTokens.pearlSecondaryText),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      labels[i],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        height: 1.1,
+                                        fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+                                        color: active ? foreground : (widget.isDark
+                                            ? DsheVisualTokens.charcoalSecondaryText
+                                            : DsheVisualTokens.pearlSecondaryText),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
             ),
