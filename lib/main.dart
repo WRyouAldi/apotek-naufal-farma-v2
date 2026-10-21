@@ -766,7 +766,7 @@ class _ProductsPageState extends State<ProductsPage>{
       TextFormField(controller:price,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Harga jual (Rp)'),validator:(v)=>int.tryParse(v??'')==null?'Masukkan angka valid':null),
       TextFormField(controller:stock,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Stok'),validator:(v)=>int.tryParse(v??'')==null?'Masukkan angka valid':null),
     ]))),actions:[TextButton(onPressed:()=>Navigator.pop(ctx,false),child:const Text('Batal')),FilledButton(onPressed:()=>Navigator.pop(ctx,form.currentState!.validate()),child:const Text('Simpan'))]));
-    if(save==true){await widget.db.saveProduct(Product(id:p?.id,name:name.text,code:code.text,barcode:barcode.text,price:int.parse(price.text),stock:int.parse(stock.text)));await _load();}
+    if(save==true){await widget.db.saveProduct(Product(id:p?.id,name:name.text,code:code.text,barcode:barcode.text,price:int.parse(price.text),stock:int.parse(stock.text),stockKnown:p?.stockKnown??true,category:p?.category??'',brand:p?.brand??'',unit:p?.unit??'',costPrice:p?.costPrice??0,minStock:p?.minStock??0,rack:p?.rack??'',supplier:p?.supplier??'',notes:p?.notes??''));await _load();}
     for(final c in [name,code,barcode,price,stock]){c.dispose();}
   }
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
