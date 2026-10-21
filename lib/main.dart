@@ -26,6 +26,10 @@ abstract final class DsheVisualTokens {
   static const charcoalSecondaryText = Color(0xFFB9C1CB);
   static const charcoalText = Color(0xFFF1F3F6);
   static const silverAccent = Color(0xFFAAB5C2);
+  static const statusError = Color(0xFFB3261E);
+  static const statusErrorDark = Color(0xFFFFB4AB);
+  static const statusUnknown = Color(0xFF5C6570);
+  static const statusUnknownDark = Color(0xFFB9C1CB);
 
   // Shared glass treatment
   static const glassTint = Color(0xFFE8EDF2);
@@ -72,7 +76,7 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
     ).copyWith(
       primary: dark ? silverAccent : pearlAccent,
-      onPrimary: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlSurface,
+      onPrimary: DsheVisualTokens.charcoalText,
       secondary: dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText,
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
       onSurface: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlText,
@@ -480,18 +484,18 @@ class _CashierPageState extends State<CashierPage> {
     const SizedBox(height:4),Text('Input barang → daftar item → periksa total → checkout.',style:Theme.of(context).textTheme.bodySmall),
     const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
     const SizedBox(height:8),if(loading)const LinearProgressIndicator(),
-    if(search.text.isNotEmpty||results.isNotEmpty)Card(child:ConstrainedBox(constraints:const BoxConstraints(maxHeight:220),child:results.isEmpty?const Padding(padding:EdgeInsets.all(14),child:Text('Barang tidak ditemukan. Tambahkan data di menu Barang.')):ListView.separated(shrinkWrap:true,itemCount:results.length,itemBuilder:(ctx,i){final p=results[i];return ListTile(dense:true,title:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis),subtitle:Text('${p.code} • ${p.stockKnown ? 'Stok ${p.stock}' : 'Stok belum terverifikasi'}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.add_circle_outline,size:18)]),onTap:()=>_add(p));},separatorBuilder:(_,__)=>const Divider(height:1)))),
+    if(search.text.isNotEmpty||results.isNotEmpty)Card(child:ConstrainedBox(constraints:const BoxConstraints(maxHeight:220),child:results.isEmpty?const Padding(padding:EdgeInsets.all(14),child:Text('Barang tidak ditemukan. Tambahkan data di menu Barang.')):ListView.separated(shrinkWrap:true,itemCount:results.length,itemBuilder:(ctx,i){final p=results[i];return ListTile(dense:true,title:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis),subtitle:Text('${p.code} • ${p.stockKnown ? 'Stok ${p.stock}' : 'Stok belum terverifikasi'}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.add_circle_outline_rounded,size:18)]),onTap:()=>_add(p));},separatorBuilder:(_,__)=>const Divider(height:1)))),
     const SizedBox(height:12),Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
       Row(children:[const Expanded(child:Text('Daftar input',style:TextStyle(fontWeight:FontWeight.w800,fontSize:17))),Text('${cart.length} item')]),
       const SizedBox(height:8),if(cart.isEmpty)const Padding(padding:EdgeInsets.symmetric(vertical:18),child:Center(child:Text('Belum ada barang. Cari atau scan barcode.'))) else ...cart.values.map((l)=>Padding(padding:const EdgeInsets.symmetric(vertical:7),child:Row(children:[
         Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text(l.product.name,style:const TextStyle(fontWeight:FontWeight.w700)),Text('${rupiah(l.product.price)} × ${l.quantity}',style:Theme.of(context).textTheme.bodySmall)])),
-        IconButton(onPressed:()=>setState(()=>cart[l.product.id!]=CartLine(product:l.product,quantity:l.quantity>1?l.quantity-1:1)),icon:const Icon(Icons.remove_circle_outline)),
+        IconButton(onPressed:()=>setState(()=>cart[l.product.id!]=CartLine(product:l.product,quantity:l.quantity>1?l.quantity-1:1)),icon:const Icon(Icons.remove_circle_outline_rounded)),
         SizedBox(width:25,child:Text('${l.quantity}',textAlign:TextAlign.center)),
-        IconButton(onPressed: l.quantity >= l.product.stock ? null : () => setState(() => cart[l.product.id!] = CartLine(product: l.product, quantity: l.quantity + 1)), icon: const Icon(Icons.add_circle_outline)),
+        IconButton(onPressed: l.quantity >= l.product.stock ? null : () => setState(() => cart[l.product.id!] = CartLine(product: l.product, quantity: l.quantity + 1)), icon: const Icon(Icons.add_circle_outline_rounded)),
         Text(rupiah(l.subtotal),style:const TextStyle(fontWeight:FontWeight.w800))
       ]))),
       const Divider(),Row(children:[const Expanded(child:Text('TOTAL',style:TextStyle(fontWeight:FontWeight.w800))),Text(rupiah(total),style:Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight:FontWeight.w900))]),
-      const SizedBox(height:12),SizedBox(width:double.infinity,child:FilledButton.icon(onPressed:cart.isEmpty?null:_checkout,icon:const Icon(Icons.check_circle_outline),label:const Text('Lanjut pembayaran'))),
+      const SizedBox(height:12),SizedBox(width:double.infinity,child:FilledButton.icon(onPressed:cart.isEmpty?null:_checkout,icon:const Icon(Icons.check_circle_outline_rounded),label:const Text('Lanjut pembayaran'))),
       const SizedBox(height:8),Text(status,style:Theme.of(context).textTheme.bodySmall)
     ])))
   ]);
@@ -506,7 +510,7 @@ class _PaymentDialogState extends State<_PaymentDialog>{
     Text('Total: ${rupiah(widget.total)}',style:const TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:12),
     DropdownButtonFormField<String>(initialValue:method,items:const [DropdownMenuItem(value:'Tunai',child:Text('Tunai')),DropdownMenuItem(value:'Non-tunai',child:Text('Non-tunai / Transfer'))],onChanged:(v)=>setState(()=>method=v??'Tunai'),decoration:const InputDecoration(labelText:'Metode pembayaran')),
     const SizedBox(height:10),TextField(controller:controller,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Jumlah dibayar (Rp)',hintText:'Masukkan nominal')),
-    if(error!=null)Padding(padding:const EdgeInsets.only(top:8),child:Text(error!,style:const TextStyle(color:Colors.red)))
+    if(error!=null)Padding(padding:const EdgeInsets.only(top:8),child:Text(error!,style:const TextStyle(color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError)))
   ]),actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Batal')),FilledButton(onPressed:(){final paid=int.tryParse(controller.text.replaceAll(RegExp(r'[^0-9]'),''));if(paid==null||paid<widget.total){setState(()=>error='Nominal harus sama dengan atau lebih dari total.');return;}Navigator.pop(context,_PaymentChoice(paid,method));},child:const Text('Simpan transaksi'))]);
 }
 
@@ -602,7 +606,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
           ])),
           const SizedBox(height: 12),
           if (loading) const LinearProgressIndicator(minHeight: 2),
-          if (error != null) GlassPanel(child: Row(children: [const Icon(Icons.error_outline_rounded, color: Colors.redAccent), const SizedBox(width: 10), Expanded(child: Text(error!)), TextButton(onPressed: () => _search(controller.text), child: const Text('Coba lagi'))])),
+          if (error != null) GlassPanel(child: Row(children: [const Icon(Icons.error_outline_rounded, color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError), const SizedBox(width: 10), Expanded(child: Text(error!)), TextButton(onPressed: () => _search(controller.text), child: const Text('Coba lagi'))])),
           if (controller.text.trim().isEmpty && !loading)
             GlassPanel(blur: 12, child: Column(children: [
               Container(width: 64, height: 64, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(22)), child: Icon(Icons.price_check_rounded, size: 32, color: Theme.of(context).colorScheme.primary)),
@@ -647,7 +651,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
                       FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(rupiah(p.price), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.primary))),
                     ])),
                     const SizedBox(width: 8),
-                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: !p.stockKnown ? const Color(0xFF87909B).withValues(alpha: 0.13) : (p.stock > 0 ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.16) : Colors.red.withValues(alpha: 0.12)), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: !p.stockKnown ? (dark ? DsheVisualTokens.statusUnknownDark : DsheVisualTokens.statusUnknown).withValues(alpha: 0.13) : (p.stock > 0 ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.16) : (dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError).withValues(alpha: 0.12)), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                       Text(!p.stockKnown ? 'STOK BELUM ADA' : (p.stock > 0 ? 'TERSEDIA' : 'HABIS'), style: TextStyle(fontSize: 10, letterSpacing: 0.4, fontWeight: FontWeight.w900, color: !p.stockKnown ? muted : (p.stock > 0 ? Theme.of(context).colorScheme.primary : Colors.redAccent))),
                       Text(p.stockKnown ? 'Stok ${p.stock}' : 'Stok —', style: TextStyle(fontWeight: FontWeight.w800, color: !p.stockKnown ? muted : (p.stock > 0 ? null : Colors.redAccent))),
                     ])),
@@ -723,6 +727,6 @@ class _ProductsPageState extends State<ProductsPage>{
 class HistoryPage extends StatefulWidget {const HistoryPage({super.key,required this.db});final PosDatabase db;@override State<HistoryPage> createState()=>_HistoryPageState();}
 class _HistoryPageState extends State<HistoryPage>{@override Widget build(BuildContext context)=>FutureBuilder<List<PosTransaction>>(future:widget.db.recentTransactions(),builder:(ctx,s)=>ListView(padding:const EdgeInsets.all(14),children:[
   Text('Riwayat transaksi',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),const SizedBox(height:12),
-  if(s.hasError)Text('Gagal membaca riwayat: ${s.error}') else if(!s.hasData)const Center(child:CircularProgressIndicator()) else if(s.data!.isEmpty)const Card(child:Padding(padding:EdgeInsets.all(22),child:Text('Belum ada transaksi tersimpan.'))) else ...s.data!.map((t)=>Card(child:ListTile(leading:const CircleAvatar(child:Icon(Icons.receipt_long)),title:Text('Transaksi #${t.id}'),subtitle:Text('${t.createdAt.replaceFirst('T',' ').split('.').first} • ${t.paymentMethod}'),trailing:Text(rupiah(t.total),style:const TextStyle(fontWeight:FontWeight.w800)))))
+  if(s.hasError)Text('Gagal membaca riwayat: ${s.error}') else if(!s.hasData)const Center(child:CircularProgressIndicator()) else if(s.data!.isEmpty)const Card(child:Padding(padding:EdgeInsets.all(22),child:Text('Belum ada transaksi tersimpan.'))) else ...s.data!.map((t)=>Card(child:ListTile(leading:const CircleAvatar(child:Icon(Icons.receipt_long_rounded)),title:Text('Transaksi #${t.id}'),subtitle:Text('${t.createdAt.replaceFirst('T',' ').split('.').first} • ${t.paymentMethod}'),trailing:Text(rupiah(t.total),style:const TextStyle(fontWeight:FontWeight.w800)))))
 ]));}
 class ReportsPage extends StatelessWidget {const ReportsPage({super.key});@override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(16),children:[Text('Laporan',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),const SizedBox(height:12),const Card(child:Padding(padding:EdgeInsets.all(18),child:Text('Ringkasan laporan akan tersedia setelah migrasi data lama dan verifikasi perhitungan selesai. Gunakan menu Riwayat untuk memeriksa transaksi Flutter yang tersimpan.')))]);}
