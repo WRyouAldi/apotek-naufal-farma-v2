@@ -6,6 +6,32 @@ import 'cloud_catalog_sync.dart';
 import 'models.dart';
 import 'pos_database.dart';
 
+/// Single source of truth for the locked Pearl Crystal / Charcoal Silver palette.
+/// Keep screen components theme-aware; avoid introducing local color variants.
+abstract final class DsheVisualTokens {
+  // Pearl Crystal
+  static const pearlBackground = Color(0xFFF1F3F6);
+  static const pearlSurface = Color(0xFFFFFFFF);
+  static const pearlSurfaceTint = Color(0xFFE8EDF2);
+  static const pearlBorder = Color(0xFFD6DCE3);
+  static const pearlSecondaryText = Color(0xFF5C6570);
+  static const pearlText = Color(0xFF20252B);
+  static const pearlAccent = DsheVisualTokens.pearlAccent;
+
+  // Charcoal Silver
+  static const charcoalBackground = Color(0xFF111317);
+  static const charcoalSurface = Color(0xFF20242A);
+  static const charcoalRaised = Color(0xFF2A3038);
+  static const charcoalBorder = Color(0xFF454D57);
+  static const charcoalSecondaryText = Color(0xFFB9C1CB);
+  static const charcoalText = Color(0xFFF1F3F6);
+  static const silverAccent = DsheVisualTokens.silverAccent;
+
+  // Shared glass treatment
+  static const glassTint = Color(0xFFE8F0F1);
+  static const glassHighlight = Color(0xFFF8F9FB);
+}
+
 void main() => runApp(const DsheFarmaApp());
 
 String rupiah(int value) => NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(value);
@@ -27,37 +53,37 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
     ),
   );
   ThemeData _theme(bool dark) {
-    const pearlAccent = Color(0xFF7D9CA5);
-    const silverAccent = Color(0xFFAAB5C2);
+    const pearlAccent = DsheVisualTokens.pearlAccent;
+    const silverAccent = DsheVisualTokens.silverAccent;
     final scheme = ColorScheme.fromSeed(
       seedColor: dark ? silverAccent : pearlAccent,
       brightness: dark ? Brightness.dark : Brightness.light,
-      surface: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
+      surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
     ).copyWith(
       primary: dark ? silverAccent : pearlAccent,
       onPrimary: dark ? const Color(0xFF20242A) : Colors.white,
       secondary: dark ? const Color(0xFF8995A3) : const Color(0xFF9AAAB5),
-      surface: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
-      onSurface: dark ? const Color(0xFFF1F3F6) : const Color(0xFF20252B),
-      outline: dark ? const Color(0xFF454D57) : const Color(0xFFD6DCE3),
+      surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
+      onSurface: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlText,
+      outline: dark ? DsheVisualTokens.charcoalBorder : DsheVisualTokens.pearlBorder,
     );
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: dark ? const Color(0xFF111317) : const Color(0xFFF1F3F6),
+      scaffoldBackgroundColor: dark ? DsheVisualTokens.charcoalBackground : DsheVisualTokens.pearlBackground,
       appBarTheme: AppBarTheme(
-        backgroundColor: (dark ? const Color(0xFF20242A) : const Color(0xFFFDFEFF)).withValues(alpha: 0.72),
-        foregroundColor: dark ? const Color(0xFFF1F3F6) : const Color(0xFF20252B),
+        backgroundColor: (dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface).withValues(alpha: 0.72),
+        foregroundColor: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlText,
         elevation: 0,
       ),
       cardTheme: CardThemeData(
-        color: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
+        color: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(22),
-          side: BorderSide(color: dark ? const Color(0xFF454D57) : const Color(0xFFD6DCE3)),
+          side: BorderSide(color: dark ? DsheVisualTokens.charcoalBorder : DsheVisualTokens.pearlBorder),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -175,7 +201,7 @@ class _PosShellState extends State<PosShell> {
       const MorePage(),
     ];
     return Scaffold(
-      appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.62)))), title: Row(children: [
+      appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : DsheVisualTokens.glassHighlight).withValues(alpha: 0.62)))), title: Row(children: [
         DsheFarmaLogo(size: 42, isDark: widget.isDark),
         const SizedBox(width:10), const Expanded(child: Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text("Apotek D'she Farma",maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(fontWeight:FontWeight.w800,fontSize:17)),Text('POINT OF SALE',style:TextStyle(fontSize:10,letterSpacing:1.4))]))
       ]), actions:[IconButton(tooltip:'Ganti tema',onPressed:widget.toggleTheme,icon:Icon(widget.isDark?Icons.light_mode_rounded:Icons.dark_mode_rounded))]),
@@ -259,7 +285,7 @@ class GlassPanel extends StatelessWidget {
               end: Alignment.bottomRight,
               colors: dark
                   ? [const Color(0xFF343A43).withValues(alpha: 0.76), const Color(0xFF202329).withValues(alpha: 0.84)]
-                  : [Colors.white.withValues(alpha: 0.82), const Color(0xFFE8F0F1).withValues(alpha: 0.72)],
+                  : [Colors.white.withValues(alpha: 0.82), DsheVisualTokens.glassTint.withValues(alpha: 0.72)],
             ),
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(color: dark ? Colors.white.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.88), width: 1),
@@ -280,7 +306,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final muted = dark ? const Color(0xFFC1C7D0) : const Color(0xFF66717D);
+    final muted = dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -305,15 +331,15 @@ class HomePage extends StatelessWidget {
                 children: [
                   Positioned(right: -16, top: -24, child: Container(
                     width: 132, height: 132,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFADB8C4).withValues(alpha: dark ? 0.12 : 0.20)),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: DsheVisualTokens.silverAccent.withValues(alpha: dark ? 0.12 : 0.20)),
                   )),
-                  Positioned(right: 18, top: 12, child: Icon(Icons.spa_rounded, size: 58, color: const Color(0xFFADB8C4).withValues(alpha: 0.58))),
+                  Positioned(right: 18, top: 12, child: Icon(Icons.spa_rounded, size: 58, color: DsheVisualTokens.silverAccent.withValues(alpha: 0.58))),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(30)),
+                        decoration: BoxDecoration(color: DsheVisualTokens.silverAccent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(30)),
                         child: Text('APOTEK • POS MOBILE', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.w800, letterSpacing: 1.3, fontSize: 10)),
                       ),
                       const SizedBox(height: 18),
@@ -359,7 +385,7 @@ class HomePage extends StatelessWidget {
               blur: 12,
               radius: 22,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.shield_outlined, color: Theme.of(context).colorScheme.primary)),
+                Container(width: 42, height: 42, decoration: BoxDecoration(color: DsheVisualTokens.silverAccent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.shield_outlined, color: Theme.of(context).colorScheme.primary)),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text('Pemeriksaan data', style: TextStyle(fontWeight: FontWeight.w800)),
@@ -390,7 +416,7 @@ class MetricCard extends StatelessWidget {
       const SizedBox(height: 14),
       AnimatedSwitcher(duration: const Duration(milliseconds: 280), transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: SlideTransition(position: Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero).animate(animation), child: child)), child: Text(value, key: ValueKey(value), style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.5))),
       const SizedBox(height: 4),
-      Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFFC1C7D0) : const Color(0xFF66717D))),
+      Text(label, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText)),
     ]),
   );
 }
@@ -538,7 +564,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
 
   @override Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final muted = dark ? const Color(0xFFC1C7D0) : const Color(0xFF66717D);
+    final muted = dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText;
     return Container(
       decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: dark ? [const Color(0xFF20242A), const Color(0xFF17191D)] : [const Color(0xFFF7FAFB), const Color(0xFFE9EFF1)])),
       child: ListView(
