@@ -16,7 +16,7 @@ abstract final class DsheVisualTokens {
   static const pearlBorder = Color(0xFFD6DCE3);
   static const pearlSecondaryText = Color(0xFF5C6570);
   static const pearlText = Color(0xFF20252B);
-  static const pearlAccent = DsheVisualTokens.pearlAccent;
+  static const pearlAccent = Color(0xFF7D9CA5);
 
   // Charcoal Silver
   static const charcoalBackground = Color(0xFF111317);
@@ -25,7 +25,7 @@ abstract final class DsheVisualTokens {
   static const charcoalBorder = Color(0xFF454D57);
   static const charcoalSecondaryText = Color(0xFFB9C1CB);
   static const charcoalText = Color(0xFFF1F3F6);
-  static const silverAccent = DsheVisualTokens.silverAccent;
+  static const silverAccent = Color(0xFFAAB5C2);
 
   // Shared glass treatment
   static const glassTint = Color(0xFFE8F0F1);
@@ -333,7 +333,7 @@ class HomePage extends StatelessWidget {
                     width: 132, height: 132,
                     decoration: BoxDecoration(shape: BoxShape.circle, color: DsheVisualTokens.silverAccent.withValues(alpha: dark ? 0.12 : 0.20)),
                   )),
-                  Positioned(right: 18, top: 12, child: Icon(Icons.spa_rounded, size: 58, color: DsheVisualTokens.silverAccent.withValues(alpha: 0.58))),
+                  Positioned(right: 18, top: 12, child: DsheFarmaLogo(size: 76, isDark: dark)),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
