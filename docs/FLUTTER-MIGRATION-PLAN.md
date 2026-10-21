@@ -56,3 +56,30 @@ Replace the legacy WebView POS gradually, without losing existing pharmacy opera
 - Negative or missing source stock is stored as zero with `stock_known=0` so it is not represented as verified inventory. The count of negative source rows is surfaced to the operator.
 - This is **one-way cloud-to-device catalog sync**. It does not yet upload local changes, synchronize transactions across devices, or automatically run in the background. The schema currently maps code/barcode/name/selling price/stock; cost, category, unit, minimum stock, rack, supplier and notes still need schema/UI migration.
 - CI must validate this commit before treating the new sync flow as build-verified. Real-device network and offline tests remain required.
+
+
+## Visual design execution log (2026-10-21)
+
+### Design lock
+- `docs/FLUTTER_UI_UX_DESIGN_LOCK_DSHE_FARMA.md` is the visual source of truth.
+- Reference direction: monochrome silver glassmorphism, Pearl Crystal light theme, Charcoal Silver dark theme, floating capsule navigation.
+- Legacy `docs/index.html` remains unchanged and is still the fallback.
+
+### P1 — visual foundation (implementation in progress)
+- Updated Flutter theme tokens toward pearl/charcoal/silver neutrals.
+- Reduced dependence on saturated green in the home hero and logo treatment.
+- Validation status: source updated; CI and Android rendering verification still required.
+
+### P2 — core components (implementation in progress)
+- Reworked mobile bottom navigation into a floating, rounded, blurred capsule with safe-area spacing.
+- Glass panel and theme tokens remain shared foundations.
+- Validation status: source updated; CI and device comparison still required.
+
+### P3 — screen-wide consistency
+- Not yet accepted. Cek Harga, Kasir, QRIS, Lainnya, sheets/dialogs, empty/error/loading states and logo placements require a systematic light/dark review.
+
+### P4 — motion, responsiveness and final verification
+- Not yet accepted. Requires reduced-motion review, keyboard/safe-area checks, narrow-screen checks, scanner lifecycle checks, automated tests, clean Android builds and device/emulator screenshot comparison.
+
+### Honest release gate
+No phase is marked 100% complete until its acceptance checks pass. A code commit alone is not proof of a successful build or visual match. Do not use the Flutter branch for live sales until database/stock/payment and device checks pass.
