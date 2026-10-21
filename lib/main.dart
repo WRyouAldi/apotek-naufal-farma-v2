@@ -27,17 +27,17 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
     ),
   );
   ThemeData _theme(bool dark) {
-    const pearlAccent = Color(0xFF8FA5B0);
-    const silverAccent = Color(0xFFADB8C4);
+    const pearlAccent = Color(0xFF7D9CA5);
+    const silverAccent = Color(0xFFAAB5C2);
     final scheme = ColorScheme.fromSeed(
       seedColor: dark ? silverAccent : pearlAccent,
       brightness: dark ? Brightness.dark : Brightness.light,
       surface: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
     ).copyWith(
-      primary: dark ? silverAccent : const Color(0xFF657F8B),
+      primary: dark ? silverAccent : pearlAccent,
       onPrimary: dark ? const Color(0xFF20242A) : Colors.white,
       secondary: dark ? const Color(0xFF8995A3) : const Color(0xFF9AAAB5),
-      surface: dark ? const Color(0xFF20242A) : const Color(0xFFFDFEFF),
+      surface: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
       onSurface: dark ? const Color(0xFFF1F3F6) : const Color(0xFF20252B),
       outline: dark ? const Color(0xFF454D57) : const Color(0xFFD6DCE3),
     );
@@ -52,6 +52,7 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
       ),
       cardTheme: CardThemeData(
         color: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
@@ -406,7 +407,26 @@ class _CashierPageState extends State<CashierPage> {
   @override void initState(){super.initState();_search('');}
   @override void dispose(){search.dispose();cash.dispose();super.dispose();}
   Future<void> _search(String q) async {setState(()=>loading=true);try{final list=await widget.db.searchProducts(q);if(mounted)setState(()=>results=list);}catch(e){if(mounted)setState(()=>status='Gagal membaca barang: $e');}finally{if(mounted)setState(()=>loading=false);}}
-  void _add(Product p){if(p.id==null)return;setState((){final old=cart[p.id!];if(old!=null){cart[p.id!]=CartLine(product:p,quantity:old.quantity+1);}else{cart[p.id!]=CartLine(product:p,quantity:1);}status='${p.name} ditambahkan ke daftar.';});}
+  void _add(Product p) {
+    if (p.id == null) return;
+    if (!p.stockKnown) {
+      setState(() => status = 'Stok ${p.name} belum terverifikasi. Sinkronkan/perbarui stok sebelum transaksi.');
+      return;
+    }
+    if (p.stock <= 0) {
+      setState(() => status = 'Stok ${p.name} habis. Barang tidak ditambahkan.');
+      return;
+    }
+    final current = cart[p.id!]?.quantity ?? 0;
+    if (current >= p.stock) {
+      setState(() => status = 'Jumlah ${p.name} melebihi stok tersedia (${p.stock}).');
+      return;
+    }
+    setState(() {
+      cart[p.id!] = CartLine(product: p, quantity: current + 1);
+      status = '${p.name} ditambahkan ke daftar.';
+    });
+  }
   Future<void> _scan() async {final code=await Navigator.of(context).push<String>(MaterialPageRoute(builder:(_)=>const BarcodePage()));if(code==null||!mounted)return;search.text=code;final p=await widget.db.findByBarcode(code);if(p!=null){_add(p);}else{await _search(code);setState(()=>status='Barcode tidak ditemukan. Periksa data barang.');}}
   Future<void> _checkout() async {
     if(cart.isEmpty){setState(()=>status='Keranjang masih kosong.');return;}
