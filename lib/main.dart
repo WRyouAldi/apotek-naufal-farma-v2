@@ -27,13 +27,46 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
     ),
   );
   ThemeData _theme(bool dark) {
-    const green = Color(0xFF398C76);
-    final scheme = ColorScheme.fromSeed(seedColor: green, brightness: dark ? Brightness.dark : Brightness.light, surface: dark ? const Color(0xFF24282E) : const Color(0xFFFCFCFD));
-    return ThemeData(useMaterial3: true, colorScheme: scheme,
-      scaffoldBackgroundColor: dark ? const Color(0xFF17191D) : const Color(0xFFF2F4F7),
-      appBarTheme: AppBarTheme(backgroundColor: (dark ? const Color(0xFF22252A) : const Color(0xFFF8F9FB)).withValues(alpha: 0.72), foregroundColor: dark ? const Color(0xFFF2F4F7) : const Color(0xFF202833), elevation: 0),
-      cardTheme: CardThemeData(color: dark ? const Color(0xFF292D33) : Colors.white, elevation: 0, margin: EdgeInsets.zero, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: dark ? const Color(0xFF484F59) : const Color(0xFFE2E6EC)))),
-      inputDecorationTheme: InputDecorationTheme(filled: true, fillColor: dark ? const Color(0xFF1D2025) : Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)), contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13)),
+    const pearlAccent = Color(0xFF8FA5B0);
+    const silverAccent = Color(0xFFADB8C4);
+    final scheme = ColorScheme.fromSeed(
+      seedColor: dark ? silverAccent : pearlAccent,
+      brightness: dark ? Brightness.dark : Brightness.light,
+      surface: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
+    ).copyWith(
+      primary: dark ? silverAccent : const Color(0xFF657F8B),
+      onPrimary: dark ? const Color(0xFF20242A) : Colors.white,
+      secondary: dark ? const Color(0xFF8995A3) : const Color(0xFF9AAAB5),
+      surface: dark ? const Color(0xFF20242A) : const Color(0xFFFDFEFF),
+      onSurface: dark ? const Color(0xFFF1F3F6) : const Color(0xFF20252B),
+      outline: dark ? const Color(0xFF454D57) : const Color(0xFFD6DCE3),
+    );
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: dark ? const Color(0xFF111317) : const Color(0xFFF1F3F6),
+      appBarTheme: AppBarTheme(
+        backgroundColor: (dark ? const Color(0xFF20242A) : const Color(0xFFFDFEFF)).withValues(alpha: 0.72),
+        foregroundColor: dark ? const Color(0xFFF1F3F6) : const Color(0xFF20252B),
+        elevation: 0,
+      ),
+      cardTheme: CardThemeData(
+        color: dark ? const Color(0xFF20242A) : const Color(0xFFFFFFFF),
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22),
+          side: BorderSide(color: dark ? const Color(0xFF454D57) : const Color(0xFFD6DCE3)),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: dark ? const Color(0xFF1A1D22) : const Color(0xFFFFFFFF).withValues(alpha: 0.84),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outline)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.7))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.primary, width: 1.4)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
     );
   }
 }
@@ -81,8 +114,8 @@ class _DsheMarkPainter extends CustomPainter {
     final scale = size.width / 42;
     canvas.save();
     canvas.scale(scale);
-    final ink = isDark ? const Color(0xFFE1E7EE) : const Color(0xFF376E67);
-    final accent = isDark ? const Color(0xFFB7C2CF) : const Color(0xFF78BEB0);
+    final ink = isDark ? const Color(0xFFE1E7EE) : const Color(0xFF53616D);
+    final accent = isDark ? const Color(0xFFB7C2CF) : const Color(0xFF9AAAB5);
 
     // Geometric D monogram, deliberately drawn rather than using a stock icon.
     final d = Path()
@@ -150,7 +183,7 @@ class _PosShellState extends State<PosShell> {
         if(wide) NavigationRail(selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelType:NavigationRailLabelType.all,destinations:List.generate(labels.length,(i)=>NavigationRailDestination(icon:Icon(icons[i]),label:Text(labels[i])))),
         Expanded(child:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:1000),child:IndexedStack(index:selected,children:pages))))
       ]),
-      bottomNavigationBar:wide?null:ClipRect(child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:24,sigmaY:24),child:Container(decoration:BoxDecoration(color:(widget.isDark?const Color(0xFF17191D):const Color(0xFFF8FAFC)).withValues(alpha:0.70),border:Border(top:BorderSide(color:widget.isDark?const Color(0xFF484F59):const Color(0xFFDDE4E9)))),child:NavigationBar(backgroundColor:Colors.transparent,elevation:0,selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,destinations:List.generate(labels.length,(i)=>NavigationDestination(icon:Icon(icons[i]),label:labels[i])))))),
+      bottomNavigationBar:wide?null:SafeArea(top:false,minimum:const EdgeInsets.fromLTRB(14,0,14,10),child:Padding(padding:const EdgeInsets.only(top:8),child:ClipRRect(borderRadius:BorderRadius.circular(36),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:24,sigmaY:24),child:Container(height:68,decoration:BoxDecoration(color:(widget.isDark?const Color(0xFF2A2E35):const Color(0xFFE9EDF2)).withValues(alpha:0.82),borderRadius:BorderRadius.circular(36),border:Border.all(color:widget.isDark?const Color(0xFF69727E).withValues(alpha:0.48):Colors.white.withValues(alpha:0.95)),boxShadow:[BoxShadow(color:Colors.black.withValues(alpha:widget.isDark?0.24:0.08),blurRadius:24,offset:const Offset(0,8))]),child:NavigationBar(height:68,backgroundColor:Colors.transparent,indicatorColor:widget.isDark?const Color(0xFF59616C):const Color(0xFFFFFFFF),surfaceTintColor:Colors.transparent,elevation:0,selectedIndex:selected,onDestinationSelected:(i)=>setState(()=>selected=i),labelBehavior:NavigationDestinationLabelBehavior.alwaysShow,destinations:List.generate(labels.length,(i)=>NavigationDestination(icon:Icon(icons[i]),label:labels[i]))))))),
     );
   }
 }
@@ -223,15 +256,15 @@ class HomePage extends StatelessWidget {
                 children: [
                   Positioned(right: -16, top: -24, child: Container(
                     width: 132, height: 132,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFF6DC8AE).withValues(alpha: dark ? 0.13 : 0.20)),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xFFADB8C4).withValues(alpha: dark ? 0.12 : 0.20)),
                   )),
-                  Positioned(right: 18, top: 12, child: Icon(Icons.spa_rounded, size: 58, color: const Color(0xFF77CDB5).withValues(alpha: 0.65))),
+                  Positioned(right: 18, top: 12, child: Icon(Icons.spa_rounded, size: 58, color: const Color(0xFFADB8C4).withValues(alpha: 0.58))),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(color: const Color(0xFF6DC8AE).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(30)),
+                        decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(30)),
                         child: const Text('APOTEK • POS MOBILE', style: TextStyle(color: Color(0xFF65B99F), fontWeight: FontWeight.w800, letterSpacing: 1.3, fontSize: 10)),
                       ),
                       const SizedBox(height: 18),
@@ -247,7 +280,7 @@ class HomePage extends StatelessWidget {
                           onPressed: openCashier,
                           icon: const Icon(Icons.point_of_sale_rounded),
                           label: const Padding(padding: EdgeInsets.symmetric(vertical: 4), child: Text('Buka kasir')),
-                          style: FilledButton.styleFrom(backgroundColor: const Color(0xFF398C76), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+                          style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
                         ),
                       ),
                     ],
@@ -258,7 +291,7 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 22),
             Row(children: [
               Expanded(child: Text('Ringkasan', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800))),
-              Icon(Icons.auto_awesome_rounded, color: const Color(0xFF65B99F).withValues(alpha: 0.9), size: 20),
+              Icon(Icons.auto_awesome_rounded, color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.9), size: 20),
             ]),
             const SizedBox(height: 12),
             FutureBuilder<List<int>>(
@@ -277,7 +310,7 @@ class HomePage extends StatelessWidget {
               blur: 12,
               radius: 22,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.shield_outlined, color: Color(0xFF65B99F))),
+                Container(width: 42, height: 42, decoration: BoxDecoration(color: const Color(0xFFADB8C4).withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: const Icon(Icons.shield_outlined, color: Color(0xFF65B99F))),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text('Pemeriksaan data', style: TextStyle(fontWeight: FontWeight.w800)),
