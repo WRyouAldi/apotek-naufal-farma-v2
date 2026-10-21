@@ -222,6 +222,23 @@ The Flutter implementation uses `DsheVisualTokens` in `lib/main.dart` as the sin
 - [ ] Narrow-screen, keyboard, and system-bar behavior is checked.
 - [ ] Remaining limitations are documented before release.
 
+
+## 14.1 Visual audit log — 2026-10-21
+
+**Scope audited:** Flutter source in `lib/main.dart`, theme tokens, all current `Card` call sites, icon variants, and color/status usages. This is a source audit; it is not a substitute for Android rendering checks.
+
+- [x] Consolidated palette, icon semantics, glass colors, radii, and blur defaults under `DsheVisualTokens`.
+- [x] Standardized all current Material icon references to the rounded family.
+- [x] Replaced ad hoc red status colors with theme-aware semantic error tokens.
+- [x] Corrected primary-button foreground to use dark text on the Pearl accent; estimated contrast is 5.27:1.
+- [x] Added `test/visual_system_test.dart` to lock token values and assert WCAG AA contrast (4.5:1) for key primary/secondary/error text pairs.
+- [x] Standardized `CardThemeData` geometry, border, and theme-aware surface as a readable non-blurred fallback; use `GlassPanel` only for highlighted surfaces so long lists do not stack expensive blur layers.
+- [ ] Run CI `flutter analyze`, `flutter test`, and Android debug APK build on the audited commit.
+- [ ] Inspect Pearl Crystal and Charcoal Silver on Android emulator/device, including keyboard, narrow screen, and safe areas.
+- [ ] Verify launcher icon and splash branding against the final owner-approved logo asset.
+
+**Audit status:** source-level consistency improved; visual release acceptance remains **PENDING** until CI and Android rendering checks pass. Do not mark the visual checklist as complete based on source inspection alone.
+
 ## 15. Change-control rule
 
 This document is the visual source of truth. Do not change the theme direction, navigation order, brand name, or core interaction rules without an explicit owner request.
