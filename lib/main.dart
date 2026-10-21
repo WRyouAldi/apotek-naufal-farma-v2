@@ -619,7 +619,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
             ])),
           if (controller.text.trim().isNotEmpty && !loading && error == null && results.isEmpty)
             GlassPanel(child: Column(children: [
-              const Icon(Icons.search_rounded_off_rounded, size: 36),
+              const Icon(Icons.search_off_rounded, size: 36),
               const SizedBox(height: 8),
               const Text('Barang tidak ditemukan', style: TextStyle(fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
