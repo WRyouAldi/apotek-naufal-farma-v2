@@ -478,7 +478,7 @@ class _CashierPageState extends State<CashierPage> {
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
     Text('Kasir',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),
     const SizedBox(height:4),Text('Input barang → daftar item → periksa total → checkout.',style:Theme.of(context).textTheme.bodySmall),
-    const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
+    const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
     const SizedBox(height:8),if(loading)const LinearProgressIndicator(),
     if(search.text.isNotEmpty||results.isNotEmpty)Card(child:ConstrainedBox(constraints:const BoxConstraints(maxHeight:220),child:results.isEmpty?const Padding(padding:EdgeInsets.all(14),child:Text('Barang tidak ditemukan. Tambahkan data di menu Barang.')):ListView.separated(shrinkWrap:true,itemCount:results.length,itemBuilder:(ctx,i){final p=results[i];return ListTile(dense:true,title:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis),subtitle:Text('${p.code} • ${p.stockKnown ? 'Stok ${p.stock}' : 'Stok belum terverifikasi'}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.add_circle_outline,size:18)]),onTap:()=>_add(p));},separatorBuilder:(_,__)=>const Divider(height:1)))),
     const SizedBox(height:12),Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
@@ -581,7 +581,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final muted = dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText;
     return Container(
-      decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: dark ? [const Color(0xFF20242A), const Color(0xFF17191D)] : [const Color(0xFFF7FAFB), const Color(0xFFE9EFF1)])),
+      decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: dark ? [DsheVisualTokens.charcoalSurface, DsheVisualTokens.charcoalBackground] : [DsheVisualTokens.pearlSurface, DsheVisualTokens.pearlBackground])),
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
         children: [
@@ -595,7 +595,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
               textInputAction: TextInputAction.search,
               onChanged: _search,
               onSubmitted: _search,
-              decoration: const InputDecoration(prefixIcon: Icon(Icons.search_rounded_rounded), hintText: 'Nama barang / kode / barcode', border: InputBorder.none, filled: false),
+              decoration: const InputDecoration(prefixIcon: Icon(Icons.search_rounded), hintText: 'Nama barang / kode / barcode', border: InputBorder.none, filled: false),
             )),
             const SizedBox(width: 6),
             IconButton.filledTonal(tooltip: 'Scan barcode', onPressed: _scan, icon: const Icon(Icons.qr_code_scanner_rounded)),
@@ -627,7 +627,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
               padding: const EdgeInsets.only(bottom: 10),
               child: GlassPanel(blur: 12, radius: 20, padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Container(width: 42, height: 42, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.medication_outlined, color: Theme.of(context).colorScheme.primary)),
+                  Container(width: 42, height: 42, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.medication_rounded, color: Theme.of(context).colorScheme.primary)),
                   const SizedBox(width: 12),
                   Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text(p.name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
