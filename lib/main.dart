@@ -758,16 +758,52 @@ class ProductsPage extends StatefulWidget {const ProductsPage({super.key,require
 class _ProductsPageState extends State<ProductsPage>{
   final search=TextEditingController();List<Product> items=[];@override void initState(){super.initState();_load();}@override void dispose(){search.dispose();super.dispose();}
   Future<void> _load()async{final r=await widget.db.searchProducts(search.text);if(mounted)setState(()=>items=r);}
-  Future<void> _edit([Product? p])async{final name=TextEditingController(text:p?.name??'');final code=TextEditingController(text:p?.code??'');final barcode=TextEditingController(text:p?.barcode??'');final price=TextEditingController(text:p?.price.toString()??'');final stock=TextEditingController(text:p?.stock.toString()??'');final form=GlobalKey<FormState>();
-    final save=await showDialog<bool>(context:context,builder:(ctx)=>AlertDialog(title:Text(p==null?'Tambah barang':'Edit barang'),content:Form(key:form,child:SingleChildScrollView(child:Column(mainAxisSize:MainAxisSize.min,children:[
-      TextFormField(controller:name,decoration:const InputDecoration(labelText:'Nama barang'),validator:(v)=>v==null||v.trim().isEmpty?'Wajib diisi':null),
-      TextFormField(controller:code,decoration:const InputDecoration(labelText:'Kode barang')),
-      TextFormField(controller:barcode,decoration:const InputDecoration(labelText:'Barcode')),
-      TextFormField(controller:price,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Harga jual (Rp)'),validator:(v)=>int.tryParse(v??'')==null?'Masukkan angka valid':null),
-      TextFormField(controller:stock,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Stok'),validator:(v)=>int.tryParse(v??'')==null?'Masukkan angka valid':null),
-    ]))),actions:[TextButton(onPressed:()=>Navigator.pop(ctx,false),child:const Text('Batal')),FilledButton(onPressed:()=>Navigator.pop(ctx,form.currentState!.validate()),child:const Text('Simpan'))]));
-    if(save==true){await widget.db.saveProduct(Product(id:p?.id,name:name.text,code:code.text,barcode:barcode.text,price:int.parse(price.text),stock:int.parse(stock.text),stockKnown:p?.stockKnown??true,category:p?.category??'',brand:p?.brand??'',unit:p?.unit??'',costPrice:p?.costPrice??0,minStock:p?.minStock??0,rack:p?.rack??'',supplier:p?.supplier??'',notes:p?.notes??''));await _load();}
-    for(final c in [name,code,barcode,price,stock]){c.dispose();}
+  Future<void> _edit([Product? p])async{
+    final name=TextEditingController(text:p?.name??'');
+    final code=TextEditingController(text:p?.code??'');
+    final barcode=TextEditingController(text:p?.barcode??'');
+    final price=TextEditingController(text:p?.price.toString()??'');
+    final stock=TextEditingController(text:p?.stock.toString()??'0');
+    final category=TextEditingController(text:p?.category??'');
+    final brand=TextEditingController(text:p?.brand??'');
+    final unit=TextEditingController(text:p?.unit??'');
+    final costPrice=TextEditingController(text:p?.costPrice.toString()??'0');
+    final minStock=TextEditingController(text:p?.minStock.toString()??'0');
+    final rack=TextEditingController(text:p?.rack??'');
+    final supplier=TextEditingController(text:p?.supplier??'');
+    final notes=TextEditingController(text:p?.notes??'');
+    final form=GlobalKey<FormState>();
+    var stockKnown=p?.stockKnown??false;
+    final save=await showDialog<bool>(context:context,builder:(ctx)=>StatefulBuilder(builder:(ctx,setDialogState)=>AlertDialog(
+      title:Text(p==null?'Tambah barang':'Edit barang'),
+      content:Form(key:form,child:SingleChildScrollView(child:Column(mainAxisSize:MainAxisSize.min,children:[
+        TextFormField(controller:name,decoration:const InputDecoration(labelText:'Nama barang'),validator:(v)=>v==null||v.trim().isEmpty?'Nama wajib diisi':null),
+        TextFormField(controller:code,decoration:const InputDecoration(labelText:'Kode barang'),validator:(v)=>v==null||v.trim().isEmpty?'Kode wajib diisi':null),
+        TextFormField(controller:barcode,decoration:const InputDecoration(labelText:'Barcode (opsional)')),
+        TextFormField(controller:price,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Harga jual (Rp)'),validator:(v)=>int.tryParse(v??'')==null||(int.tryParse(v!)??-1)<0?'Masukkan angka ≥ 0':null),
+        TextFormField(controller:costPrice,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Harga beli (Rp)'),validator:(v)=>int.tryParse(v??'')==null||(int.tryParse(v!)??-1)<0?'Masukkan angka ≥ 0':null),
+        TextFormField(controller:stock,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Jumlah stok'),validator:(v)=>int.tryParse(v??'')==null||(int.tryParse(v!)??-1)<0?'Masukkan angka ≥ 0':null),
+        CheckboxListTile(contentPadding:EdgeInsets.zero,value:stockKnown,onChanged:(v)=>setDialogState(()=>stockKnown=v??false),title:const Text('Stok sudah diverifikasi'),subtitle:const Text('Centang hanya setelah menghitung stok fisik.'),controlAffinity:ListTileControlAffinity.leading),
+        TextFormField(controller:minStock,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Batas stok minimum'),validator:(v)=>int.tryParse(v??'')==null||(int.tryParse(v!)??-1)<0?'Masukkan angka ≥ 0':null),
+        TextFormField(controller:category,decoration:const InputDecoration(labelText:'Kategori')),
+        TextFormField(controller:brand,decoration:const InputDecoration(labelText:'Merek')),
+        TextFormField(controller:unit,decoration:const InputDecoration(labelText:'Satuan (tablet, botol, dll.)')),
+        TextFormField(controller:rack,decoration:const InputDecoration(labelText:'Lokasi rak')),
+        TextFormField(controller:supplier,decoration:const InputDecoration(labelText:'Pemasok')),
+        TextFormField(controller:notes,decoration:const InputDecoration(labelText:'Catatan'),maxLines:2),
+      ]))),
+      actions:[TextButton(onPressed:()=>Navigator.pop(ctx,false),child:const Text('Batal')),FilledButton(onPressed:()=>Navigator.pop(ctx,form.currentState!.validate()),child:const Text('Simpan'))]
+    )));
+    if(save==true){
+      try{
+        await widget.db.saveProduct(Product(id:p?.id,name:name.text,code:code.text,barcode:barcode.text,price:int.parse(price.text),stock:int.parse(stock.text),stockKnown:stockKnown,category:category.text.trim(),brand:brand.text.trim(),unit:unit.text.trim(),costPrice:int.parse(costPrice.text),minStock:int.parse(minStock.text),rack:rack.text.trim(),supplier:supplier.text.trim(),notes:notes.text.trim()));
+        await _load();
+        if(mounted)ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:Text('Data barang berhasil disimpan.')));
+      }catch(e){
+        if(mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text('Gagal menyimpan: $e')));
+      }
+    }
+    for(final c in [name,code,barcode,price,stock,category,brand,unit,costPrice,minStock,rack,supplier,notes]){c.dispose();}
   }
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
     Row(children:[Expanded(child:Text('Manajemen barang',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800))),IconButton.filled(onPressed:()=>_edit(),icon:const Icon(Icons.add_rounded))]),
