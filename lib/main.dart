@@ -773,7 +773,7 @@ class _ProductsPageState extends State<ProductsPage>{
     Row(children:[Expanded(child:Text('Manajemen barang',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800))),IconButton.filled(onPressed:()=>_edit(),icon:const Icon(Icons.add_rounded))]),
     const SizedBox(height:10),TextField(controller:search,onChanged:(_)=>_load(),decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Cari nama, kode, barcode')),
     const SizedBox(height:10),Text('${items.length} hasil (maks. 100 ditampilkan)',style:Theme.of(context).textTheme.bodySmall),
-    ...items.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.code} • ${p.barcode.isEmpty?'Tanpa barcode':p.barcode} • Stok ${p.stock}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.edit_rounded,size:16)]),onTap:()=>_edit(p)))),
+    ...items.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.code} • ${p.barcode.isEmpty?'Tanpa barcode':p.barcode} • ${p.stockKnown?'Stok ${p.stock}':'Stok belum diketahui'}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.edit_rounded,size:16)]),onTap:()=>_edit(p)))),
   ]);
 }
 
