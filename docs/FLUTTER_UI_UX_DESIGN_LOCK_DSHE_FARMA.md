@@ -68,9 +68,8 @@ These are starting tokens, not a requirement to use every color in every compone
 Primary mobile destinations remain:
 
 1. **Kasir**
-2. **QRIS**
-3. **Cek Harga**
-4. **Lainnya**
+2. **Cek Harga**
+3. **Lainnya**
 
 Requirements:
 - Use a floating capsule-style bottom navigation inspired by the reference.
@@ -114,13 +113,11 @@ Users must be able to check a product's price without adding it to a cart.
 - Provide feedback without relying on color alone.
 - Do not remove existing POS capabilities as part of a visual redesign.
 
-### 7.3 QRIS
+### 7.3 Removed payment feature
 
-- Keep QRIS accessible from primary navigation.
-- Display the approved QRIS asset and payment instructions when configured.
-- Do not imply payment succeeded merely because a QR image is displayed.
-- Distinguish static QR display from verified payment confirmation. Verified success requires a supported provider integration or confirmed operator workflow.
-- Do not invent transaction notifications or API credentials.
+- QRIS is intentionally excluded from the Flutter navigation and screen flow per owner instruction.
+- Non-cash payment labels must use generic transfer wording; do not display QRIS as an app feature.
+- Do not remove historical payment-method values from stored transactions unless a separate data migration is explicitly approved.
 
 ### 7.4 Lainnya
 
@@ -171,7 +168,7 @@ Use short, purposeful transitions: subtle navigation fade/slide, restrained card
 - Negative or invalid source stock must be marked unverified rather than silently represented as verified stock.
 - Failed cloud fetch/validation must not partially overwrite the local catalog.
 - Import must be transactional and must not delete local products merely because they are absent from the remote file.
-- Payment success must not be inferred from QR display alone.
+- QRIS is out of scope for the current Flutter UI; do not introduce a QRIS screen without explicit owner approval.
 - Transaction/stock updates must remain atomic.
 - Keep legacy `docs/index.html` unchanged as fallback until Flutter feature parity and device checks are accepted.
 
