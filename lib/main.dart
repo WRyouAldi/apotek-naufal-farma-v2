@@ -104,9 +104,9 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: dark ? DsheVisualTokens.charcoalRaised : DsheVisualTokens.pearlSurface.withValues(alpha: 0.92),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outline)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.7))),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(18), borderSide: BorderSide(color: scheme.primary, width: 1.4)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(DsheVisualTokens.radiusControl), borderSide: BorderSide(color: scheme.outline)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(DsheVisualTokens.radiusControl), borderSide: BorderSide(color: scheme.outline.withValues(alpha: 0.85))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(DsheVisualTokens.radiusControl), borderSide: BorderSide(color: scheme.primary, width: 1.6)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
     );
@@ -123,7 +123,7 @@ class DsheFarmaLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final edge = isDark ? const Color(0xFF6E7782) : const Color(0xFFFFFFFF);
+    final edge = isDark ? DsheVisualTokens.charcoalBorder : DsheVisualTokens.pearlSurface;
     return Container(
       width: size,
       height: size,
@@ -139,7 +139,7 @@ class DsheFarmaLogo extends StatelessWidget {
         border: Border.all(color: edge.withValues(alpha: isDark ? 0.52 : 0.92), width: 1.1),
         boxShadow: [
           BoxShadow(color: Colors.black.withValues(alpha: isDark ? 0.18 : 0.08), blurRadius: size * 0.22, offset: Offset(0, size * 0.08)),
-          BoxShadow(color: (isDark ? const Color(0xFFB6C0CD) : const Color(0xFFFFFFFF)).withValues(alpha: 0.42), blurRadius: size * 0.12, offset: Offset(-size * 0.03, -size * 0.03)),
+          BoxShadow(color: (isDark ? DsheVisualTokens.silverAccent : DsheVisualTokens.pearlSurface).withValues(alpha: 0.42), blurRadius: size * 0.12, offset: Offset(-size * 0.03, -size * 0.03)),
         ],
       ),
       child: CustomPaint(painter: _DsheMarkPainter(isDark: isDark)),
@@ -216,7 +216,7 @@ class _PosShellState extends State<PosShell> {
       const MorePage(),
     ];
     return Scaffold(
-      appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? const Color(0xFF22252A) : DsheVisualTokens.glassHighlight).withValues(alpha: 0.62)))), title: Row(children: [
+      appBar: AppBar(titleSpacing: 16, flexibleSpace: ClipRect(child: BackdropFilter(filter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: Container(color: (widget.isDark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface).withValues(alpha: 0.76)))), title: Row(children: [
         DsheFarmaLogo(size: 42, isDark: widget.isDark),
         const SizedBox(width:10), const Expanded(child: Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text("Apotek D'she Farma",maxLines:1,overflow:TextOverflow.ellipsis,style:TextStyle(fontWeight:FontWeight.w800,fontSize:17)),Text('POINT OF SALE',style:TextStyle(fontSize:10,letterSpacing:1.4))]))
       ]), actions:[IconButton(tooltip:'Ganti tema',onPressed:widget.toggleTheme,icon:Icon(widget.isDark?Icons.light_mode_rounded:Icons.dark_mode_rounded))]),
@@ -230,7 +230,7 @@ class _PosShellState extends State<PosShell> {
         child: Padding(
           padding: const EdgeInsets.only(top: 8),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(36),
+            borderRadius: BorderRadius.circular(DsheVisualTokens.radiusCapsule),
             child: BackdropFilter(
               filter: ui.ImageFilter.blur(sigmaX: DsheVisualTokens.blurNavigation, sigmaY: DsheVisualTokens.blurNavigation),
               child: Container(
@@ -391,7 +391,7 @@ class HomePage extends StatelessWidget {
                 return Row(children: [
                   Expanded(child: MetricCard(label: 'Transaksi hari ini', value: values.isNotEmpty ? values[0].toString() : (s.hasError ? '!' : '—'), icon: Icons.receipt_long_rounded)),
                   const SizedBox(width: 12),
-                  Expanded(child: MetricCard(label: 'Jumlah barang', value: values.length > 1 ? values[1].toString() : (s.hasError ? '!' : '—'), icon: Icons.inventory_2_outlined)),
+                  Expanded(child: MetricCard(label: 'Jumlah barang', value: values.length > 1 ? values[1].toString() : (s.hasError ? '!' : '—'), icon: Icons.inventory_2_rounded)),
                 ]);
               },
             ),
@@ -400,7 +400,7 @@ class HomePage extends StatelessWidget {
               blur: 12,
               radius: 22,
               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(width: 42, height: 42, decoration: BoxDecoration(color: DsheVisualTokens.silverAccent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.shield_outlined, color: Theme.of(context).colorScheme.primary)),
+                Container(width: 42, height: 42, decoration: BoxDecoration(color: DsheVisualTokens.silverAccent.withValues(alpha: 0.16), borderRadius: BorderRadius.circular(14)), child: Icon(Icons.shield_rounded, color: Theme.of(context).colorScheme.primary)),
                 const SizedBox(width: 12),
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text('Pemeriksaan data', style: TextStyle(fontWeight: FontWeight.w800)),
@@ -478,7 +478,7 @@ class _CashierPageState extends State<CashierPage> {
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
     Text('Kasir',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800)),
     const SizedBox(height:4),Text('Input barang → daftar item → periksa total → checkout.',style:Theme.of(context).textTheme.bodySmall),
-    const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
+    const SizedBox(height:12),Row(children:[Expanded(child:ClipRRect(borderRadius:BorderRadius.circular(14),child:BackdropFilter(filter:ui.ImageFilter.blur(sigmaX:8,sigmaY:8),child:TextField(controller:search,onChanged:_search,onSubmitted:(v)async{final p=await widget.db.findByBarcode(v);if(p!=null)_add(p);},decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded_rounded),hintText:'Ketik nama, kode, atau barcode'))))),const SizedBox(width:8),IconButton.filledTonal(tooltip:'Scan barcode',onPressed:_scan,icon:const Icon(Icons.qr_code_scanner_rounded))]),
     const SizedBox(height:8),if(loading)const LinearProgressIndicator(),
     if(search.text.isNotEmpty||results.isNotEmpty)Card(child:ConstrainedBox(constraints:const BoxConstraints(maxHeight:220),child:results.isEmpty?const Padding(padding:EdgeInsets.all(14),child:Text('Barang tidak ditemukan. Tambahkan data di menu Barang.')):ListView.separated(shrinkWrap:true,itemCount:results.length,itemBuilder:(ctx,i){final p=results[i];return ListTile(dense:true,title:Text(p.name,maxLines:2,overflow:TextOverflow.ellipsis),subtitle:Text('${p.code} • ${p.stockKnown ? 'Stok ${p.stock}' : 'Stok belum terverifikasi'}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.add_circle_outline,size:18)]),onTap:()=>_add(p));},separatorBuilder:(_,__)=>const Divider(height:1)))),
     const SizedBox(height:12),Card(child:Padding(padding:const EdgeInsets.all(14),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
@@ -595,7 +595,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
               textInputAction: TextInputAction.search,
               onChanged: _search,
               onSubmitted: _search,
-              decoration: const InputDecoration(prefixIcon: Icon(Icons.search_rounded), hintText: 'Nama barang / kode / barcode', border: InputBorder.none, filled: false),
+              decoration: const InputDecoration(prefixIcon: Icon(Icons.search_rounded_rounded), hintText: 'Nama barang / kode / barcode', border: InputBorder.none, filled: false),
             )),
             const SizedBox(width: 6),
             IconButton.filledTonal(tooltip: 'Scan barcode', onPressed: _scan, icon: const Icon(Icons.qr_code_scanner_rounded)),
@@ -613,7 +613,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
             ])),
           if (controller.text.trim().isNotEmpty && !loading && error == null && results.isEmpty)
             GlassPanel(child: Column(children: [
-              const Icon(Icons.search_off_rounded, size: 36),
+              const Icon(Icons.search_rounded_off_rounded, size: 36),
               const SizedBox(height: 8),
               const Text('Barang tidak ditemukan', style: TextStyle(fontWeight: FontWeight.w800)),
               const SizedBox(height: 4),
@@ -691,7 +691,7 @@ class _MorePageState extends State<MorePage> {
     Card(child: ListTile(leading: const Icon(Icons.cloud_sync_rounded), title: const Text('Sinkronisasi database cloud'), subtitle: const Text('Ambil katalog terbaru dari CSV GitHub'), trailing: syncing ? const SizedBox(width: 22,height: 22,child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.sync_rounded), onTap: syncing ? null : _sync)),
     if (syncStatus != null) Padding(padding: const EdgeInsets.only(top: 8,bottom: 8), child: Card(child: Padding(padding: const EdgeInsets.all(12), child: Text(syncStatus!)))),
     Card(child: ListTile(leading: const Icon(Icons.grid_view_rounded), title: const Text('Beranda'), subtitle: const Text('Ringkasan aktivitas apotek'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HomePage(db: PosDatabase.instance, openCashier: () => Navigator.of(context).pop()))))),
-    Card(child: ListTile(leading: const Icon(Icons.inventory_2_outlined), title: const Text('Manajemen barang'), subtitle: const Text('Cari, tambah, dan edit katalog'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductsPage(db: PosDatabase.instance))))),
+    Card(child: ListTile(leading: const Icon(Icons.inventory_2_rounded), title: const Text('Manajemen barang'), subtitle: const Text('Cari, tambah, dan edit katalog'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductsPage(db: PosDatabase.instance))))),
     Card(child: ListTile(leading: const Icon(Icons.receipt_long_rounded), title: const Text('Riwayat transaksi'), subtitle: const Text('Lihat transaksi yang tersimpan'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => HistoryPage(db: PosDatabase.instance))))),
     Card(child: ListTile(leading: const Icon(Icons.bar_chart_rounded), title: const Text('Laporan'), subtitle: const Text('Ringkasan transaksi'), trailing: const Icon(Icons.chevron_right_rounded), onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ReportsPage())))),
   ]);
@@ -714,9 +714,9 @@ class _ProductsPageState extends State<ProductsPage>{
   }
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
     Row(children:[Expanded(child:Text('Manajemen barang',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800))),IconButton.filled(onPressed:()=>_edit(),icon:const Icon(Icons.add))]),
-    const SizedBox(height:10),TextField(controller:search,onChanged:(_)=>_load(),decoration:const InputDecoration(prefixIcon:Icon(Icons.search),hintText:'Cari nama, kode, barcode')),
+    const SizedBox(height:10),TextField(controller:search,onChanged:(_)=>_load(),decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Cari nama, kode, barcode')),
     const SizedBox(height:10),Text('${items.length} hasil (maks. 100 ditampilkan)',style:Theme.of(context).textTheme.bodySmall),
-    ...items.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.code} • ${p.barcode.isEmpty?'Tanpa barcode':p.barcode} • Stok ${p.stock}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.edit_outlined,size:16)]),onTap:()=>_edit(p)))),
+    ...items.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.code} • ${p.barcode.isEmpty?'Tanpa barcode':p.barcode} • Stok ${p.stock}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.edit_rounded,size:16)]),onTap:()=>_edit(p)))),
   ]);
 }
 
