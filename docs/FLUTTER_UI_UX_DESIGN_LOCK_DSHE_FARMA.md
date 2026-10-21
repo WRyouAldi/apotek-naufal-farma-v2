@@ -113,10 +113,10 @@ Users must be able to check a product's price without adding it to a cart.
 - Provide feedback without relying on color alone.
 - Do not remove existing POS capabilities as part of a visual redesign.
 
-### 7.3 Removed payment feature
+### 7.3 Payment scope
 
-- QRIS is intentionally excluded from the Flutter navigation and screen flow per owner instruction.
-- Non-cash payment labels must use generic transfer wording; do not display QRIS as an app feature.
+- Provider-specific QR payment features are out of scope per owner instruction; no related screen, navigation item, button, or success claim may be shown.
+- Non-cash payment labels use generic transfer wording.
 - Do not remove historical payment-method values from stored transactions unless a separate data migration is explicitly approved.
 
 ### 7.4 Lainnya
@@ -168,9 +168,9 @@ Use short, purposeful transitions: subtle navigation fade/slide, restrained card
 - Negative or invalid source stock must be marked unverified rather than silently represented as verified stock.
 - Failed cloud fetch/validation must not partially overwrite the local catalog.
 - Import must be transactional and must not delete local products merely because they are absent from the remote file.
-- QRIS is out of scope for the current Flutter UI; do not introduce a QRIS screen without explicit owner approval.
+- Provider-specific QR payment workflows are out of scope; do not introduce them without explicit owner approval.
 - Transaction/stock updates must remain atomic.
-- Keep legacy `docs/index.html` unchanged as fallback until Flutter feature parity and device checks are accepted.
+- Treat legacy `docs/index.html` only as a migration reference/data source; it is not a runtime fallback and must not constrain the Flutter architecture.
 
 ## 13. Flutter implementation guidance
 
@@ -198,7 +198,7 @@ Use short, purposeful transitions: subtle navigation fade/slide, restrained card
 - [ ] Cek Harga never auto-adds items to the cart.
 - [ ] Scanner handles permission denial and camera errors.
 - [ ] Cashier validates payment and stock correctly.
-- [ ] QRIS display does not falsely claim payment success.
+- [ ] No removed payment-provider screen or navigation item is exposed; non-cash payments use generic transfer wording.
 - [ ] Cloud sync shows progress/results and preserves local data on failure.
 - [ ] Existing legacy functions are not silently removed.
 
