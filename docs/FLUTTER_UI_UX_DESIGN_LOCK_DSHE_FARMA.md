@@ -182,6 +182,17 @@ Use short, purposeful transitions: subtle navigation fade/slide, restrained card
 - Database schema changes require explicit versioned migrations and migration tests.
 - New dependencies require a clear reason and CI validation.
 
+
+## 13.1 Implementation contract — single visual system
+
+The Flutter implementation uses `DsheVisualTokens` in `lib/main.dart` as the single source of truth for palette, semantic icon colors, shared radii, and blur defaults. New components must reference these tokens rather than introduce local palette values.
+
+- **Logo:** use `DsheFarmaLogo` for the in-app brand mark in both themes. This is the current implementation mark, not final owner approval; launcher and splash must use the same approved source asset once supplied/approved.
+- **Icons:** use Material rounded variants consistently for navigation and common actions. Preserve meaning, keep icon sizes aligned to the shared 22 logical-pixel theme default, and use semantic theme colors rather than per-screen colors.
+- **Glass:** use `GlassPanel` for frosted cards; shared panel radius defaults to 22 and blur to 14. Use the shared capsule radius for floating navigation. Avoid adding independent blur/gradient treatments to ordinary content cards.
+- **Themes:** Pearl Crystal and Charcoal Silver must use the same component geometry and hierarchy; only semantic palette tokens change. Avoid local near-duplicate colors.
+- **Fallback:** ordinary cards and forms remain legible without depending on blur. Keep glass blur limited to hero/special panels/navigation rather than every row in long lists.
+
 ## 14. Acceptance checklist
 
 ### Visual
