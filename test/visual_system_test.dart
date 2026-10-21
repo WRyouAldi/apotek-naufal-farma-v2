@@ -28,6 +28,7 @@ void main() {
       expect(DsheVisualTokens.pearlBackground, const Color(0xFFF1F3F6));
       expect(DsheVisualTokens.pearlSurface, const Color(0xFFFFFFFF));
       expect(DsheVisualTokens.pearlAccent, const Color(0xFF7D9CA5));
+      expect(DsheVisualTokens.pearlPrimary, const Color(0xFF405A63));
       expect(DsheVisualTokens.charcoalBackground, const Color(0xFF111317));
       expect(DsheVisualTokens.charcoalSurface, const Color(0xFF20242A));
       expect(DsheVisualTokens.silverAccent, const Color(0xFFAAB5C2));
@@ -54,7 +55,15 @@ void main() {
         greaterThanOrEqualTo(minimum),
       );
       expect(
-        _contrast(DsheVisualTokens.charcoalText, DsheVisualTokens.pearlAccent),
+        _contrast(DsheVisualTokens.pearlPrimary, DsheVisualTokens.pearlSurface),
+        greaterThanOrEqualTo(minimum),
+      );
+      expect(
+        _contrast(DsheVisualTokens.pearlSurface, DsheVisualTokens.pearlPrimary),
+        greaterThanOrEqualTo(minimum),
+      );
+      expect(
+        _contrast(DsheVisualTokens.charcoalBackground, DsheVisualTokens.silverAccent),
         greaterThanOrEqualTo(minimum),
       );
       expect(
