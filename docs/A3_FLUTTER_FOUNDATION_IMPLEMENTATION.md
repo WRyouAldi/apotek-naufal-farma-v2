@@ -25,7 +25,9 @@
 
 ### Product editor — `lib/main.dart`
 - Edit flow now carries forward the existing `stockKnown` value and supported metadata fields instead of allowing model defaults to silently change them.
-- Metadata fields are preserved even though the current basic editor does not yet expose each metadata field as an editable control.
+- Product editor now exposes category, brand, unit, purchase cost, minimum stock, rack, supplier and notes fields.
+- Added an explicit **“Stok sudah diverifikasi”** checkbox; stock stays unknown unless staff deliberately confirms physical stock. This prevents a default zero from being mistaken for a verified count.
+- Save errors are shown to the operator instead of leaving failures silent.
 
 ### Model tests — `test/models_test.dart`
 - Added stock-unknown conversion coverage.
@@ -63,3 +65,13 @@
 ## A3 acceptance gate
 
 A3 remains **in progress** until CI passes for the latest intended commit, database integration tests cover the P0 invariants, and the application is tested on an Android emulator or physical device. QRIS remains excluded; Flutter remains the sole runtime target.
+
+
+## A3.4 Next implementation slice — product data entry
+
+- [x] Expose supported product metadata in the product editor.
+- [x] Require a product code in the form before attempting a save.
+- [x] Validate non-negative integer price, purchase cost, stock and minimum stock in the form and database layer.
+- [x] Make stock certainty an explicit operator action; existing unknown stock remains unknown until the checkbox is deliberately selected.
+- [x] Show success/failure feedback for product saves.
+- [ ] Verify the editor changes with latest-commit CI and Android runtime testing.
