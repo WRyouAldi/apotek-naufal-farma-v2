@@ -82,10 +82,42 @@ class PosDatabase {
     return rows.isEmpty ? null : Product.fromMap(rows.first);
   }
   Future<void> saveProduct(Product product) async {
-    if (product.name.trim().isEmpty) throw ArgumentError('Nama barang wajib diisi.');
-    if (product.price < 0 || product.stock < 0) throw ArgumentError('Harga dan stok tidak boleh negatif.');
-    final database = await db; final values = product.toMap()..remove('id');
-    if (product.id == null) { await database.insert('products', values); } else { await database.update('products', values, where: 'id = ?', whereArgs: [product.id]); }
+    final name = product.name.trim();
+    final code = product.code.trim();
+    final barcode = product.barcode.trim();
+    if (name.isEmpty) throw ArgumentError('Nama barang wajib diisi.');
+    if (code.isEmpty) throw ArgumentError('Kode barang wajib diisi.');
+    if (product.price < 0 || product.stock < 0 || product.costPrice < 0 || product.minStock < 0) {
+      throw ArgumentError('Harga, harga beli, stok, dan stok minimum tidak boleh negatif.');
+    }
+    final database = await db;
+    final codeMatches = await database.query(
+      'products', columns: ['id'], where: 'UPPER(TRIM(code)) = ?',
+      whereArgs: [code.toUpperCase()],
+    );
+    if (codeMatches.any((row) => row['id'] != product.id)) {
+      throw ArgumentError('Kode barang sudah digunakan produk lain.');
+    }
+    if (barcode.isNotEmpty) {
+      final barcodeMatches = await database.query(
+        'products', columns: ['id'], where: 'TRIM(barcode) = ?',
+        whereArgs: [barcode],
+      );
+      if (barcodeMatches.any((row) => row['id'] != product.id)) {
+        throw ArgumentError('Barcode sudah digunakan produk lain.');
+      }
+    }
+    final values = product.toMap()
+      ..remove('id')
+      ..['name'] = name
+      ..['code'] = code
+      ..['barcode'] = barcode;
+    if (product.id == null) {
+      await database.insert('products', values);
+    } else {
+      final changed = await database.update('products', values, where: 'id = ?', whereArgs: [product.id]);
+      if (changed != 1) throw StateError('Produk tidak ditemukan; perubahan tidak disimpan.');
+    }
   }
   Future<int> productCount() async => Sqflite.firstIntValue(await (await db).rawQuery('SELECT COUNT(*) FROM products')) ?? 0;
   Future<List<PosTransaction>> recentTransactions() async {
@@ -98,19 +130,69 @@ class PosDatabase {
   }
   Future<int> checkout({required List<CartLine> lines, required int paid, required String paymentMethod}) async {
     if (lines.isEmpty) throw StateError('Keranjang masih kosong.');
-    final total = lines.fold<int>(0, (sum, item) => sum + item.subtotal);
-    if (paid < total) throw StateError('Pembayaran kurang dari total transaksi.');
+    if (paid < 0) throw StateError('Nominal pembayaran tidak valid.');
+    if (paymentMethod.trim().isEmpty) throw StateError('Metode pembayaran wajib dipilih.');
+
+    // Combine repeated lines so stock and transaction totals use one canonical row per product.
+    final quantities = <int, int>{};
+    for (final line in lines) {
+      final id = line.product.id;
+      if (id == null) throw StateError('Barang belum tersimpan di database.');
+      if (line.quantity <= 0) throw StateError('Jumlah barang harus lebih dari nol.');
+      quantities[id] = (quantities[id] ?? 0) + line.quantity;
+    }
+
     final database = await db;
     return database.transaction<int>((txn) async {
-      for (final item in lines) {
-        final id = item.product.id;
-        if (id == null) throw StateError('Barang belum tersimpan di database.');
-        final changed = await txn.rawUpdate('UPDATE products SET stock = stock - ? WHERE id = ? AND stock_known = 1 AND stock >= ?', [item.quantity, id, item.quantity]);
-        if (changed != 1) throw StateError('Stok barang tidak mencukupi: ${item.product.name}');
+      final canonicalLines = <({int id, String name, int price, int quantity, int subtotal})>[];
+      var total = 0;
+      for (final entry in quantities.entries) {
+        final rows = await txn.query(
+          'products',
+          columns: ['id', 'name', 'price', 'stock', 'stock_known'],
+          where: 'id = ?',
+          whereArgs: [entry.key],
+          limit: 1,
+        );
+        if (rows.isEmpty) throw StateError('Barang tidak ditemukan. Muat ulang keranjang.');
+        final product = rows.first;
+        final name = product['name'] as String;
+        final price = product['price'] as int;
+        final stock = product['stock'] as int;
+        final stockKnown = (product['stock_known'] as int) == 1;
+        final quantity = entry.value;
+        if (!stockKnown) throw StateError('Stok belum terverifikasi: $name. Transaksi diblokir.');
+        if (stock < quantity) throw StateError('Stok barang tidak mencukupi: $name');
+        final subtotal = price * quantity;
+        total += subtotal;
+        canonicalLines.add((id: entry.key, name: name, price: price, quantity: quantity, subtotal: subtotal));
       }
-      final txId = await txn.insert('transactions', {'created_at': DateTime.now().toIso8601String(), 'total': total, 'paid': paid, 'change_amount': paid - total, 'payment_method': paymentMethod});
-      for (final item in lines) {
-        await txn.insert('transaction_items', {'transaction_id': txId, 'product_id': item.product.id, 'product_name': item.product.name, 'quantity': item.quantity, 'unit_price': item.product.price, 'subtotal': item.subtotal});
+      if (paid < total) throw StateError('Pembayaran kurang dari total transaksi.');
+
+      // Conditional updates protect against stale stock. Any failure rolls back the whole sale.
+      for (final line in canonicalLines) {
+        final changed = await txn.rawUpdate(
+          'UPDATE products SET stock = stock - ? WHERE id = ? AND stock_known = 1 AND stock >= ?',
+          [line.quantity, line.id, line.quantity],
+        );
+        if (changed != 1) throw StateError('Stok berubah saat transaksi: ${line.name}. Silakan ulangi.');
+      }
+      final txId = await txn.insert('transactions', {
+        'created_at': DateTime.now().toIso8601String(),
+        'total': total,
+        'paid': paid,
+        'change_amount': paid - total,
+        'payment_method': paymentMethod.trim(),
+      });
+      for (final line in canonicalLines) {
+        await txn.insert('transaction_items', {
+          'transaction_id': txId,
+          'product_id': line.id,
+          'product_name': line.name,
+          'quantity': line.quantity,
+          'unit_price': line.price,
+          'subtotal': line.subtotal,
+        });
       }
       return txId;
     });
