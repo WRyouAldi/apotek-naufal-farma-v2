@@ -510,7 +510,7 @@ class _PaymentDialogState extends State<_PaymentDialog>{
     Text('Total: ${rupiah(widget.total)}',style:const TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:12),
     DropdownButtonFormField<String>(initialValue:method,items:const [DropdownMenuItem(value:'Tunai',child:Text('Tunai')),DropdownMenuItem(value:'Non-tunai',child:Text('Non-tunai / Transfer'))],onChanged:(v)=>setState(()=>method=v??'Tunai'),decoration:const InputDecoration(labelText:'Metode pembayaran')),
     const SizedBox(height:10),TextField(controller:controller,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Jumlah dibayar (Rp)',hintText:'Masukkan nominal')),
-    if(error!=null)Padding(padding:const EdgeInsets.only(top:8),child:Text(error!,style:const TextStyle(color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError)))
+    if(error!=null)Padding(padding:const EdgeInsets.only(top:8),child:Text(error!,style:TextStyle(color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError)))
   ]),actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Batal')),FilledButton(onPressed:(){final paid=int.tryParse(controller.text.replaceAll(RegExp(r'[^0-9]'),''));if(paid==null||paid<widget.total){setState(()=>error='Nominal harus sama dengan atau lebih dari total.');return;}Navigator.pop(context,_PaymentChoice(paid,method));},child:const Text('Simpan transaksi'))]);
 }
 
@@ -606,7 +606,7 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
           ])),
           const SizedBox(height: 12),
           if (loading) const LinearProgressIndicator(minHeight: 2),
-          if (error != null) GlassPanel(child: Row(children: [const Icon(Icons.error_outline_rounded, color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError), const SizedBox(width: 10), Expanded(child: Text(error!)), TextButton(onPressed: () => _search(controller.text), child: const Text('Coba lagi'))])),
+          if (error != null) GlassPanel(child: Row(children: [Icon(Icons.error_outline_rounded, color: Theme.of(context).brightness == Brightness.dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError), const SizedBox(width: 10), Expanded(child: Text(error!)), TextButton(onPressed: () => _search(controller.text), child: const Text('Coba lagi'))])),
           if (controller.text.trim().isEmpty && !loading)
             GlassPanel(blur: 12, child: Column(children: [
               Container(width: 64, height: 64, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(22)), child: Icon(Icons.price_check_rounded, size: 32, color: Theme.of(context).colorScheme.primary)),
@@ -652,8 +652,8 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
                     ])),
                     const SizedBox(width: 8),
                     Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 8), decoration: BoxDecoration(color: !p.stockKnown ? (dark ? DsheVisualTokens.statusUnknownDark : DsheVisualTokens.statusUnknown).withValues(alpha: 0.13) : (p.stock > 0 ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.16) : (dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError).withValues(alpha: 0.12)), borderRadius: BorderRadius.circular(12)), child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                      Text(!p.stockKnown ? 'STOK BELUM ADA' : (p.stock > 0 ? 'TERSEDIA' : 'HABIS'), style: TextStyle(fontSize: 10, letterSpacing: 0.4, fontWeight: FontWeight.w900, color: !p.stockKnown ? muted : (p.stock > 0 ? Theme.of(context).colorScheme.primary : Colors.redAccent))),
-                      Text(p.stockKnown ? 'Stok ${p.stock}' : 'Stok —', style: TextStyle(fontWeight: FontWeight.w800, color: !p.stockKnown ? muted : (p.stock > 0 ? null : Colors.redAccent))),
+                      Text(!p.stockKnown ? 'STOK BELUM ADA' : (p.stock > 0 ? 'TERSEDIA' : 'HABIS'), style: TextStyle(fontSize: 10, letterSpacing: 0.4, fontWeight: FontWeight.w900, color: !p.stockKnown ? muted : (p.stock > 0 ? Theme.of(context).colorScheme.primary : (dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError)))),
+                      Text(p.stockKnown ? 'Stok ${p.stock}' : 'Stok —', style: TextStyle(fontWeight: FontWeight.w800, color: !p.stockKnown ? muted : (p.stock > 0 ? null : (dark ? DsheVisualTokens.statusErrorDark : DsheVisualTokens.statusError)))),
                     ])),
                   ]),
                 ),
@@ -717,7 +717,7 @@ class _ProductsPageState extends State<ProductsPage>{
     for(final c in [name,code,barcode,price,stock]){c.dispose();}
   }
   @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(14),children:[
-    Row(children:[Expanded(child:Text('Manajemen barang',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800))),IconButton.filled(onPressed:()=>_edit(),icon:const Icon(Icons.add))]),
+    Row(children:[Expanded(child:Text('Manajemen barang',style:Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight:FontWeight.w800))),IconButton.filled(onPressed:()=>_edit(),icon:const Icon(Icons.add_rounded))]),
     const SizedBox(height:10),TextField(controller:search,onChanged:(_)=>_load(),decoration:const InputDecoration(prefixIcon:Icon(Icons.search_rounded),hintText:'Cari nama, kode, barcode')),
     const SizedBox(height:10),Text('${items.length} hasil (maks. 100 ditampilkan)',style:Theme.of(context).textTheme.bodySmall),
     ...items.map((p)=>Card(child:ListTile(title:Text(p.name),subtitle:Text('${p.code} • ${p.barcode.isEmpty?'Tanpa barcode':p.barcode} • Stok ${p.stock}'),trailing:Column(mainAxisAlignment:MainAxisAlignment.center,crossAxisAlignment:CrossAxisAlignment.end,children:[Text(rupiah(p.price),style:const TextStyle(fontWeight:FontWeight.w800)),const Icon(Icons.edit_rounded,size:16)]),onTap:()=>_edit(p)))),
