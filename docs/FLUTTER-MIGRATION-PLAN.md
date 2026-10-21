@@ -1,7 +1,7 @@
 # Flutter Migration Plan — Apotek D'She Farma
 
 ## Goal
-Replace the legacy WebView POS gradually, without losing existing pharmacy operations or silently inventing data. The legacy app at `docs/index.html` remains the behavioral reference until Flutter passes parity tests.
+Build Apotek D'She Farma as a Flutter-first native Android POS. WebView is not the target architecture and must not constrain Flutter implementation. Existing legacy assets/data may be consulted only as migration sources where needed; do not preserve WebView as a required runtime fallback.
 
 ## Current audit (2026-10-20)
 - Legacy HTML/JS is approximately 1 MB and embeds a catalog of 4,348 products.
@@ -11,16 +11,17 @@ Replace the legacy WebView POS gradually, without losing existing pharmacy opera
 - QRIS provider confirmation, migration of transaction history, purchase-cost/profit fields, full reporting/export/printing, and legacy sync have not been verified as migrated.
 - CI/build must pass and a real Android device check is required before live use.
 
-## Migration strategy: strangler, not big-bang replacement
-1. Keep the current WebView app as the production fallback while Flutter is developed in its own branch.
-2. Freeze a feature inventory and define acceptance tests for each legacy workflow.
-3. Migrate read-only Price Check first, because it has a small blast radius and is the user's immediate priority.
-4. Introduce a repository/data layer so widgets do not query SQLite directly. Use a single canonical product model and explicit `stockKnown` state.
-5. Migrate inventory management and CSV import/export with validation, preview, duplicate handling, rollback, and a reconciliation report.
-6. Migrate cashier and checkout only after product prices and stock are reconciled. Enforce stock decrement and transaction persistence in one database transaction.
-7. Migrate QRIS only with verified merchant configuration and an authoritative confirmation flow; otherwise clearly label it manual and never auto-confirm.
-8. Migrate reports, receipt printing, backup/restore and sync after transaction schema parity is established.
-9. Release side-by-side to a test device, compare results against WebView, and switch the default only after all release gates pass.
+## Flutter-first implementation strategy
+1. Flutter is the sole target UI/runtime. Do not build new features in WebView or keep a WebView fallback as a requirement.
+2. Use the old code/data only as a reference for field mappings and required business behavior; do not copy its UI architecture.
+3. Keep a feature inventory and acceptance tests for each pharmacy workflow.
+4. Prioritize read-only Price Check with exact barcode lookup, robust search, stock certainty and accessible error states.
+5. Introduce repository/data services so widgets do not issue ad-hoc SQL; use a canonical product model and explicit `stockKnown` state.
+6. Implement inventory and CSV import/export with validation, preview, duplicate handling, rollback and reconciliation reports.
+7. Implement cashier/checkout only with verified prices/stock, atomic transaction persistence and clear failure recovery.
+8. QRIS is intentionally excluded by owner instruction. Do not reintroduce it without explicit approval.
+9. Implement reports, thermal receipt printing, backup/restore and cloud sync as Flutter/native workflows after their data contracts are defined.
+10. Release only after automated tests, data reconciliation and physical Android checks pass. The acceptance gate is quality verification, not a WebView fallback.
 
 ## Price Check acceptance criteria
 - Search by product name, code and barcode.
@@ -83,3 +84,22 @@ Replace the legacy WebView POS gradually, without losing existing pharmacy opera
 
 ### Honest release gate
 No phase is marked 100% complete until its acceptance checks pass. A code commit alone is not proof of a successful build or visual match. Do not use the Flutter branch for live sales until database/stock/payment and device checks pass.
+
+
+## Flutter-first decision (2026-10-21)
+
+Owner decision: **maximize Flutter's native capabilities and ignore WebView as the target implementation**.
+
+### Implementation priorities
+- Native-feeling UI built from reusable Flutter widgets; no WebView shell.
+- Central theme tokens for Pearl Crystal (light) and Charcoal Silver (dark).
+- Reusable glass surfaces and floating capsule navigation with safe-area handling.
+- Product/transaction repository boundary between widgets and SQLite.
+- Fast catalog lookup with indexed code/barcode/name search and large-list rendering.
+- Camera barcode scanner with explicit permission, lifecycle, and error handling.
+- SQLite migrations, atomic checkout, data import validation, and reconciliation.
+- Native Android integrations for thermal printing, files, backup/restore, and device-specific features where needed.
+- QRIS remains removed from navigation and feature screens.
+
+### Definition of done
+A feature is complete only when its UI, business logic, persistence, error states, tests, and Android verification all pass. CI success is necessary but not sufficient for visual or operational acceptance. Do not describe P1–P4 as 100% until every checklist item has evidence.
