@@ -643,10 +643,58 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
         children: [
-          Text('Cek Harga', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
-          const SizedBox(height: 5),
-          Text('Cari nama, kode, atau scan barcode untuk melihat harga dan stok.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: muted)),
+          // Distinctive hero surface: a real rendered dashboard change, not just palette tokens.
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: dark
+                    ? const [Color(0xFF343B45), Color(0xFF20242A), Color(0xFF15171B)]
+                    : const [Color(0xFFFFFFFF), Color(0xFFE4EAF0), Color(0xFFD4DCE5)],
+              ),
+              border: Border.all(color: dark ? const Color(0xFF687482) : const Color(0xFFFFFFFF), width: 1.2),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withValues(alpha: dark ? 0.22 : 0.07), blurRadius: 26, offset: const Offset(0, 12)),
+                BoxShadow(color: Colors.white.withValues(alpha: dark ? 0.04 : 0.72), blurRadius: 10, offset: const Offset(-3, -3)),
+              ],
+            ),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Container(
+                  width: 48, height: 48,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(17),
+                    color: dark ? const Color(0xFF171A1F) : Colors.white.withValues(alpha: 0.84),
+                    border: Border.all(color: dark ? const Color(0xFF56616E) : const Color(0xFFFFFFFF)),
+                  ),
+                  child: Icon(Icons.medication_liquid_rounded, size: 27, color: dark ? DsheVisualTokens.silverAccent : DsheVisualTokens.pearlPrimary),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text("D'SHE FARMA", style: TextStyle(fontSize: 11, letterSpacing: 2.0, fontWeight: FontWeight.w900, color: muted)),
+                  const SizedBox(height: 3),
+                  Text('Pusat informasi harga', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                ])),
+                Icon(Icons.auto_awesome_rounded, color: dark ? DsheVisualTokens.silverAccent : DsheVisualTokens.pearlPrimary, size: 23),
+              ]),
+              const SizedBox(height: 22),
+              Text('Temukan harga,\ndengan lebih mudah.', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900, letterSpacing: -0.7, height: 1.05)),
+              const SizedBox(height: 9),
+              Text('Cari nama atau kode barang, atau pindai barcode untuk hasil yang cepat dan akurat.', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: muted, height: 1.4)),
+              const SizedBox(height: 18),
+              Row(children: [
+                Icon(Icons.verified_user_outlined, size: 16, color: muted),
+                const SizedBox(width: 7),
+                Expanded(child: Text('Harga dari katalog • Cek Harga tidak mengubah keranjang kasir', style: TextStyle(fontSize: 11, color: muted, fontWeight: FontWeight.w600))),
+              ]),
+            ]),
+          ),
           const SizedBox(height: 18),
+          Text('CEK HARGA', style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w900, letterSpacing: 1.5, color: muted)),
+          const SizedBox(height: 10),
           GlassPanel(blur: 18, radius: 24, child: Row(children: [
             Expanded(child: TextField(
               controller: controller,
