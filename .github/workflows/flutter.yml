@@ -2,7 +2,7 @@ name: Flutter POS validation
 
 on:
   push:
-    branches: [p2.3.2-flutter-migration]
+    branches: [p2.3.2-flutter-migration, flutter-clean-rebuild]
   pull_request:
     branches: [main]
 
