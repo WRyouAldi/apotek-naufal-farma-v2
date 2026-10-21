@@ -17,6 +17,8 @@ abstract final class DsheVisualTokens {
   static const pearlSecondaryText = Color(0xFF5C6570);
   static const pearlText = Color(0xFF20252B);
   static const pearlAccent = Color(0xFF7D9CA5);
+  // Accessible action/text color; pearlAccent remains the locked decorative glass accent.
+  static const pearlPrimary = Color(0xFF405A63);
 
   // Charcoal Silver
   static const charcoalBackground = Color(0xFF111317);
@@ -75,8 +77,8 @@ class _DsheFarmaAppState extends State<DsheFarmaApp> {
       brightness: dark ? Brightness.dark : Brightness.light,
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
     ).copyWith(
-      primary: dark ? silverAccent : pearlAccent,
-      onPrimary: DsheVisualTokens.charcoalText,
+      primary: dark ? silverAccent : DsheVisualTokens.pearlPrimary,
+      onPrimary: dark ? DsheVisualTokens.charcoalBackground : DsheVisualTokens.pearlSurface,
       secondary: dark ? DsheVisualTokens.charcoalSecondaryText : DsheVisualTokens.pearlSecondaryText,
       surface: dark ? DsheVisualTokens.charcoalSurface : DsheVisualTokens.pearlSurface,
       onSurface: dark ? DsheVisualTokens.charcoalText : DsheVisualTokens.pearlText,
