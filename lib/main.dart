@@ -162,15 +162,14 @@ class PosShell extends StatefulWidget {
   @override State<PosShell> createState() => _PosShellState();
 }
 class _PosShellState extends State<PosShell> {
-  int selected = 2;
+  int selected = 1;
   final db = PosDatabase.instance;
-  static const labels = ['Kasir','QRIS','Cek Harga','Lainnya'];
-  static const icons = [Icons.point_of_sale_rounded,Icons.qr_code_2_rounded,Icons.price_check_rounded,Icons.more_horiz_rounded];
+  static const labels = ['Kasir','Cek Harga','Lainnya'];
+  static const icons = [Icons.point_of_sale_rounded,Icons.price_check_rounded,Icons.more_horiz_rounded];
   @override Widget build(BuildContext context) {
     final wide = MediaQuery.sizeOf(context).width >= 720;
     final pages = [
       CashierPage(db: db),
-      const QrisInfoPage(),
       PriceCheckPage(db: db),
       const MorePage(),
     ];
@@ -444,7 +443,7 @@ class _PaymentDialogState extends State<_PaymentDialog>{
   @override void dispose(){controller.dispose();super.dispose();}
   @override Widget build(BuildContext context)=>AlertDialog(title:const Text('Pembayaran'),content:Column(mainAxisSize:MainAxisSize.min,crossAxisAlignment:CrossAxisAlignment.start,children:[
     Text('Total: ${rupiah(widget.total)}',style:const TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:12),
-    DropdownButtonFormField<String>(initialValue:method,items:const [DropdownMenuItem(value:'Tunai',child:Text('Tunai')),DropdownMenuItem(value:'Non-tunai',child:Text('Non-tunai / QRIS'))],onChanged:(v)=>setState(()=>method=v??'Tunai'),decoration:const InputDecoration(labelText:'Metode pembayaran')),
+    DropdownButtonFormField<String>(initialValue:method,items:const [DropdownMenuItem(value:'Tunai',child:Text('Tunai')),DropdownMenuItem(value:'Non-tunai',child:Text('Non-tunai / Transfer'))],onChanged:(v)=>setState(()=>method=v??'Tunai'),decoration:const InputDecoration(labelText:'Metode pembayaran')),
     const SizedBox(height:10),TextField(controller:controller,keyboardType:TextInputType.number,decoration:const InputDecoration(labelText:'Jumlah dibayar (Rp)',hintText:'Masukkan nominal')),
     if(error!=null)Padding(padding:const EdgeInsets.only(top:8),child:Text(error!,style:const TextStyle(color:Colors.red)))
   ]),actions:[TextButton(onPressed:()=>Navigator.pop(context),child:const Text('Batal')),FilledButton(onPressed:(){final paid=int.tryParse(controller.text.replaceAll(RegExp(r'[^0-9]'),''));if(paid==null||paid<widget.total){setState(()=>error='Nominal harus sama dengan atau lebih dari total.');return;}Navigator.pop(context,_PaymentChoice(paid,method));},child:const Text('Simpan transaksi'))]);
@@ -601,27 +600,6 @@ class _PriceCheckPageState extends State<PriceCheckPage> {
       ),
     );
   }
-}
-
-class QrisInfoPage extends StatelessWidget {
-  const QrisInfoPage({super.key});
-  @override Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(16), children: [
-    Text('Pembayaran QRIS', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w900)),
-    const SizedBox(height: 12),
-    GlassPanel(blur: 18, child: Column(children: [
-      Container(width: 64, height: 64, decoration: BoxDecoration(color: const Color(0xFF65B99F).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)), child: const Icon(Icons.qr_code_2_rounded, size: 34, color: Color(0xFF65B99F))),
-      const SizedBox(height: 12),
-      const Text('QRIS merchant belum dikonfigurasi', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16), textAlign: TextAlign.center),
-      const SizedBox(height: 8),
-      const Text('Sebelum menerima pembayaran, pasang QRIS resmi milik apotek dan verifikasi pembayaran melalui aplikasi merchant. Aplikasi ini belum menerima notifikasi pembayaran otomatis.', textAlign: TextAlign.center),
-    ])),
-    const SizedBox(height: 12),
-    const GlassPanel(child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Icon(Icons.verified_user_outlined, color: Color(0xFF65B99F)),
-      SizedBox(width: 10),
-      Expanded(child: Text('Jangan tandai transaksi QRIS sebagai berhasil hanya berdasarkan tangkapan layar atau bukti transfer pelanggan. Pastikan dana masuk melalui kanal merchant resmi.')),
-    ])),
-  ]);
 }
 
 class MorePage extends StatefulWidget {
