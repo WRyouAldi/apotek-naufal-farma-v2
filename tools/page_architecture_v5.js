@@ -360,7 +360,6 @@
     new MutationObserver(syncTxSummary).observe(txCart,{childList:true,subtree:true,characterData:true});
     syncTxSummary();
   }
-  window.nfPaymentOpen=function(){if(legacyPayment)legacyPayment.style.display='block';};
   window.focusPayment=function(){window.nfGo('transaction')};
   window.focusSearch=function(scan){
     window.nfGo(scan?'transaction':'price');
