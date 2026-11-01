@@ -5133,4 +5133,124 @@ html[data-dshe-theme="dark"] .dshe-feedback-state[data-state="info"]{background:
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
+
+<style id="dsheContrastNavbarP1">
+/* P1 visual correction: preserve Naufal Farma branding and Pearl Crystal language. */
+/* Light/Pearl mode: glass remains translucent, typography becomes reliably readable. */
+html:not([data-dshe-theme="dark"]) .stat-card,
+html:not([data-dshe-theme="dark"]) .quick-btn,
+html:not([data-dshe-theme="dark"]) .nf-crud-host,
+html:not([data-dshe-theme="dark"]) .nf-sync-host,
+html:not([data-dshe-theme="dark"]) #nfItemsHost,
+html:not([data-dshe-theme="dark"]) #nfSyncHost,
+html:not([data-dshe-theme="dark"]) .nf-home-tools button{
+  color:#35404c!important;
+  -webkit-text-fill-color:#35404c;
+}
+html:not([data-dshe-theme="dark"]) .stat-card{
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(239,243,247,.88))!important;
+  border:1px solid rgba(255,255,255,.96)!important;
+}
+html:not([data-dshe-theme="dark"]) .stat-card b,
+html:not([data-dshe-theme="dark"]) .stat-card strong,
+html:not([data-dshe-theme="dark"]) .stat-card .nf-stat-copy,
+html:not([data-dshe-theme="dark"]) .quick-btn b,
+html:not([data-dshe-theme="dark"]) .quick-btn .nf-quick-label,
+html:not([data-dshe-theme="dark"]) .quick-btn small,
+html:not([data-dshe-theme="dark"]) .nf-home-tools-title,
+html:not([data-dshe-theme="dark"]) .nf-home-tools-title b,
+html:not([data-dshe-theme="dark"]) .nf-crud-host button,
+html:not([data-dshe-theme="dark"]) .nf-sync-host button,
+html:not([data-dshe-theme="dark"]) #nfItemsHost button,
+html:not([data-dshe-theme="dark"]) #nfSyncHost button{
+  color:#35404c!important;-webkit-text-fill-color:#35404c!important;
+}
+html:not([data-dshe-theme="dark"]) .stat-card small,
+html:not([data-dshe-theme="dark"]) .stat-card em,
+html:not([data-dshe-theme="dark"]) .quick-btn small,
+html:not([data-dshe-theme="dark"]) .nf-home-tools-title small,
+html:not([data-dshe-theme="dark"]) .nf-crud-host p,
+html:not([data-dshe-theme="dark"]) .nf-sync-host p{
+  color:#66717e!important;-webkit-text-fill-color:#66717e!important;
+}
+html:not([data-dshe-theme="dark"]) .nf-crud-host,
+html:not([data-dshe-theme="dark"]) .nf-sync-host,
+html:not([data-dshe-theme="dark"]) #nfItemsHost,
+html:not([data-dshe-theme="dark"]) #nfSyncHost{
+  background:rgba(255,255,255,.82)!important;
+  border-color:rgba(255,255,255,.94)!important;
+}
+html:not([data-dshe-theme="dark"]) .nf-home-tools button{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(235,240,245,.91))!important;
+  border-color:rgba(255,255,255,.98)!important;
+}
+html[data-dshe-theme="dark"] .stat-card,
+html[data-dshe-theme="dark"] .quick-btn,
+html[data-dshe-theme="dark"] .nf-crud-host,
+html[data-dshe-theme="dark"] .nf-sync-host,
+html[data-dshe-theme="dark"] #nfItemsHost,
+html[data-dshe-theme="dark"] #nfSyncHost{
+  color:#f1f4f7!important;-webkit-text-fill-color:#f1f4f7!important;
+}
+html[data-dshe-theme="dark"] .stat-card b,
+html[data-dshe-theme="dark"] .stat-card strong,
+html[data-dshe-theme="dark"] .quick-btn b,
+html[data-dshe-theme="dark"] .nf-crud-host button,
+html[data-dshe-theme="dark"] .nf-sync-host button,
+html[data-dshe-theme="dark"] #nfItemsHost button,
+html[data-dshe-theme="dark"] #nfSyncHost button{
+  color:#f1f4f7!important;-webkit-text-fill-color:#f1f4f7!important;
+}
+html[data-dshe-theme="dark"] .stat-card small,
+html[data-dshe-theme="dark"] .stat-card em,
+html[data-dshe-theme="dark"] .quick-btn small,
+html[data-dshe-theme="dark"] .quick-btn .nf-quick-label{
+  color:#c5cdd7!important;-webkit-text-fill-color:#c5cdd7!important;
+}
+/* One fixed, four-column navigation. No clipping, no horizontal overflow, no overlap. */
+#bottomNavV15,
+#bottomNavV15.nf-glass-nav{
+  position:fixed!important;z-index:1200!important;
+  left:12px!important;right:12px!important;bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;
+  transform:none!important;width:auto!important;max-width:570px!important;
+  margin:0 auto!important;box-sizing:border-box!important;
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:6px!important;
+  padding:7px!important;overflow:visible!important;
+  border:1px solid rgba(255,255,255,.9)!important;border-radius:23px!important;
+  background:rgba(248,250,252,.84)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(155%)!important;
+  backdrop-filter:blur(24px) saturate(155%)!important;
+  box-shadow:0 10px 30px rgba(38,48,61,.19),inset 0 1px 0 rgba(255,255,255,.96)!important;
+}
+#bottomNavV15>button,
+#bottomNavV15.nf-glass-nav>button{
+  width:100%!important;min-width:0!important;max-width:none!important;flex:none!important;
+  height:58px!important;margin:0!important;padding:5px 2px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:4px!important;border:0!important;border-radius:17px!important;
+  background:transparent!important;color:#46515e!important;
+  overflow:hidden!important;white-space:nowrap!important;
+}
+#bottomNavV15>button span{font-size:19px!important;line-height:1!important;color:inherit!important}
+#bottomNavV15>button b{display:block!important;max-width:100%!important;font-size:10px!important;line-height:1.15!important;font-weight:750!important;color:inherit!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#bottomNavV15>button:first-child,
+#bottomNavV15>button.active{background:rgba(20,135,105,.13)!important;color:#08785e!important}
+html[data-dshe-theme="dark"] #bottomNavV15,
+html[data-dshe-theme="dark"] #bottomNavV15.nf-glass-nav{
+  background:rgba(34,39,47,.88)!important;border-color:rgba(220,228,238,.28)!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+html[data-dshe-theme="dark"] #bottomNavV15>button{color:#d7dee8!important}
+html[data-dshe-theme="dark"] #bottomNavV15>button:first-child,
+html[data-dshe-theme="dark"] #bottomNavV15>button.active{background:rgba(92,191,163,.17)!important;color:#a8ead5!important}
+body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important}
+@media(max-width:380px){
+  #bottomNavV15,#bottomNavV15.nf-glass-nav{left:8px!important;right:8px!important;gap:4px!important;padding:6px!important}
+  #bottomNavV15>button{height:56px!important}
+  #bottomNavV15>button b{font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){#bottomNavV15>button{transition:none!important}}
+</style>
+
 </body></html>
