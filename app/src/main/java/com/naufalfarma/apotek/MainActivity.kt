@@ -80,6 +80,20 @@ class MainActivity : Activity() {
         android.os.Handler(mainLooper).postDelayed({
             setContentView(R.layout.activity_main)
             webView = findViewById(R.id.webView)
+            // Respect Android status/navigation bar insets instead of drawing the WebView
+            // underneath system icons (the overlap visible on Android 15/16).
+            window.statusBarColor = Color.rgb(244, 245, 247)
+            window.navigationBarColor = Color.rgb(244, 245, 247)
+            @Suppress("DEPRECATION")
+            run { window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR }
+            val appRoot = webView.parent as? View
+            appRoot?.setOnApplyWindowInsetsListener { root, insets ->
+                val topInset = insets.systemWindowInsetTop
+                val bottomInset = insets.systemWindowInsetBottom
+                root.setPadding(0, topInset, 0, bottomInset)
+                insets
+            }
+            appRoot?.requestApplyInsets()
             webView.settings.javaScriptEnabled = true
             webView.settings.domStorageEnabled = true
             webView.settings.allowFileAccess = true
