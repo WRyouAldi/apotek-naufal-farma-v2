@@ -2477,6 +2477,23 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   wrap.innerHTML='';
   wrap.append(home,price,tx,morePage,out,report,items,sync);
 
+  // Critical WebView fix: the legacy nav can be a child of .wrap. Clearing
+  // wrap.innerHTML detaches it from the live document. Re-parent it directly
+  // under body so it remains visible, fixed, and receives touch events.
+  if(nodes.bottom){
+    document.body.appendChild(nodes.bottom);
+    nodes.bottom.classList.add('nf-glass-nav');
+    nodes.bottom.style.cssText += ';position:fixed!important;display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:2147483000!important;left:10px!important;right:10px!important;bottom:10px!important;top:auto!important;transform:none!important';
+    nodes.bottom.querySelectorAll('button[data-page]').forEach(button=>{
+      button.type='button';
+      button.onclick=event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        window.nfGo(button.dataset.page);
+      };
+    });
+  }
+
   // Keep dynamically created Barang Keluar inside its own page.
   const relocate=()=>{
     const el=document.getElementById('barangKeluarSection');
@@ -2562,6 +2579,22 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   window.focusOut=function(){window.nfGo('out')};
   window.focusItems=function(){window.nfGo('items')};
   window.focusSync=function(){window.nfGo('sync')};
+
+  // Bind dashboard shortcuts explicitly; do not depend on legacy inline
+  // handlers that may have been removed during the page reconstruction.
+  const quickPrice=quick.querySelector('.q-green');
+  const quickTransaction=quick.querySelector('.q-indigo');
+  const quickReport=quick.querySelector('.q-orange');
+  if(quickPrice)quickPrice.onclick=event=>{event.preventDefault();window.nfGo('price')};
+  if(quickTransaction)quickTransaction.onclick=event=>{event.preventDefault();window.nfGo('transaction')};
+  if(quickReport)quickReport.onclick=event=>{event.preventDefault();window.nfGo('report')};
+  const heroCashier=welcome.querySelector('[data-hero-cashier]');
+  if(heroCashier)heroCashier.onclick=event=>{event.preventDefault();window.nfGo('transaction')};
+  const openItems=more.querySelector('[data-open-items]');
+  const openSync=more.querySelector('[data-open-sync]');
+  if(openItems)openItems.onclick=event=>{event.preventDefault();window.nfGo('items')};
+  if(openSync)openSync.onclick=event=>{event.preventDefault();window.nfGo('sync')};
+
   more.querySelector('[data-open-items]').onclick=window.focusItems;
   more.querySelector('[data-open-sync]').onclick=function(){window.nfGo('sync')};
 
@@ -5293,4 +5326,13 @@ header{position:relative!important;top:auto!important;z-index:20!important;paddi
  if(status)status.textContent='Mode offline aktif';
 })();
 </script>
+
+<!-- NF-P0-NAV-INTERACTION-RECOVERY -->
+<style id="nfNavInteractionRecovery">
+#bottomNavV15.nf-glass-nav{position:fixed!important;display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:2147483000!important;left:10px!important;right:10px!important;bottom:10px!important;top:auto!important;transform:none!important;width:auto!important;max-width:790px!important;margin:0 auto!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;overflow:visible!important}
+#bottomNavV15.nf-glass-nav button{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;position:relative!important;z-index:1!important;min-height:50px!important;touch-action:manipulation!important;cursor:pointer!important}
+#nfHome .quick-btn,#nfHome .nf-home-tools button,#nfHome .nf-hero-actions button{position:relative!important;z-index:5!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
+.nf-page:not(.nf-active){display:none!important;visibility:hidden!important;pointer-events:none!important}
+.nf-page.nf-active{display:block!important;visibility:visible!important;pointer-events:auto!important}
+</style>
 </body></html>
