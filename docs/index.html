@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="id"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Apotek D'she Farma — POS</title>
+<title>Apotek Apotek Naufal Farma — POS</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f5f4;color:#17211f;font-family:Arial,Helvetica,sans-serif}
 header{position:sticky;top:0;z-index:10;background:#0f6f55;color:white;padding:14px;box-shadow:0 2px 10px #0002}
@@ -707,7 +707,7 @@ html[data-dshe-theme="system"] header .brand-text div{color:#c7ced7!important;-w
 <header>
   <div class="topbar">
     <div class="brand-mark"><img src="branding/logo-mark.svg" alt="Apotek D&#39;she Farma"></div>
-    <div class="brand-text"><h1>D'she Farma</h1><div>Apotek • POS Mobile</div></div>
+    <div class="brand-text"><h1>Apotek Naufal Farma</h1><div>Apotek • POS Mobile</div></div>
     <button type="button" class="top-notify" onclick="focusReport()" aria-label="Laporan">♧</button>
   </div>
 </header>
@@ -728,7 +728,7 @@ html[data-dshe-theme="system"] header .brand-text div{color:#c7ced7!important;-w
   </div>
   <div class="stat-card stat-stock">
     <span class="stat-icon">!</span>
-    <div><small>Status</small><b>Siap Jual</b><em>Harga terbaru</em></div>
+    <div><small>Status</small><b>Siap Jual</b><em>Mode offline aktif</em></div>
   </div>
 </section>
 
@@ -936,7 +936,7 @@ function deleteTransaction(id){
 function backupData(){
   try{
     let legacyTransactions=[];try{const saved=JSON.parse(localStorage.getItem("naufal_farma_transactions")||"[]");if(Array.isArray(saved))legacyTransactions=saved;}catch(e){}
-    const payload={app:"Apotek D\u0027she Farma",version:2,exportedAt:new Date().toISOString(),transactions:getHistory(),legacyLocalStorageTransactions:legacyTransactions,notes:"Pada Android, transaksi utama berasal dari SQLite. legacyLocalStorageTransactions adalah arsip lama dan belum diimpor ke SQLite."};
+    const payload={app:"Apotek Apotek Naufal Farma",version:2,exportedAt:new Date().toISOString(),transactions:getHistory(),legacyLocalStorageTransactions:legacyTransactions,notes:"Pada Android, transaksi utama berasal dari SQLite. legacyLocalStorageTransactions adalah arsip lama dan belum diimpor ke SQLite."};
     const text=JSON.stringify(payload,null,2);
     const a=document.createElement("a");
     a.href="data:application/json;charset=utf-8,"+encodeURIComponent(text);
@@ -2215,8 +2215,8 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   const home=document.createElement('section'); home.id='nfHome'; home.className='nf-page';
   // Compact Operational Hero: useful actions first, without consuming cashier workspace.
   welcome.classList.add('nf-operational-hero');
-  welcome.setAttribute('aria-label',"Ringkasan operasional Apotek D'she Farma");
-  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> PEARL CRYSTAL · POS MOBILE</span><h2>Apotek D'she Farma</h2><p>Penjualan, scan barcode, dan pengecekan produk dalam satu alur yang praktis.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div><div class="nf-hero-status"><span></span> Dashboard siap · pilih tindakan</div></div><div class="nf-hero-orb" aria-label="Logo D\u0027she Farma"><img src="logo_dshe_farma.svg" alt="D\u0027she Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
+  welcome.setAttribute('aria-label',"Ringkasan operasional Apotek Apotek Naufal Farma");
+  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> PEARL CRYSTAL · POS MOBILE</span><h2>Apotek Apotek Naufal Farma</h2><p>Penjualan, scan barcode, dan pengecekan produk dalam satu alur yang praktis.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div><div class="nf-hero-status"><span></span> Dashboard siap · pilih tindakan</div></div><div class="nf-hero-orb" aria-label="Logo Apotek Naufal Farma"><img src="branding/logo-mark.svg" alt="Apotek Naufal Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
   home.append(welcome,stats,quick);
   welcome.querySelector('[data-hero-cashier]').addEventListener('click',()=>window.nfGo('transaction'));
   welcome.querySelector('[data-hero-scan]').addEventListener('click',()=>window.focusSearch(true));
@@ -2846,7 +2846,7 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
 })();
 })();
 
-/* D'she Farma Smart Theme: Pearl Light + Charcoal Silver Pearl Dark */
+/* Apotek Naufal Farma Smart Theme: Pearl Light + Charcoal Silver Pearl Dark */
 (function(){
   if(document.getElementById('dsheThemeStyle'))return;
   const css=document.createElement('style');css.id='dsheThemeStyle';
@@ -3461,7 +3461,7 @@ function boot(){install();setTimeout(install,500);setTimeout(install,1200)}if(do
   function pdfBody(t){
     const rows=items(t).map((i,n)=>'<tr><td class="c">'+(n+1)+'</td><td>'+esc(i.code??i.kode??'')+'</td><td>'+esc(i.name??i.nama??'')+'</td><td class="c">'+qty(i)+'</td><td class="r">'+rupiah(price(i))+'</td><td class="r">'+rupiah(sub(i))+'</td></tr>').join('');
     return `<style>*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#111;font-family:Arial,Helvetica,sans-serif}body{font-size:9pt;line-height:1.3}html,body{width:100%;min-width:0;max-width:100%;overflow:visible}.page{display:block;width:100%;max-width:186mm;min-width:0;margin:0 auto;overflow:visible}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:5mm;border-bottom:1px solid #333;padding-bottom:5mm;margin-bottom:5mm;min-width:0}.head>div{min-width:0;max-width:100%}.brand{font-size:15pt;font-weight:800;overflow-wrap:anywhere}.sub{font-size:8pt;font-weight:400;margin-top:2mm}.meta{text-align:right;font-size:8pt;line-height:1.5;min-width:0;overflow-wrap:anywhere}h1{text-align:center;font-size:15pt;margin:4mm 0 1mm;overflow-wrap:anywhere}h2{text-align:center;font-size:9pt;font-weight:400;margin:0 0 5mm}table{width:100%;max-width:100%;border-collapse:collapse;table-layout:fixed;break-inside:auto}th,td{border:.5pt solid #777;padding:2.2mm 1.8mm;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}th{background:#eee;text-align:center;font-weight:800}.c{text-align:center}.r{text-align:right;white-space:nowrap}th:nth-child(1){width:7%}th:nth-child(2){width:16%}th:nth-child(3){width:37%}th:nth-child(4){width:8%}th:nth-child(5){width:16%}th:nth-child(6){width:16%}.summary{width:80mm;max-width:100%;margin:6mm 0 0 auto;table-layout:fixed}.summary td,.summary th{font-weight:800;overflow-wrap:anywhere}.foot{display:flex;justify-content:space-between;gap:8mm;margin-top:12mm;font-size:7.5pt;color:#555;break-inside:avoid}.foot>div{max-width:50%;overflow-wrap:anywhere}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}td,th{min-width:0}@page{size:A4 portrait;margin:10mm}@media print{html,body{width:auto!important;height:auto!important;margin:0!important;padding:0!important;overflow:visible!important}.page{width:100%!important;max-width:190mm!important;margin:0 auto!important}table{width:100%!important;max-width:100%!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-/* Brand visibility fix: keep D'she Farma readable over the Pearl / Dark Pearl header. */
+/* Brand visibility fix: keep Apotek Naufal Farma readable over the Pearl / Dark Pearl header. */
 header .topbar{position:relative;isolation:isolate}
 header .brand-text{position:relative;z-index:2;min-width:0;flex:1}
 header .brand-text h1{
@@ -5253,4 +5253,44 @@ body{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important}
 @media(prefers-reduced-motion:reduce){#bottomNavV15>button{transition:none!important}}
 </style>
 
+
+<!-- NF-P0-ANDROID-WEBVIEW-FIX-2026-11 -->
+<style id="nfP0AndroidWebViewFix">
+:root{--nf-nav-height:70px}
+html,body{width:100%;max-width:100%;overflow-x:hidden!important}
+body{min-height:100dvh;padding-bottom:calc(112px + env(safe-area-inset-bottom,0px))!important}
+header{position:relative!important;top:auto!important;z-index:20!important;padding-top:16px!important}
+.wrap{padding-bottom:calc(124px + env(safe-area-inset-bottom,0px))!important}
+#bottomNavV15.nf-glass-nav,#bottomNavV15.bottom-nav{position:fixed!important;left:10px!important;right:10px!important;bottom:10px!important;top:auto!important;z-index:2147483000!important;width:auto!important;max-width:790px!important;margin:0 auto!important;min-height:66px!important;height:auto!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important;gap:6px!important;padding:7px!important;transform:none!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;overflow:visible!important;border:1px solid rgba(255,255,255,.96)!important;border-radius:23px!important;background:rgba(248,251,250,.94)!important;backdrop-filter:blur(24px) saturate(175%)!important;-webkit-backdrop-filter:blur(24px) saturate(175%)!important;box-shadow:0 12px 34px rgba(28,53,65,.17),inset 0 1px 0 #fff!important}
+#bottomNavV15.nf-glass-nav>button{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;min-width:0!important;width:100%!important;min-height:50px!important;height:auto!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:6px 3px!important;border:1px solid transparent!important;border-radius:15px!important;background:transparent!important;color:#536a65!important;font-size:11px!important;line-height:1.15!important;white-space:nowrap!important}
+#bottomNavV15.nf-glass-nav>button span{display:block!important;min-height:21px!important;font-size:20px!important;line-height:1!important;color:inherit!important}
+#bottomNavV15.nf-glass-nav>button b{display:block!important;max-width:100%!important;font-size:10px!important;font-weight:800!important;line-height:1.1!important;overflow:visible!important;white-space:nowrap!important}
+#bottomNavV15.nf-glass-nav>button.active,#bottomNavV15.nf-glass-nav>button[aria-current="page"]{background:linear-gradient(145deg,#fff,#e4f4ed)!important;border-color:rgba(255,255,255,.98)!important;color:#087b60!important;box-shadow:0 3px 10px rgba(17,105,80,.12),inset 0 1px 0 #fff!important}
+#nfHome,#nfPrice,#nfTransaction,#nfMore,#nfOut,#nfReport,#nfItems,#nfSync{min-height:calc(100dvh - 20px);padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))!important}
+#nfHome .quick-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#nfHome .quick-btn{min-width:0!important;min-height:116px!important}
+#nfHome .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+#nfHome .stat-card{min-width:0!important;min-height:126px!important}
+#searchArea,.search-card{width:100%!important;max-width:100%!important;min-width:0!important}
+#searchArea input,#q{min-width:0!important;width:100%!important;min-height:52px!important;font-size:16px!important}
+#results{width:100%!important;min-width:0!important;padding-bottom:14px!important}
+#results .card{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+#results .row{min-width:0!important;flex-wrap:wrap!important;align-items:center!important}
+#results .qty{flex-wrap:nowrap!important;max-width:100%!important}
+#results .qty button{min-width:42px!important;min-height:42px!important}
+@media(max-width:380px){#bottomNavV15.nf-glass-nav,#bottomNavV15.bottom-nav{left:7px!important;right:7px!important;bottom:8px!important}#bottomNavV15.nf-glass-nav>button b{font-size:9px!important}#nfHome .quick-btn{min-height:106px!important}}
+@media(prefers-reduced-motion:reduce){#bottomNavV15 *{transition:none!important;animation:none!important}}
+</style>
+<script id="nfP0BrandAndNavigationGuard">
+(()=>{
+ const brand='Apotek Naufal Farma';
+ document.title=brand+' — POS Mobile';
+ const headerTitle=document.querySelector('header .brand-text h1');if(headerTitle)headerTitle.textContent=brand;
+ const logo=document.querySelector('header .brand-mark img');if(logo)logo.alt=brand;
+ const nav=document.getElementById('bottomNavV15');
+ if(nav){nav.setAttribute('aria-label','Navigasi utama');nav.style.setProperty('display','grid','important');}
+ const status=Array.from(document.querySelectorAll('.stat-card em')).find(e=>/harga terbaru|mode offline/i.test(e.textContent||''));
+ if(status)status.textContent='Mode offline aktif';
+})();
+</script>
 </body></html>
