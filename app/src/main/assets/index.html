@@ -191,6 +191,17 @@ header{position:relative;top:auto;background:linear-gradient(135deg,#0b8a69,#079
     <button type="button" class="quick-btn q-orange" onclick="focusReport()"><span>▤</span><b>Laporan</b><small>Penjualan harian</small></button>
   </div>
 </section>
+<section id="kasirOps" class="card" style="display:none;margin-top:14px">
+ <div class="section-head"><h3>Operasional Kasir</h3><span>POS</span></div>
+ <div class="quick-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <button class="quick-btn q-green" onclick="toggleKasirHistory()"><span>📋</span><b>Riwayat</b><small>Transaksi tersimpan</small></button>
+  <button class="quick-btn q-indigo" onclick="holdCurrentSale()"><span>⏸</span><b>Tahan Transaksi</b><small>Simpan keranjang sementara</small></button>
+  <button class="quick-btn q-orange" onclick="showHeldSales()"><span>▶</span><b>Lanjutkan</b><small id="heldCountLabel">0 transaksi ditahan</small></button>
+  <button class="quick-btn" onclick="reprintLatestReceipt()"><span>🧾</span><b>Cetak Ulang</b><small>Struk terakhir / riwayat</small></button>
+ </div>
+ <div id="heldSalesBox" style="display:none;margin-top:12px"></div>
+ <div id="kasirHistoryWrap" style="display:none;margin-top:12px"><div class="row"><b>Riwayat Transaksi</b><button type="button" onclick="showHistory()" style="padding:7px 10px">Muat ulang</button></div><div id="historyBox" style="display:block"></div></div>
+</section>
 
 <section id="pembayaranMandiri" class="card payment-hub" style="display:none">
 <div class="payment-hub-head"><div><span class="eyebrow">PEMBAYARAN</span><h2>Pembayaran QRIS</h2><p>Menu terpisah untuk pembayaran di luar transaksi kasir.</p></div><span class="payment-hub-icon">▦</span></div>
@@ -584,6 +595,22 @@ renderResults(ITEMS.slice(0,30));renderCart();
       '</style></head><body><h1>APOTEK D'SHE FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
       '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table>
+
+<script id="kasirOpsV1">
+function showKasirOps(){const p=document.getElementById("kasirOps");p.style.display="block";document.getElementById("pembayaranMandiri").style.display="none";document.getElementById("kasirHistoryWrap").style.display="none";document.getElementById("heldSalesBox").style.display="none";p.scrollIntoView({behavior:"smooth",block:"start"});updateHeldCount();}
+function heldSales(){try{return JSON.parse(localStorage.getItem("anf_held_sales")||"[]")}catch(e){return[]}}
+function updateHeldCount(){const n=heldSales().length;const el=document.getElementById("heldCountLabel");if(el)el.textContent=n+" transaksi ditahan";}
+function holdCurrentSale(){if(!cart.length){alert("Keranjang kosong. Tambahkan barang sebelum menahan transaksi.");return;}const all=heldSales();all.unshift({key:Date.now(),at:new Date().toISOString(),cart:cart.map(x=>({...x})),paymentMethod:document.getElementById("paymentMethod").value,cash:document.getElementById("cash").value,customerName:document.getElementById("customerName").value});localStorage.setItem("anf_held_sales",JSON.stringify(all));cart=[];renderCart();document.getElementById("cash").value="";document.getElementById("customerName").value="";updateHeldCount();alert("Transaksi ditahan. Keranjang dikosongkan untuk transaksi berikutnya.");}
+function showHeldSales(){const box=document.getElementById("heldSalesBox");box.style.display="block";const all=heldSales();if(!all.length){box.innerHTML='<div class="small">Belum ada transaksi yang ditahan.</div>';return;}box.innerHTML=all.map((x,i)=>'<div class="history-item"><b>Ditahan '+(i+1)+'</b><div class="small">'+new Date(x.at).toLocaleString("id-ID")+' • '+x.cart.reduce((a,b)=>a+(Number(b.qty)||0),0)+' item</div><b>'+rupiah(x.cart.reduce((a,b)=>a+(Number(b.price)||0)*(Number(b.qty)||0),0))+'</b><div style="display:flex;gap:8px;margin-top:8px"><button onclick="resumeHeldSale('+x.key+')">Lanjutkan</button><button class="danger" onclick="removeHeldSale('+x.key+')">Hapus</button></div></div>').join("");}
+function resumeHeldSale(key){if(cart.length&&!confirm("Keranjang aktif akan digantikan transaksi yang ditahan. Lanjutkan?"))return;const all=heldSales(),x=all.find(a=>a.key===key);if(!x)return;cart=x.cart.map(a=>({...a}));document.getElementById("paymentMethod").value=x.paymentMethod||"Tunai";document.getElementById("cash").value=x.cash||"";document.getElementById("customerName").value=x.customerName||"";localStorage.setItem("anf_held_sales",JSON.stringify(all.filter(a=>a.key!==key)));renderCart();updateHeldCount();document.getElementById("heldSalesBox").style.display="none";focusCart();}
+function removeHeldSale(key){localStorage.setItem("anf_held_sales",JSON.stringify(heldSales().filter(x=>x.key!==key)));showHeldSales();updateHeldCount();}
+function toggleKasirHistory(){const w=document.getElementById("kasirHistoryWrap");w.style.display=w.style.display==="none"?"block":"none";if(w.style.display==="block")showHistory();}
+function receiptText(tx){const line="--------------------------------";let s="APOTEK NAUFAL FARMA\n"+line+"\n"+(tx.invoice||("ID "+tx.id))+"\n"+(tx.date||new Date(tx.iso||Date.now()).toLocaleString("id-ID"))+"\n"+(tx.customer?"Pelanggan: "+tx.customer+"\n":"")+line+"\n";(tx.items||[]).forEach(i=>{s+=i.name+"\n"+i.qty+" x "+rupiah(i.price)+" = "+rupiah(i.qty*i.price)+"\n"});s+=line+"\nTOTAL  "+rupiah(tx.total)+"\nBAYAR  "+rupiah(tx.cash)+"\nKEMBALI "+rupiah(tx.change)+"\n"+line+"\nTerima kasih\n";return s;}
+function printReceipt(tx){if(!tx){alert("Data transaksi tidak ditemukan.");return;}const textReceipt=receiptText(tx);if(window.Android&&typeof window.Android.thermalPrinters==="function"&&typeof window.Android.printThermal==="function"){try{const printers=JSON.parse(window.Android.thermalPrinters());if(printers.length){const choice=prompt("Pilih printer (nomor):\n"+printers.map((p,i)=>(i+1)+". "+p.name+" • "+p.address).join("\n"),"1");if(choice===null)return;const p=printers[Number(choice)-1];if(!p){alert("Pilihan printer tidak valid.");return;}const result=JSON.parse(window.Android.printThermal(p.address,textReceipt));if(result.ok)return;if(result.permission){alert("Izin Bluetooth diminta. Silakan ulangi Cetak Ulang setelah izin diberikan.");return;}alert(result.error||"Cetak thermal gagal.");return;}}catch(e){console.warn(e)}const w=window.open("","_blank");if(!w){alert("Popup cetak diblokir.");return;}w.document.write('<html><head><title>Struk '+(tx.invoice||'')+'</title><style>body{font:12px monospace;width:72mm;margin:4mm auto;white-space:pre-wrap}</style></head><body>'+esc(textReceipt)+'</body></html>');w.document.close();w.focus();w.print();}
+function reprintLatestReceipt(){const h=getHistory().filter(x=>x.status!=="VOIDED");if(!h.length){alert("Belum ada transaksi untuk dicetak ulang.");return;}printReceipt(h[0]);}
+function reprintReceiptById(id){const tx=getHistory().find(x=>String(x.id)===String(id)||String(x.invoice)===String(id));printReceipt(tx);}
+updateHeldCount();
+</script>
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
@@ -752,7 +779,8 @@ function focusSettings(){const el=document.getElementById("backupBtn");if(el){el
 <button type="button" onclick="focusCart()"><span>🛒</span><b>Transaksi</b></button>
 <button type="button" onclick="focusReport()"><span>▤</span><b>Laporan</b></button>
 <button type="button" onclick="showPaymentHub()"><span>▦</span><b>QRIS</b></button>
+<button type="button" onclick="showKasirOps()"><span>🧾</span><b>Kasir</b></button>
 </nav>
-<style id="bottomNavStyle">.bottom-nav{position:sticky;bottom:0;z-index:20;max-width:760px;margin:14px auto 0;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#fff;border:1px solid var(--line);border-radius:20px 20px 0 0;box-shadow:0 -5px 20px rgba(20,70,58,.08);display:grid;grid-template-columns:repeat(5,1fr);gap:3px}.bottom-nav button{background:transparent;color:#75827e;padding:5px 2px;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:3px}.bottom-nav button span{font-size:18px;color:var(--g)}.bottom-nav button b{font-size:9px}.bottom-nav button:first-child{color:var(--g)}</style>
+<style id="bottomNavStyle">.bottom-nav{position:sticky;bottom:0;z-index:20;max-width:760px;margin:14px auto 0;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#fff;border:1px solid var(--line);border-radius:20px 20px 0 0;box-shadow:0 -5px 20px rgba(20,70,58,.08);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}.bottom-nav button{background:transparent;color:#75827e;padding:5px 2px;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:3px}.bottom-nav button span{font-size:18px;color:var(--g)}.bottom-nav button b{font-size:9px}.bottom-nav button:first-child{color:var(--g)}</style>
 <script>if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",migrateLegacyTransactionsToSQLite,{once:true});}else{migrateLegacyTransactionsToSQLite();}</script>
 </body></html>
