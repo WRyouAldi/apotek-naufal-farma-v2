@@ -606,7 +606,32 @@ function resumeHeldSale(key){if(cart.length&&!confirm("Keranjang aktif akan diga
 function removeHeldSale(key){localStorage.setItem("anf_held_sales",JSON.stringify(heldSales().filter(x=>x.key!==key)));showHeldSales();updateHeldCount();}
 function toggleKasirHistory(){const w=document.getElementById("kasirHistoryWrap");w.style.display=w.style.display==="none"?"block":"none";if(w.style.display==="block")showHistory();}
 function receiptText(tx){const line="--------------------------------";let s="APOTEK NAUFAL FARMA\n"+line+"\n"+(tx.invoice||("ID "+tx.id))+"\n"+(tx.date||new Date(tx.iso||Date.now()).toLocaleString("id-ID"))+"\n"+(tx.customer?"Pelanggan: "+tx.customer+"\n":"")+line+"\n";(tx.items||[]).forEach(i=>{s+=i.name+"\n"+i.qty+" x "+rupiah(i.price)+" = "+rupiah(i.qty*i.price)+"\n"});s+=line+"\nTOTAL  "+rupiah(tx.total)+"\nBAYAR  "+rupiah(tx.cash)+"\nKEMBALI "+rupiah(tx.change)+"\n"+line+"\nTerima kasih\n";return s;}
-function printReceipt(tx){if(!tx){alert("Data transaksi tidak ditemukan.");return;}const textReceipt=receiptText(tx);if(window.Android&&typeof window.Android.thermalPrinters==="function"&&typeof window.Android.printThermal==="function"){try{const printers=JSON.parse(window.Android.thermalPrinters());if(printers.length){const choice=prompt("Pilih printer (nomor):\n"+printers.map((p,i)=>(i+1)+". "+p.name+" • "+p.address).join("\n"),"1");if(choice===null)return;const p=printers[Number(choice)-1];if(!p){alert("Pilihan printer tidak valid.");return;}const result=JSON.parse(window.Android.printThermal(p.address,textReceipt));if(result.ok)return;if(result.permission){alert("Izin Bluetooth diminta. Silakan ulangi Cetak Ulang setelah izin diberikan.");return;}alert(result.error||"Cetak thermal gagal.");return;}}catch(e){console.warn(e)}const w=window.open("","_blank");if(!w){alert("Popup cetak diblokir.");return;}w.document.write('<html><head><title>Struk '+(tx.invoice||'')+'</title><style>body{font:12px monospace;width:72mm;margin:4mm auto;white-space:pre-wrap}</style></head><body>'+esc(textReceipt)+'</body></html>');w.document.close();w.focus();w.print();}
+function printReceipt(tx){if(!tx){alert("Data transaksi tidak ditemukan.");return;}const textReceipt=receiptText(tx);if(window.Android&&typeof window.Android.thermalPrinters==="function"&&typeof window.Android.printThermal==="function"){try{const printers=JSON.parse(window.Android.thermalPrinters());if(printers.length){const choice=prompt("Pilih printer (nomor):\n"+printers.map((p,i)=>(i+1)+". "+p.name+" • "+p.address).join("\n"),"1");if(choice===null)return;const p=printers[Number(choice)-1];if(!p){alert("Pilihan printer tidak valid.");return;}const result=JSON.parse(window.Android.printThermal(p.address,textReceipt));if(result.ok)return;if(result.permission){alert("Izin Bluetooth diminta. Silakan ulangi Cetak Ulang setelah izin diberikan.");return;}alert(result.error||"Cetak thermal gagal.");return;}}catch(e){console.warn(e)}const w=window.open("","_blank");if(!w){alert("Popup cetak diblokir.");return;}w.document.write('<html><head><title>Struk '+(tx.invoice||'')+'</title><style>body{font:12px monospace;width:72mm;margin:4mm auto;white-space:pre-wrap}</style></head><body>'+esc(textReceipt)+'<style id="menuPageRoutingV2">
+body[data-page="home"] .wrap> :not(.welcome-card):not(.stats-grid):not(.quick-section){display:none!important}
+body[data-page="home"] .welcome-card,body[data-page="home"] .stats-grid,body[data-page="home"] .quick-section{display:block!important}
+body[data-page="obat"] .wrap> :not(#searchArea):not(#results):not(#cartAnchor){display:none!important}
+body[data-page="obat"] #searchArea,body[data-page="obat"] #results{display:block!important}
+body[data-page="transaksi"] .wrap> :not(#cartAnchor):not(.cart){display:none!important}
+body[data-page="transaksi"] #cartAnchor,body[data-page="transaksi"] .cart{display:block!important}
+body[data-page="laporan"] .wrap> :not(#laporanSection){display:none!important}
+body[data-page="laporan"] #laporanSection{display:block!important}
+body[data-page="qris"] .wrap> :not(#pembayaranMandiri){display:none!important}
+body[data-page="qris"] #pembayaranMandiri{display:block!important}
+body[data-page="kasir"] .wrap> :not(#kasirOps){display:none!important}
+body[data-page="kasir"] #kasirOps{display:block!important}
+#bottomNavV15{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:calc(7px + env(safe-area-inset-bottom))!important;width:calc(100% - 14px)!important;max-width:570px!important;z-index:9999!important;border-radius:22px!important;box-shadow:0 10px 32px rgba(15,50,40,.2)!important}
+body{padding-bottom:92px!important}
+</style>
+<script id="menuPageRoutingV2JS">
+function routePage(page){document.body.dataset.page=page;document.querySelectorAll("#bottomNavV15 button").forEach((b,i)=>b.classList.toggle("active",["home","obat","transaksi","laporan","qris","kasir"][i]===page));window.scrollTo({top:0,behavior:"smooth"});if(page==="kasir")updateHeldCount();if(page==="laporan"&&typeof renderReport==="function")try{renderReport()}catch(e){}}
+function focusSearch(){routePage("obat");setTimeout(()=>{const q=document.getElementById("q");if(q)q.focus()},180)}
+function focusCart(){routePage("transaksi")}
+function focusReport(){routePage("laporan")}
+function showPaymentHub(){routePage("qris")}
+function showKasirOps(){routePage("kasir")}
+document.addEventListener("DOMContentLoaded",()=>routePage("home"));
+</script>
+</body></html>');w.document.close();w.focus();w.print();}
 function reprintLatestReceipt(){const h=getHistory().filter(x=>x.status!=="VOIDED");if(!h.length){alert("Belum ada transaksi untuk dicetak ulang.");return;}printReceipt(h[0]);}
 function reprintReceiptById(id){const tx=getHistory().find(x=>String(x.id)===String(id)||String(x.invoice)===String(id));printReceipt(tx);}
 updateHeldCount();
