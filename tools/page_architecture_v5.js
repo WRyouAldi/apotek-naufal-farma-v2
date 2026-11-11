@@ -34,8 +34,8 @@
   const home=document.createElement('section'); home.id='nfHome'; home.className='nf-page';
   // Compact Operational Hero: useful actions first, without consuming cashier workspace.
   welcome.classList.add('nf-operational-hero');
-  welcome.setAttribute('aria-label',"Ringkasan operasional Apotek D'she Farma");
-  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> PEARL CRYSTAL · POS MOBILE</span><h2>Apotek D'she Farma</h2><p>Penjualan, scan barcode, dan pengecekan produk dalam satu alur yang praktis.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div><div class="nf-hero-status"><span></span> Dashboard siap · pilih tindakan</div></div><div class="nf-hero-orb" aria-label="Logo D\u0027she Farma"><img src="logo_dshe_farma.svg" alt="D\u0027she Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
+  welcome.setAttribute('aria-label',"Ringkasan operasional Apotek Naufal Farma");
+  welcome.innerHTML=`<div class="nf-hero-copy"><span class="nf-hero-eyebrow"><i></i> PEARL CRYSTAL · POS MOBILE</span><h2>Apotek Naufal Farma</h2><p>Penjualan, scan barcode, dan pengecekan produk dalam satu alur yang praktis.</p><div class="nf-hero-actions"><button type="button" class="nf-hero-primary" data-hero-cashier><span>▣</span> Buka Kasir</button><button type="button" class="nf-hero-scan" data-hero-scan><span>▦</span> Scan Barcode</button></div><div class="nf-hero-status"><span></span> Dashboard siap · pilih tindakan</div></div><div class="nf-hero-orb" aria-label="Logo Apotek Naufal Farma"><img src="logo_dshe_farma.svg" alt="Apotek Naufal Farma" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
   home.append(welcome,stats,quick);
   welcome.querySelector('[data-hero-cashier]').addEventListener('click',()=>window.nfGo('transaction'));
   welcome.querySelector('[data-hero-scan]').addEventListener('click',()=>window.focusSearch(true));
