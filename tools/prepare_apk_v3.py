@@ -49,7 +49,7 @@ if pos<0: raise SystemExit('index.html: document closing tag not found')
 inject=''.join('<script id="'+sid+'">\n'+path.read_text(encoding='utf-8')+'\n</script>\n' for sid,path in modules)
 layout_fix='''<script id="naufalLiquidLayoutFix">\n(function(){function wrapDirectText(root){Array.from(root.childNodes).forEach(function(node){if(node.nodeType===3&&node.textContent.trim()){var span=document.createElement('span');span.className='nf-auto-label';span.textContent=node.textContent.trim();root.replaceChild(span,node)}})}function fix(){document.querySelectorAll('.stat-card').forEach(function(card){var copy=card.querySelector(':scope > div:last-child');if(copy&&!copy.classList.contains('stat-icon')){wrapDirectText(copy);copy.classList.add('nf-stat-copy')}});document.querySelectorAll('.quick-btn').forEach(function(btn){wrapDirectText(btn);btn.querySelectorAll('.nf-auto-label').forEach(function(el){if(!el.classList.contains('nf-quick-label'))el.classList.add('nf-quick-label')})})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fix);else fix();new MutationObserver(function(){fix()}).observe(document.body,{childList:true,subtree:true})})();\n</script>\n'''
 s=s[:pos]+inject+layout_fix+s[pos:]
-for style_id in ['sampleUIUXV15','referenceUIUX','naufalPharmacyThemeV2','naufalLiquidThemeV3']:
+for style_id in ['sampleUIUXV15','referenceUIUX','naufalPharmacyThemeV2','naufalLiquidThemeV3','nfResultQuantityUX','dark-pearl-unified-theme','dsheNavbarCapsuleReference','nfNavInteractionRecovery','bottomNavStyle']:
     s=re.sub(r'<style id="'+style_id+r'">.*?</style>\s*','',s,flags=re.S)
 theme=Path('tools/ui_theme_v2.css').read_text(encoding='utf-8')
 style_tag='<style id="naufalLiquidThemeV3">\n'+theme+'\n</style>\n'
