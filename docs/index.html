@@ -1133,35 +1133,6 @@ renderResults(ITEMS.slice(0,30));renderCart();
       '</style></head><body><h1>APOTEK NAUFAL FARMA</h1><h3>Laporan Harian • '+esc(date)+'</h3>'+
       '<table><thead><tr><th>Nama Barang</th><th>Qty</th><th>Harga</th><th>Subtotal</th></tr></thead><tbody>'+body+'</tbody></table>'+
       '<table class="total"><tr><th>Total Item</th><td>'+qtotal+'</td></tr><tr><th>TOTAL PENJUALAN</th><td>'+sales+'</td></tr></table>
-<!-- NF-P0-MENU-FREEZE-FIX -->
-<script id="nfMenuRouterHotfix">
-(function(){
-  "use strict";
-  const pages=["home","obat","transaksi","laporan","qris","kasir"];
-  function safeRun(fn){try{if(typeof fn==="function")fn();}catch(err){console.error("[Naufal Farma] Menu action:",err);}}
-  window.routePage=function(page){
-    if(!pages.includes(page)) page="home";
-    document.body.dataset.page=page;
-    document.querySelectorAll("#bottomNavV15 button").forEach((button,index)=>{
-      button.classList.toggle("active",pages[index]===page);
-      button.setAttribute("aria-current",pages[index]===page?"page":"false");
-    });
-    try{window.scrollTo(0,0);}catch(_){}
-    if(page==="kasir") safeRun(window.updateHeldCount);
-  };
-  window.focusSearch=function(){
-    window.routePage("obat");
-    const input=document.getElementById("q");
-    if(input){try{input.focus({preventScroll:true});}catch(_){input.focus();}}
-  };
-  window.focusCart=function(){window.routePage("transaksi");};
-  window.focusReport=function(){window.routePage("laporan");};
-  window.showPaymentHub=function(){window.routePage("qris");};
-  window.showKasirOps=function(){window.routePage("kasir");};
-  document.addEventListener("DOMContentLoaded",function(){window.routePage(document.body.dataset.page||"home");},{once:true});
-})();
-</script>
-
 </body></html>';
     const blob=new Blob([xls],{type:"application/vnd.ms-excel;charset=utf-8"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
