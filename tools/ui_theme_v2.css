@@ -1267,3 +1267,33 @@ html[data-dshe-theme="dark"] .nf-more-link{
   color:#f1f3f6!important;border:1px solid rgba(211,219,229,.25)!important;
 }
 html[data-dshe-theme="dark"] .nf-more-link button{color:#f1f3f6!important}
+
+
+/* Naufal Farma WebView navigation: persistent, visible, safe-area aware. */
+#bottomNavV15.nf-glass-nav,
+#bottomNavV15.bottom-nav{
+  position:fixed!important;display:grid!important;visibility:visible!important;
+  opacity:1!important;pointer-events:auto!important;z-index:2147483000!important;
+  left:max(10px,env(safe-area-inset-left))!important;
+  right:max(10px,env(safe-area-inset-right))!important;
+  bottom:max(8px,env(safe-area-inset-bottom))!important;top:auto!important;
+  width:auto!important;max-width:760px!important;margin:0 auto!important;
+  transform:none!important;overflow:visible!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  min-height:64px!important;padding:7px 8px calc(7px + env(safe-area-inset-bottom))!important;
+  border-radius:20px!important;box-sizing:border-box!important;
+}
+#bottomNavV15.nf-glass-nav>button,
+#bottomNavV15.bottom-nav>button{
+  display:flex!important;visibility:visible!important;opacity:1!important;
+  pointer-events:auto!important;position:relative!important;z-index:1!important;
+  min-width:0!important;min-height:48px!important;align-items:center!important;
+  justify-content:center!important;flex-direction:column!important;
+  gap:3px!important;touch-action:manipulation!important;
+}
+#bottomNavV15~*{scroll-margin-bottom:90px}
+body{padding-bottom:calc(86px + env(safe-area-inset-bottom))!important}
+@media(max-width:380px){
+ #bottomNavV15.nf-glass-nav,#bottomNavV15.bottom-nav{left:6px!important;right:6px!important;bottom:5px!important}
+ #bottomNavV15>button b{font-size:9px!important}
+}
