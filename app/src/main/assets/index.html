@@ -637,6 +637,37 @@ document.addEventListener("DOMContentLoaded",()=>routePage("home"));
 #bottomNavV15 button.active{color:#087f65!important;background:rgba(80,190,160,.14)!important;border-radius:12px!important}
 body{padding-bottom:110px!important}
 </style>
+
+<!-- NF-P0-MENU-FREEZE-FIX -->
+<script id="nfMenuRouterHotfix">
+(function(){
+  "use strict";
+  const pages=["home","obat","transaksi","laporan","qris","kasir"];
+  function safeRun(fn){try{if(typeof fn==="function")fn();}catch(err){console.error("[Naufal Farma] Menu action:",err);}}
+  window.routePage=function(page){
+    if(!pages.includes(page)) page="home";
+    document.body.dataset.page=page;
+    document.querySelectorAll("#bottomNavV15 button").forEach((button,index)=>{
+      button.classList.toggle("active",pages[index]===page);
+      button.setAttribute("aria-current",pages[index]===page?"page":"false");
+    });
+    // Avoid animated scrolling in Android WebView; repeated smooth scrolls can stall the UI thread.
+    try{window.scrollTo(0,0);}catch(_){}
+    if(page==="kasir") safeRun(window.updateHeldCount);
+  };
+  window.focusSearch=function(){
+    window.routePage("obat");
+    const input=document.getElementById("q");
+    if(input){try{input.focus({preventScroll:true});}catch(_){input.focus();}}
+  };
+  window.focusCart=function(){window.routePage("transaksi");};
+  window.focusReport=function(){window.routePage("laporan");};
+  window.showPaymentHub=function(){window.routePage("qris");};
+  window.showKasirOps=function(){window.routePage("kasir");};
+  document.addEventListener("DOMContentLoaded",function(){window.routePage(document.body.dataset.page||"home");},{once:true});
+})();
+</script>
+
 </body></html>');w.document.close();w.focus();w.print();}
 function reprintLatestReceipt(){const h=getHistory().filter(x=>x.status!=="VOIDED");if(!h.length){alert("Belum ada transaksi untuk dicetak ulang.");return;}printReceipt(h[0]);}
 function reprintReceiptById(id){const tx=getHistory().find(x=>String(x.id)===String(id)||String(x.invoice)===String(id));printReceipt(tx);}
