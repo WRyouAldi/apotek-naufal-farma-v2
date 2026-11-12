@@ -304,25 +304,6 @@
   setTimeout(relocate,500);
 
   const map={home:'nfHome',price:'nfPrice',transaction:'nfTransaction',more:'nfMore',out:'nfOut',report:'nfReport',items:'nfItems',sync:'nfSync'};
-  window.nfGo=function(page){
-    if(!map[page])page='home';
-    Object.entries(map).forEach(([key,id])=>{
-      const el=document.getElementById(id);
-      if(el)el.classList.toggle('nf-active',key===page);
-    });
-    if(nodes.bottom)nodes.bottom.querySelectorAll('button').forEach(b=>{
-      const active=b.dataset.page===page;
-      b.classList.toggle('active',active);
-      if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
-    });
-    window.scrollTo({top:0,behavior:'smooth'});
-    if(page==='transaction')setTimeout(()=>document.getElementById('q')?.focus({preventScroll:true}),120);
-    if(page==='price')setTimeout(()=>document.getElementById('nfPriceQuery')?.focus({preventScroll:true}),120);
-    if(page==='items')window.nfCrudRefresh?.();
-    if(page==='sync')window.nfCloudSyncInit?.();
-    if(page==='report')window.nfReportRefresh?.();
-  };
-
   const cashierSearch=nodes.search?.querySelector('.search');
   function launchNativeScan(){
     if(window.Android&&typeof window.Android.scanBarcode==='function'){
