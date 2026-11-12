@@ -287,6 +287,8 @@
     nodes.bottom.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>window.nfGo(b.dataset.page)));
   }
 
+  // Keep the single navbar outside the page container before rebuilding page nodes.
+  if(nodes.bottom && nodes.bottom.parentElement!==document.body) document.body.appendChild(nodes.bottom);
   wrap.innerHTML='';
   wrap.append(home,price,tx,morePage,out,report,items,sync);
 
@@ -360,7 +362,6 @@
     new MutationObserver(syncTxSummary).observe(txCart,{childList:true,subtree:true,characterData:true});
     syncTxSummary();
   }
-  window.focusPayment=function(){window.nfGo('transaction')};
   window.focusSearch=function(scan){
     window.nfGo(scan?'transaction':'price');
     setTimeout(()=>{
@@ -394,15 +395,26 @@
   });
   const navLabel=nodes.bottom&&nodes.bottom.querySelector('[data-page="transaction"]');
   if(navLabel)navLabel.setAttribute('aria-label','Kasir: keranjang dan pembayaran');
-  const originalGo=window.nfGo;
+  // Single router: page state, nav state, scroll and optional entrance motion.
   window.nfGo=function(page){
-    originalGo(page);
-    const active=document.getElementById(map[page]||map.home);
-    if(active&&!reduceMotion()){
-      active.classList.remove('nf-page-enter');
-      void active.offsetWidth;
-      active.classList.add('nf-page-enter');
-    }
+    if(!map[page])page='home';
+    Object.entries(map).forEach(([key,id])=>{
+      const el=document.getElementById(id);
+      if(el)el.classList.toggle('nf-active',key===page);
+    });
+    if(nodes.bottom)nodes.bottom.querySelectorAll('button[data-page]').forEach(b=>{
+      const active=b.dataset.page===page;
+      b.classList.toggle('active',active);
+      if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+    });
+    window.scrollTo({top:0,behavior:reduceMotion()?'auto':'smooth'});
+    if(page==='transaction')setTimeout(()=>document.getElementById('q')?.focus({preventScroll:true}),120);
+    if(page==='price')setTimeout(()=>document.getElementById('nfPriceQuery')?.focus({preventScroll:true}),120);
+    if(page==='items')window.nfCrudRefresh?.();
+    if(page==='sync')window.nfCloudSyncInit?.();
+    if(page==='report')window.nfReportRefresh?.();
+    const active=document.getElementById(map[page]);
+    if(active&&!reduceMotion()){active.classList.remove('nf-page-enter');void active.offsetWidth;active.classList.add('nf-page-enter');}
   };
   // POS mobile opens on Dashboard; the dedicated Home tab keeps the Hero reachable from every page.
   // Simplified cashier flow: set Qty once, then type+Enter or scan to add immediately.
