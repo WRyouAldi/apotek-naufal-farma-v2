@@ -56,5 +56,12 @@ style_tag='<style id="naufalLiquidThemeV3">\n'+theme+'\n</style>\n'
 head_pos=s.lower().find('</head>')
 if head_pos<0: raise SystemExit('index.html: </head> not found')
 s=s[:head_pos]+style_tag+s[head_pos:]
+# P0 navigation integrity checks: fail the build instead of packaging duplicate routers/navbars.
+if s.count('id="naufalPageArchitectureV5"') != 1:
+    raise SystemExit("P0 validation failed: architecture module must exist exactly once")
+if s.count("window.nfGo=function(page)") != 1:
+    raise SystemExit("P0 validation failed: expected exactly one authoritative nfGo router")
+if s.count('id="bottomNavV15"') != 1:
+    raise SystemExit("P0 validation failed: expected exactly one bottom navigation")
 p.write_text(s,encoding='utf-8')
 print('Prepared APK HTML with database manager, consolidated UI V3, transaction printing, and mobile layout normalization')
